@@ -514,6 +514,9 @@
     .save-btn { background: #27ae60; }
     .save-btn:hover { background: #2ecc71; }
 
+    .update-btn { background: #f59e0b; color: #1e293b; font-weight: 700; }
+    .update-btn:hover { background: #fbbf24; }
+
     .load-btn { background: #8e44ad; }
     .load-btn:hover { background: #9b59b6; }
 
@@ -684,14 +687,15 @@
       </div>
     </div>
 
-    <!-- Row 2: Saved Rotations Dropdown -->
+    <!-- Row 2: Saved Rotations Dropdown & Update Changes -->
     <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
       <div class="config-group">
         <span class="config-label">Saved Rotations:</span>
-        <select id="savedRotationsSelect" style="min-width: 160px;">
+        <select id="savedRotationsSelect" style="min-width: 160px;" onchange="syncSelectedRotationName(this.value)">
           <option value="">-- Select Rotation Name --</option>
         </select>
         <button class="load-btn" onclick="loadSelectedRotation()">📂 Load</button>
+        <button class="update-btn" onclick="updateCurrentLoadedRotation()">💾 Save Changes</button>
         <button class="del-btn" onclick="deleteCurrentRotation()">🗑️ Delete</button>
       </div>
     </div>
@@ -782,10 +786,6 @@
   <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
 
   <script>
-    /* =======================================================
-       DEVELOPER / CREATOR CONTACT EMAIL
-       Replace this with your personal or team contact email
-       ======================================================= */
     const MY_EMAIL = "xarisllc1@gmail.com";
 
     const DEFAULT_NAMES = [
@@ -841,6 +841,7 @@
     let sevenPlayerSubSide = "left";
     let currentRotation = 1;
     let currentScenario = 'home';
+    let currentlyLoadedRotationName = null;
     let squad = [];
 
     let playerCoords = JSON.parse(JSON.stringify(HOME_COORDINATES));
@@ -1273,9 +1274,40 @@
       };
 
       localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
+      currentlyLoadedRotationName = name;
       nameInput.value = '';
       populateRotationsDropdown(name);
       document.getElementById('logBox').innerText = `✓ Lineup saved under "${name}"!`;
+    }
+
+    function syncSelectedRotationName(val) {
+      if (val) {
+        currentlyLoadedRotationName = val;
+      }
+    }
+
+    function updateCurrentLoadedRotation() {
+      const select = document.getElementById('savedRotationsSelect');
+      const rotName = select.value || currentlyLoadedRotationName;
+
+      if (!rotName) {
+        alert("Please select or load a Rotation Name first, or type a new name and click 'Save'.");
+        return;
+      }
+
+      const savedRotations = getRotationsFromStorage();
+      savedRotations[rotName] = {
+        teamSize,
+        sevenPlayerSubSide,
+        currentScenario,
+        playerCoords: JSON.parse(JSON.stringify(playerCoords)),
+        squad: JSON.parse(JSON.stringify(squad))
+      };
+
+      localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
+      currentlyLoadedRotationName = rotName;
+      populateRotationsDropdown(rotName);
+      document.getElementById('logBox').innerText = `✓ Saved changes to "${rotName}"!`;
     }
 
     function loadSelectedRotation() {
@@ -1290,6 +1322,7 @@
       const loaded = savedRotations[rotName];
       if (!loaded) return;
 
+      currentlyLoadedRotationName = rotName;
       loadPayloadData(loaded);
       document.getElementById('logBox').innerText = `✓ Successfully loaded "${rotName}".`;
     }
@@ -1306,6 +1339,9 @@
         const savedRotations = getRotationsFromStorage();
         delete savedRotations[rotName];
         localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
+        if (currentlyLoadedRotationName === rotName) {
+          currentlyLoadedRotationName = null;
+        }
         populateRotationsDropdown();
         document.getElementById('logBox').innerText = `Deleted "${rotName}".`;
       }
@@ -1408,7 +1444,6 @@
       e.target.value = '';
     }
 
-    /* Email suggestions to the creator */
     function emailSuggestions() {
       const subject = encodeURIComponent("Suggestion for Simeon Volleyball Simulator");
       const body = encodeURIComponent(
