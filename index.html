@@ -10,9 +10,9 @@
       --court-border: #2980b9;
       --court-line: #ffffff;
       --player-court: #27ae60;
-      --player-server: #e67e22;
+      --player-setter: #d63031; /* Red fill for Setters */
       --player-bench: #8e44ad;
-      --player-fault: #e74c3c;
+      --player-fault: #b33939;
       --panel-bg: #162447;
       --panel-border: #1f4068;
     }
@@ -397,8 +397,8 @@
 
     /* Draggable Player Token: Sized & Fitted */
     .player-token {
-      width: 78px;
-      height: 78px;
+      width: 76px;
+      height: 76px;
       border-radius: 50%;
       background: var(--player-court);
       color: white;
@@ -406,12 +406,13 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      gap: 3px;
       font-weight: bold;
       box-shadow: 0 4px 10px rgba(0,0,0,0.35);
       border: 2px solid white;
       z-index: 10;
       text-align: center;
-      padding: 3px;
+      padding: 4px;
       box-sizing: border-box;
       position: absolute;
       cursor: grab;
@@ -426,9 +427,23 @@
       z-index: 20;
     }
 
+    /* Server maintains standard green fill; distinguished by gold border & ring glow */
     .player-token.server {
-      background: var(--player-server);
+      background: var(--player-court);
       border-color: #ffd700;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.65);
+    }
+
+    /* Setter turns red automatically */
+    .player-token.setter {
+      background: var(--player-setter) !important;
+    }
+
+    /* If server is also setter, preserve red fill with server's gold border */
+    .player-token.server.setter {
+      background: var(--player-setter) !important;
+      border-color: #ffd700;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.85);
     }
 
     .player-token.fault {
@@ -441,22 +456,22 @@
       position: relative;
       cursor: default;
       background: var(--player-bench);
-      width: 74px;
-      height: 74px;
+      width: 72px;
+      height: 72px;
     }
 
-    /* Name Input (Fitted tightly) */
+    /* Name Input (Line 1) */
     .player-name-input {
-      width: 58px;
+      width: 60px;
       background: rgba(0, 0, 0, 0.38);
       border: 1px solid rgba(255, 255, 255, 0.4);
       border-radius: 3px;
       color: #fff;
       font-weight: bold;
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       line-height: 1.1;
       text-align: center;
-      padding: 1px 2px;
+      padding: 2px 2px;
       outline: none;
       box-sizing: border-box;
       pointer-events: auto;
@@ -468,7 +483,7 @@
       border-color: #ffd700;
     }
 
-    /* Editable Position Badge (MB, S, OH, RS, etc) */
+    /* Position/Role Input (Line 2) */
     .player-role-input {
       width: 44px;
       background: rgba(255, 255, 255, 0.2);
@@ -476,32 +491,21 @@
       border-radius: 3px;
       color: #ffeaa7;
       font-weight: 800;
-      font-size: 0.54rem;
+      font-size: 0.58rem;
       line-height: 1.1;
       text-align: center;
       text-transform: uppercase;
       padding: 1px;
       outline: none;
       box-sizing: border-box;
-      margin: 1px 0;
       pointer-events: auto;
-      letter-spacing: 0.2px;
+      letter-spacing: 0.3px;
     }
 
     .player-role-input:focus {
       background: rgba(0, 0, 0, 0.8);
       border-color: #00d2d3;
       color: #00d2d3;
-    }
-
-    /* Zone/Slot Label inside circle */
-    .token-slot-badge {
-      font-size: 0.52rem;
-      line-height: 1;
-      opacity: 0.9;
-      pointer-events: none;
-      white-space: nowrap;
-      letter-spacing: 0.2px;
     }
 
     #overlapCanvas {
@@ -585,7 +589,7 @@
       gap: 18px !important;
     }
 
-    /* CELLPHONE MODE (PROPORTIONAL SHRINKING & FONT FITTING) */
+    /* CELLPHONE MODE */
     body.mode-mobile {
       padding: 6px !important;
     }
@@ -601,30 +605,24 @@
       height: 330px !important;
       border-width: 4px !important;
     }
-    /* Token shrunk with proportional fonts to prevent any overflow */
     body.mode-mobile .player-token {
-      width: 58px !important;
-      height: 58px !important;
+      width: 56px !important;
+      height: 56px !important;
       border-width: 1.5px !important;
       padding: 2px 1px !important;
+      gap: 2px !important;
     }
     body.mode-mobile .player-name-input {
-      width: 48px !important;
-      font-size: 0.52rem !important;
+      width: 46px !important;
+      font-size: 0.54rem !important;
       padding: 1px !important;
       line-height: 1 !important;
     }
     body.mode-mobile .player-role-input {
-      width: 36px !important;
-      font-size: 0.44rem !important;
+      width: 34px !important;
+      font-size: 0.46rem !important;
       padding: 0 !important;
-      margin: 1px 0 !important;
       line-height: 1 !important;
-    }
-    body.mode-mobile .token-slot-badge {
-      font-size: 0.42rem !important;
-      line-height: 1 !important;
-      transform: scale(0.95);
     }
     body.mode-mobile .bench-wing {
       width: 74px !important;
@@ -635,8 +633,8 @@
     body.mode-mobile .bench-sub-indicator { font-size: 0.5rem !important; padding: 3px 2px !important; }
     body.mode-mobile .bench-flow-note { font-size: 0.48rem !important; }
     body.mode-mobile .bench-wing .player-token {
-      width: 54px !important;
-      height: 54px !important;
+      width: 52px !important;
+      height: 52px !important;
     }
     body.mode-mobile .config-row {
       flex-direction: column !important;
@@ -657,28 +655,23 @@
         border-width: 4px;
       }
       body:not(.mode-desktop) .player-token {
-        width: 58px;
-        height: 58px;
+        width: 56px;
+        height: 56px;
         border-width: 1.5px;
         padding: 2px 1px;
+        gap: 2px;
       }
       body:not(.mode-desktop) .player-name-input {
-        width: 48px;
-        font-size: 0.52rem;
+        width: 46px;
+        font-size: 0.54rem;
         padding: 1px;
         line-height: 1;
       }
       body:not(.mode-desktop) .player-role-input {
-        width: 36px;
-        font-size: 0.44rem;
+        width: 34px;
+        font-size: 0.46rem;
         padding: 0;
-        margin: 1px 0;
         line-height: 1;
-      }
-      body:not(.mode-desktop) .token-slot-badge {
-        font-size: 0.42rem;
-        line-height: 1;
-        transform: scale(0.95);
       }
       body:not(.mode-desktop) .bench-wing {
         width: 74px;
@@ -695,8 +688,8 @@
         font-size: 0.48rem;
       }
       body:not(.mode-desktop) .bench-wing .player-token {
-        width: 54px;
-        height: 54px;
+        width: 52px;
+        height: 52px;
       }
     }
   </style>
@@ -906,6 +899,12 @@
 
     let playerCoords = JSON.parse(JSON.stringify(HOME_COORDINATES));
     let activeFaults = [];
+
+    function isSetterRole(role) {
+      if (!role) return false;
+      const clean = role.trim().toUpperCase();
+      return clean === "S" || clean.startsWith("SETTER");
+    }
 
     function initDefaultSquad() {
       squad = JSON.parse(JSON.stringify(DEFAULT_NAMES));
@@ -1201,28 +1200,20 @@
       }
     }
 
+    /* Renders name and position centered vertically without the 3rd line, auto-coloring setter red */
     function renderCourtTokens() {
       const container = document.getElementById('courtTokensContainer');
       const state = calculateStateForRotation(currentRotation);
       container.innerHTML = '';
 
-      // Clean concise zone indicators for scannability
-      const slotLabels = {
-        pos1: 'Z1 (RB)',
-        pos2: 'Z2 (RF)',
-        pos3: 'Z3 (MF)',
-        pos4: 'Z4 (LF)',
-        pos5: 'Z5 (LB)',
-        pos6: 'Z6 (MB)'
-      };
-
       ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
         const player = state[posKey];
         const coords = playerCoords[posKey];
         const isServer = (posKey === 'pos1');
+        const isSetter = isSetterRole(player.role);
 
         const token = document.createElement('div');
-        token.className = `player-token ${isServer ? 'server' : ''}`;
+        token.className = `player-token ${isServer ? 'server' : ''} ${isSetter ? 'setter' : ''}`;
         token.id = `token-${posKey}`;
         token.style.left = `${coords.x}%`;
         token.style.top = `${coords.y}%`;
@@ -1245,7 +1236,6 @@
             onchange="onPlayerRoleChange(${player.id}, this.value)"
             onkeydown="if(event.key === 'Enter') this.blur()"
           />
-          <span class="token-slot-badge">${isServer ? '★ ' : ''}${slotLabels[posKey]}</span>
         `;
 
         attachDragHandlers(token, posKey);
@@ -1258,20 +1248,20 @@
       const b2 = document.getElementById('rightBench');
 
       if (state.leftBench && b1) {
+        const isSetter1 = isSetterRole(state.leftBench.role);
         b1.innerHTML = `
-          <div class="player-token">
+          <div class="player-token ${isSetter1 ? 'setter' : ''}">
             <input type="text" class="player-name-input" value="${state.leftBench.name}" title="Click to edit player name" onchange="onPlayerNameChange(${state.leftBench.id}, this.value)" />
             <input type="text" class="player-role-input" value="${state.leftBench.role || 'POS'}" title="Click to edit position/role" onchange="onPlayerRoleChange(${state.leftBench.id}, this.value)" />
-            <span class="token-slot-badge">Bench #1</span>
           </div>
         `;
       }
       if (state.rightBench && b2) {
+        const isSetter2 = isSetterRole(state.rightBench.role);
         b2.innerHTML = `
-          <div class="player-token">
+          <div class="player-token ${isSetter2 ? 'setter' : ''}">
             <input type="text" class="player-name-input" value="${state.rightBench.name}" title="Click to edit player name" onchange="onPlayerNameChange(${state.rightBench.id}, this.value)" />
             <input type="text" class="player-role-input" value="${state.rightBench.role || 'POS'}" title="Click to edit position/role" onchange="onPlayerRoleChange(${state.rightBench.id}, this.value)" />
-            <span class="token-slot-badge">Bench #2</span>
           </div>
         `;
       }
