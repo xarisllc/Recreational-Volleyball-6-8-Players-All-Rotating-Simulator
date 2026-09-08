@@ -397,8 +397,8 @@
 
     /* Draggable Player Token */
     .player-token {
-      width: 72px;
-      height: 72px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
       background: var(--player-court);
       color: white;
@@ -416,7 +416,7 @@
       position: absolute;
       cursor: grab;
       touch-action: none;
-      transition: box-shadow 0.15s, border-color 0.15s, background-color 0.2s, color 0.2s;
+      transition: box-shadow 0.15s, border-color 0.15s, background-color 0.15s;
     }
 
     .player-token:active, .player-token.dragging {
@@ -425,29 +425,17 @@
       z-index: 20;
     }
 
+    /* Setter in front row turns yellow */
     .player-token.setter-front {
       background: var(--player-setter-front) !important;
-      color: #1a1a2e !important;
+      color: #1e293b !important;
       border-color: #ffffff !important;
     }
-    .player-token.setter-front .player-name-input {
-      color: #1a1a2e !important;
-      background: rgba(255, 255, 255, 0.45) !important;
-      border-color: rgba(0, 0, 0, 0.3) !important;
-    }
-    .player-token.setter-front .position-select-btn {
-      color: #1a1a2e !important;
-      background: rgba(255, 255, 255, 0.45) !important;
-      border-color: rgba(0, 0, 0, 0.3) !important;
-    }
-    .player-token.setter-front .token-pos-badge {
-      color: #2c3e50 !important;
-      font-weight: 700 !important;
-    }
-
-    .player-token.server {
-      background: var(--player-court);
-      border-color: #ffffff;
+    .player-token.setter-front .player-name-input,
+    .player-token.setter-front .player-role-input {
+      color: #1e293b !important;
+      background: rgba(255, 255, 255, 0.4) !important;
+      border-color: rgba(0, 0, 0, 0.25) !important;
     }
 
     .player-token.fault {
@@ -455,11 +443,6 @@
       color: #ffffff !important;
       border-color: #ffeaa7 !important;
       box-shadow: 0 0 15px #e74c3c !important;
-    }
-    .player-token.fault .player-name-input,
-    .player-token.fault .position-select-btn {
-      color: #ffffff !important;
-      background: rgba(0, 0, 0, 0.4) !important;
     }
 
     .bench-wing .player-token {
@@ -477,60 +460,36 @@
       border-radius: 4px;
       color: #fff;
       font-weight: bold;
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       text-align: center;
-      padding: 1px;
+      padding: 1px 2px;
       outline: none;
       box-sizing: border-box;
       pointer-events: auto;
     }
 
-    .player-name-input:focus {
-      background: rgba(0, 0, 0, 0.85);
-      border-color: #ffd700;
-      color: #ffffff !important;
-    }
-
-    /* Interactive Dropdown Button for Positions */
-    .position-select-btn {
-      width: 44px;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.4);
+    .player-role-input {
+      width: 52px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px dashed rgba(255, 255, 255, 0.4);
       border-radius: 3px;
       color: #ffeaa7;
+      font-size: 0.58rem;
       font-weight: 800;
-      font-size: 0.6rem;
-      text-align: center;
-      padding: 1px 2px;
-      box-sizing: border-box;
-      margin-top: 1px;
       text-transform: uppercase;
-      cursor: pointer;
+      text-align: center;
+      padding: 1px;
+      margin-top: 2px;
+      outline: none;
+      box-sizing: border-box;
       pointer-events: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
-      line-height: 1;
-      box-shadow: none;
+      letter-spacing: 0.3px;
     }
 
-    .position-select-btn:hover {
-      background: rgba(0, 0, 0, 0.65);
-      border-color: #ffd700;
-    }
-
-    .position-caret {
-      font-size: 0.45rem;
-      opacity: 0.7;
-    }
-
-    .token-pos-badge {
-      font-size: 0.54rem;
-      opacity: 0.9;
-      pointer-events: none;
-      margin-top: 1px;
-      letter-spacing: 0.2px;
+    .player-name-input:focus, .player-role-input:focus {
+      background: rgba(0, 0, 0, 0.85) !important;
+      border-color: #ffd700 !important;
+      color: #ffffff !important;
     }
 
     #overlapCanvas {
@@ -605,59 +564,6 @@
       text-align: center;
     }
 
-    /* Modal Dropdown Menu */
-    .position-menu-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: transparent;
-      z-index: 1000;
-      display: none;
-    }
-
-    .position-menu {
-      position: absolute;
-      background: #0f172a;
-      border: 2px solid #00d2d3;
-      border-radius: 8px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.8);
-      z-index: 1001;
-      display: none;
-      flex-direction: column;
-      padding: 4px;
-      min-width: 110px;
-      max-width: 140px;
-      box-sizing: border-box;
-    }
-
-    .pos-menu-item {
-      background: transparent;
-      border: none;
-      color: #ecf0f1;
-      padding: 5px 8px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-align: left;
-      border-radius: 4px;
-      cursor: pointer;
-      box-shadow: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .pos-menu-item:hover {
-      background: #1f4068;
-      color: #00ffcc;
-    }
-
-    .pos-menu-item.active-pos {
-      background: #0984e3;
-      color: #fff;
-    }
-
     /* Responsive Mode Overrides */
     body.mode-desktop .arena-container {
       flex-direction: row !important;
@@ -687,16 +593,15 @@
       padding: 1px !important;
     }
     body.mode-mobile .player-name-input {
-      width: 42px !important;
-      font-size: 0.54rem !important;
+      width: 44px !important;
+      font-size: 0.58rem !important;
+      padding: 1px !important;
+    }
+    body.mode-mobile .player-role-input {
+      width: 40px !important;
+      font-size: 0.48rem !important;
       padding: 0 !important;
     }
-    body.mode-mobile .position-select-btn {
-      width: 32px !important;
-      font-size: 0.5rem !important;
-      padding: 0 !important;
-    }
-    body.mode-mobile .token-pos-badge { font-size: 0.44rem !important; }
     body.mode-mobile .bench-wing {
       width: 72px !important;
       min-height: 310px !important;
@@ -733,15 +638,12 @@
         border-width: 1.5px;
       }
       body:not(.mode-desktop) .player-name-input {
-        width: 42px;
-        font-size: 0.54rem;
+        width: 44px;
+        font-size: 0.58rem;
       }
-      body:not(.mode-desktop) .position-select-btn {
-        width: 32px;
-        font-size: 0.5rem;
-      }
-      body:not(.mode-desktop) .token-pos-badge {
-        font-size: 0.44rem;
+      body:not(.mode-desktop) .player-role-input {
+        width: 40px;
+        font-size: 0.48rem;
       }
       body:not(.mode-desktop) .bench-wing {
         width: 72px;
@@ -766,9 +668,10 @@
 </head>
 <body class="mode-auto">
 
+  <!-- Main Application Header -->
   <h1>Simeon All-Rotating Recreational Volleyball Simulator</h1>
   <p class="subtitle">
-    Click on any position badge to open the <b>Position Selector Dropdown</b>. Setters (S) stay <b>green in the back row</b> and turn <b>yellow in the front row</b>!
+    Compare <b>Home</b>, <b>Base</b>, <b>Serve</b>, and <b>Receive</b>. Setters turn <b>yellow in the front row</b> and remain <b>green in the back row</b>. Edit names and position tags directly!
   </p>
 
   <!-- Device Formatter -->
@@ -803,7 +706,7 @@
       </div>
 
       <div class="config-group">
-        <span class="config-label">Rotation Name:</span>
+        <span class="config-label">Save New:</span>
         <input type="text" id="rotationNameInput" class="rotation-name-input" placeholder="e.g. Stacked P1" style="width: 120px;">
         <button class="save-btn" onclick="saveNamedRotation()">💾 Save</button>
       </div>
@@ -902,37 +805,24 @@
     <button class="nav-btn" onclick="goToRotation(currentRotation - 1)">&larr; Prev Rotation</button>
     <button class="nav-btn" onclick="goToRotation(currentRotation + 1)">Next Rotation &rarr;</button>
     <button class="reset-pos-btn" onclick="resetScenarioFormation()">Reset Scenario Layout</button>
-    <button class="del-btn" onclick="resetToDefaults()">Reset Names & Positions</button>
+    <button class="del-btn" onclick="resetToDefaults()">Reset Lineup</button>
   </div>
 
   <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
 
-  <!-- Position Dropdown Popup Menu -->
-  <div id="positionMenuBackdrop" class="position-menu-backdrop" onclick="closePositionMenu()"></div>
-  <div id="positionMenu" class="position-menu"></div>
-
   <script>
     const MY_EMAIL = "your-email@example.com";
 
-    // Standard Volleyball Positions
-    const AVAILABLE_POSITIONS = [
-      { code: "S", name: "Setter" },
-      { code: "OH", name: "Outside Hitter" },
-      { code: "MB", name: "Middle Blocker" },
-      { code: "OPP", name: "Opposite / RS" },
-      { code: "L", name: "Libero" },
-      { code: "DS", name: "Defensive Specialist" }
-    ];
-
+    // Default squad with configurable names and positions/roles
     const DEFAULT_NAMES = [
-      { id: 1, name: "Alex", position: "S" },
-      { id: 2, name: "Jordan", position: "OH" },
-      { id: 3, name: "Taylor", position: "MB" },
-      { id: 4, name: "Sam", position: "OPP" },
-      { id: 5, name: "Morgan", position: "OH" },
-      { id: 6, name: "Casey", position: "MB" },
-      { id: 7, name: "Riley", position: "DS" },
-      { id: 8, name: "Jamie", position: "L" }
+      { id: 1, name: "Alex", position: "S" },      // Starts at Pos 1
+      { id: 2, name: "Jordan", position: "OH" },  // Starts at Pos 6
+      { id: 3, name: "Taylor", position: "MB" },  // Starts at Pos 5
+      { id: 4, name: "Sam", position: "OPP" },    // Starts at Pos 4
+      { id: 5, name: "Morgan", position: "OH" },  // Starts at Pos 3
+      { id: 6, name: "Casey", position: "MB" },   // Starts at Pos 2
+      { id: 7, name: "Riley", position: "DS" },   // Left Bench
+      { id: 8, name: "Jamie", position: "DS" }    // Right Bench
     ];
 
     const HOME_COORDINATES = {
@@ -1083,6 +973,14 @@
       document.getElementById('logBox').innerText = `Reset layout for current scenario in Rotation ${currentRotation}.`;
     }
 
+    /* Check if player is designated as Setter */
+    function isPlayerSetter(player) {
+      if (!player) return false;
+      const posText = (player.position || '').trim().toUpperCase();
+      const nameText = (player.name || '').trim().toUpperCase();
+      return posText === 'S' || posText.includes('SET') || nameText.includes('SETTER');
+    }
+
     function checkPositionalFaults() {
       if (currentScenario === 'base') {
         activeFaults = [];
@@ -1170,7 +1068,7 @@
 
     function attachDragHandlers(el, posKey) {
       const onPointerDown = (e) => {
-        if (e.target.tagName.toLowerCase() === 'input' || e.target.closest('.position-select-btn')) return;
+        if (e.target.tagName.toLowerCase() === 'input') return;
         draggedToken = el;
         draggedPosKey = posKey;
         el.classList.add('dragging');
@@ -1246,6 +1144,7 @@
       currentRotation = targetRot;
       const state = calculateStateForRotation(currentRotation);
 
+      // Default to 'home' scenario on every rotation switch
       currentScenario = 'home';
       document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
       const homeBtn = document.getElementById('btnScenarioHome');
@@ -1269,59 +1168,12 @@
       }
     }
 
-    /* Position Dropdown Logic */
-    let currentOpenPlayerId = null;
-
-    function openPositionMenu(event, playerId) {
-      event.stopPropagation();
-      currentOpenPlayerId = playerId;
-
+    function onPlayerPositionChange(playerId, newPosition) {
       const player = squad.find(p => p.id === playerId);
-      const menu = document.getElementById('positionMenu');
-      const backdrop = document.getElementById('positionMenuBackdrop');
-      
-      menu.innerHTML = '';
-      AVAILABLE_POSITIONS.forEach(pos => {
-        const item = document.createElement('button');
-        item.className = `pos-menu-item ${player && player.position === pos.code ? 'active-pos' : ''}`;
-        item.innerHTML = `<span><b>${pos.code}</b> - ${pos.name}</span>`;
-        item.onclick = () => selectPosition(pos.code);
-        menu.appendChild(item);
-      });
-
-      const btnRect = event.currentTarget.getBoundingClientRect();
-      let top = btnRect.bottom + 4;
-      let left = btnRect.left;
-
-      if (left + 140 > window.innerWidth) {
-        left = window.innerWidth - 145;
+      if (player) {
+        player.position = newPosition.trim().toUpperCase() || 'P';
+        goToRotation(currentRotation);
       }
-      if (top + 180 > window.innerHeight) {
-        top = btnRect.top - 180;
-      }
-
-      menu.style.top = `${top}px`;
-      menu.style.left = `${left}px`;
-      menu.style.display = 'flex';
-      backdrop.style.display = 'block';
-    }
-
-    function closePositionMenu() {
-      document.getElementById('positionMenu').style.display = 'none';
-      document.getElementById('positionMenuBackdrop').style.display = 'none';
-      currentOpenPlayerId = null;
-    }
-
-    function selectPosition(newPos) {
-      if (currentOpenPlayerId !== null) {
-        const player = squad.find(p => p.id === currentOpenPlayerId);
-        if (player) {
-          player.position = newPos;
-          goToRotation(currentRotation);
-          document.getElementById('logBox').innerText = `✓ Updated ${player.name}'s position to [${newPos}].`;
-        }
-      }
-      closePositionMenu();
     }
 
     function renderCourtTokens() {
@@ -1329,29 +1181,19 @@
       const state = calculateStateForRotation(currentRotation);
       container.innerHTML = '';
 
-      const posLabels = {
-        pos1: 'Pos 1 (RB)',
-        pos2: 'Pos 2 (RF)',
-        pos3: 'Pos 3 (MF)',
-        pos4: 'Pos 4 (LF)',
-        pos5: 'Pos 5 (LB)',
-        pos6: 'Pos 6 (MB)'
-      };
-
       const frontRowKeys = ['pos4', 'pos3', 'pos2'];
 
       ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
         const player = state[posKey];
         const coords = playerCoords[posKey];
-        const isServer = (posKey === 'pos1');
-        const posTag = (player.position || 'OH').toUpperCase();
-        const isSetter = (posTag === 'S');
         const isFrontRow = frontRowKeys.includes(posKey);
+        const isSetter = isPlayerSetter(player);
 
-        const isSetterFront = isSetter && isFrontRow;
+        // Setter is yellow in front row (Pos 4, 3, 2); stays standard green in back row (Pos 5, 6, 1)
+        const isYellowSetter = isSetter && isFrontRow;
 
         const token = document.createElement('div');
-        token.className = `player-token ${isSetterFront ? 'setter-front' : ''} ${isServer ? 'server' : ''}`;
+        token.className = `player-token ${isYellowSetter ? 'setter-front' : ''}`;
         token.id = `token-${posKey}`;
         token.style.left = `${coords.x}%`;
         token.style.top = `${coords.y}%`;
@@ -1362,19 +1204,18 @@
             type="text" 
             class="player-name-input" 
             value="${player.name}" 
-            title="Edit player name"
+            title="Click to edit player name"
             onchange="onPlayerNameChange(${player.id}, this.value)"
             onkeydown="if(event.key === 'Enter') this.blur()"
           />
-          <button 
-            class="position-select-btn" 
-            title="Click to select position"
-            onclick="openPositionMenu(event, ${player.id})"
-          >
-            <span>${posTag}</span>
-            <span class="position-caret">▼</span>
-          </button>
-          <span class="token-pos-badge">${posLabels[posKey]}</span>
+          <input 
+            type="text" 
+            class="player-role-input" 
+            value="${player.position || 'P'}" 
+            title="Click to edit position (S, OH, MB, OPP, etc.)"
+            onchange="onPlayerPositionChange(${player.id}, this.value)"
+            onkeydown="if(event.key === 'Enter') this.blur()"
+          />
         `;
 
         attachDragHandlers(token, posKey);
@@ -1387,28 +1228,42 @@
       const b2 = document.getElementById('rightBench');
 
       if (state.leftBench && b1) {
-        const posTag = (state.leftBench.position || 'DS').toUpperCase();
         b1.innerHTML = `
           <div class="player-token">
-            <input type="text" class="player-name-input" value="${state.leftBench.name}" onchange="onPlayerNameChange(${state.leftBench.id}, this.value)" />
-            <button class="position-select-btn" onclick="openPositionMenu(event, ${state.leftBench.id})" title="Click to select position">
-              <span>${posTag}</span>
-              <span class="position-caret">▼</span>
-            </button>
-            <span class="token-pos-badge">Bench #1</span>
+            <input 
+              type="text" 
+              class="player-name-input" 
+              value="${state.leftBench.name}" 
+              title="Click to edit player name"
+              onchange="onPlayerNameChange(${state.leftBench.id}, this.value)" 
+            />
+            <input 
+              type="text" 
+              class="player-role-input" 
+              value="${state.leftBench.position || 'BENCH'}" 
+              title="Click to edit position"
+              onchange="onPlayerPositionChange(${state.leftBench.id}, this.value)" 
+            />
           </div>
         `;
       }
       if (state.rightBench && b2) {
-        const posTag = (state.rightBench.position || 'L').toUpperCase();
         b2.innerHTML = `
           <div class="player-token">
-            <input type="text" class="player-name-input" value="${state.rightBench.name}" onchange="onPlayerNameChange(${state.rightBench.id}, this.value)" />
-            <button class="position-select-btn" onclick="openPositionMenu(event, ${state.rightBench.id})" title="Click to select position">
-              <span>${posTag}</span>
-              <span class="position-caret">▼</span>
-            </button>
-            <span class="token-pos-badge">Bench #2</span>
+            <input 
+              type="text" 
+              class="player-name-input" 
+              value="${state.rightBench.name}" 
+              title="Click to edit player name"
+              onchange="onPlayerNameChange(${state.rightBench.id}, this.value)" 
+            />
+            <input 
+              type="text" 
+              class="player-role-input" 
+              value="${state.rightBench.position || 'BENCH'}" 
+              title="Click to edit position"
+              onchange="onPlayerPositionChange(${state.rightBench.id}, this.value)" 
+            />
           </div>
         `;
       }
@@ -1498,7 +1353,7 @@
       currentlyLoadedRotationName = name;
       nameInput.value = '';
       populateRotationsDropdown(name);
-      document.getElementById('logBox').innerText = `✓ Lineup saved under "${name}"!`;
+      document.getElementById('logBox').innerText = `✓ Lineup and positions saved under "${name}"!`;
     }
 
     function syncSelectedRotationName(val) {
@@ -1585,8 +1440,9 @@
     function resetToDefaults() {
       if (confirm("Reset current lineup names and positions to defaults?")) {
         initDefaultSquad();
+        setScenario('home');
         goToRotation(1);
-        document.getElementById('logBox').innerText = "Lineup and positions restored to defaults.";
+        document.getElementById('logBox').innerText = "Lineup names and positions restored to defaults.";
       }
     }
 
@@ -1617,6 +1473,7 @@
 
       updateWingVisibility();
       renderRotationButtons();
+      setScenario(data.currentScenario || 'home');
       goToRotation(data.currentRotation || 1);
     }
 
