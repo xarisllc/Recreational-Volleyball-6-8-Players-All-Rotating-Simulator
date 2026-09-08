@@ -10,10 +10,9 @@
       --court-border: #2980b9;
       --court-line: #ffffff;
       --player-court: #27ae60;
-      --player-server: #27ae60; /* Standard green even while serving */
+      --player-setter-front: #f1c40f;
       --player-bench: #8e44ad;
       --player-fault: #e74c3c;
-      --player-setter-front: #f1c40f; /* Setter turns yellow in the front row */
       --panel-bg: #162447;
       --panel-border: #1f4068;
     }
@@ -398,8 +397,8 @@
 
     /* Draggable Player Token */
     .player-token {
-      width: 68px;
-      height: 68px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       background: var(--player-court);
       color: white;
@@ -417,7 +416,7 @@
       position: absolute;
       cursor: grab;
       touch-action: none;
-      transition: box-shadow 0.15s, border-color 0.15s, background-color 0.15s;
+      transition: box-shadow 0.15s, border-color 0.15s, background-color 0.2s, color 0.2s;
     }
 
     .player-token:active, .player-token.dragging {
@@ -426,44 +425,51 @@
       z-index: 20;
     }
 
-    /* Serving border indicator */
-    .player-token.server {
-      background: var(--player-server);
-      border-color: #ffd700;
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-    }
-
-    /* Setter in Front Row: Yellow styling */
+    /* Setter in front row turns yellow */
     .player-token.setter-front {
       background: var(--player-setter-front) !important;
       color: #1a1a2e !important;
       border-color: #ffffff !important;
-      box-shadow: 0 4px 12px rgba(241, 196, 15, 0.6) !important;
-    }
-    .player-token.setter-front .token-pos-badge {
-      color: #1a1a2e !important;
-      font-weight: 800;
     }
     .player-token.setter-front .player-name-input {
       color: #1a1a2e !important;
-      background: rgba(255, 255, 255, 0.4) !important;
+      background: rgba(255, 255, 255, 0.45) !important;
       border-color: rgba(0, 0, 0, 0.3) !important;
     }
+    .player-token.setter-front .position-tag-input {
+      color: #1a1a2e !important;
+      background: rgba(255, 255, 255, 0.45) !important;
+      border-color: rgba(0, 0, 0, 0.3) !important;
+    }
+    .player-token.setter-front .token-pos-badge {
+      color: #2c3e50 !important;
+      font-weight: 700 !important;
+    }
 
-    /* Overlap Faults (non-setter or true fault) */
+    /* Standard serving token remains standard green */
+    .player-token.server {
+      background: var(--player-court);
+      border-color: #ffffff;
+    }
+
     .player-token.fault {
       background: var(--player-fault) !important;
+      color: #ffffff !important;
       border-color: #ffeaa7 !important;
       box-shadow: 0 0 15px #e74c3c !important;
-      color: #fff !important;
+    }
+    .player-token.fault .player-name-input,
+    .player-token.fault .position-tag-input {
+      color: #ffffff !important;
+      background: rgba(0, 0, 0, 0.4) !important;
     }
 
     .bench-wing .player-token {
       position: relative;
       cursor: default;
       background: var(--player-bench);
-      width: 64px;
-      height: 64px;
+      width: 66px;
+      height: 66px;
     }
 
     .player-name-input {
@@ -473,9 +479,9 @@
       border-radius: 4px;
       color: #fff;
       font-weight: bold;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-align: center;
-      padding: 2px;
+      padding: 1px;
       outline: none;
       box-sizing: border-box;
       pointer-events: auto;
@@ -484,15 +490,39 @@
     .player-name-input:focus {
       background: rgba(0, 0, 0, 0.85);
       border-color: #ffd700;
-      color: #fff !important;
+      color: #ffffff !important;
+    }
+
+    /* Editable Position Input (S, OH, MB, OPP, L, DS, etc.) */
+    .position-tag-input {
+      width: 36px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 3px;
+      color: #ffeaa7;
+      font-weight: 800;
+      font-size: 0.6rem;
+      text-align: center;
+      padding: 0 2px;
+      outline: none;
+      box-sizing: border-box;
+      margin-top: 1px;
+      text-transform: uppercase;
+      pointer-events: auto;
+    }
+
+    .position-tag-input:focus {
+      background: rgba(0, 0, 0, 0.85);
+      border-color: #ffd700;
+      color: #ffffff !important;
     }
 
     .token-pos-badge {
-      font-size: 0.58rem;
+      font-size: 0.54rem;
       opacity: 0.9;
       pointer-events: none;
       margin-top: 1px;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.2px;
     }
 
     #overlapCanvas {
@@ -590,17 +620,22 @@
       border-width: 4px !important;
     }
     body.mode-mobile .player-token {
-      width: 48px !important;
-      height: 48px !important;
+      width: 50px !important;
+      height: 50px !important;
       border-width: 1.5px !important;
       padding: 1px !important;
     }
     body.mode-mobile .player-name-input {
       width: 42px !important;
-      font-size: 0.58rem !important;
-      padding: 1px !important;
+      font-size: 0.54rem !important;
+      padding: 0 !important;
     }
-    body.mode-mobile .token-pos-badge { font-size: 0.48rem !important; }
+    body.mode-mobile .position-tag-input {
+      width: 28px !important;
+      font-size: 0.5rem !important;
+      padding: 0 !important;
+    }
+    body.mode-mobile .token-pos-badge { font-size: 0.44rem !important; }
     body.mode-mobile .bench-wing {
       width: 72px !important;
       min-height: 310px !important;
@@ -610,8 +645,8 @@
     body.mode-mobile .bench-sub-indicator { font-size: 0.5rem !important; padding: 3px 2px !important; }
     body.mode-mobile .bench-flow-note { font-size: 0.48rem !important; }
     body.mode-mobile .bench-wing .player-token {
-      width: 46px !important;
-      height: 46px !important;
+      width: 48px !important;
+      height: 48px !important;
     }
     body.mode-mobile .config-row {
       flex-direction: column !important;
@@ -632,16 +667,20 @@
         border-width: 4px;
       }
       body:not(.mode-desktop) .player-token {
-        width: 48px;
-        height: 48px;
+        width: 50px;
+        height: 50px;
         border-width: 1.5px;
       }
       body:not(.mode-desktop) .player-name-input {
         width: 42px;
-        font-size: 0.58rem;
+        font-size: 0.54rem;
+      }
+      body:not(.mode-desktop) .position-tag-input {
+        width: 28px;
+        font-size: 0.5rem;
       }
       body:not(.mode-desktop) .token-pos-badge {
-        font-size: 0.48rem;
+        font-size: 0.44rem;
       }
       body:not(.mode-desktop) .bench-wing {
         width: 72px;
@@ -658,18 +697,17 @@
         font-size: 0.48rem;
       }
       body:not(.mode-desktop) .bench-wing .player-token {
-        width: 46px;
-        height: 46px;
+        width: 48px;
+        height: 48px;
       }
     }
   </style>
 </head>
 <body class="mode-auto">
 
-  <!-- Main Application Header -->
   <h1>Simeon All-Rotating Recreational Volleyball Simulator</h1>
   <p class="subtitle">
-    Compare <b>Home</b>, <b>Base</b>, <b>Serve</b>, and <b>Receive</b>. Drag circles to check overlaps and click <b>Copy Share Link</b> to share with others on GitHub!
+    Setters (S) stay <b>green in the back row</b> and turn <b>yellow in the front row</b>. Positions (S, OH, MB, etc.) and names are fully editable!
   </p>
 
   <!-- Device Formatter -->
@@ -704,7 +742,7 @@
       </div>
 
       <div class="config-group">
-        <span class="config-label">Save New:</span>
+        <span class="config-label">Rotation Name:</span>
         <input type="text" id="rotationNameInput" class="rotation-name-input" placeholder="e.g. Stacked P1" style="width: 120px;">
         <button class="save-btn" onclick="saveNamedRotation()">💾 Save</button>
       </div>
@@ -803,7 +841,7 @@
     <button class="nav-btn" onclick="goToRotation(currentRotation - 1)">&larr; Prev Rotation</button>
     <button class="nav-btn" onclick="goToRotation(currentRotation + 1)">Next Rotation &rarr;</button>
     <button class="reset-pos-btn" onclick="resetScenarioFormation()">Reset Scenario Layout</button>
-    <button class="del-btn" onclick="resetToDefaults()">Reset Names</button>
+    <button class="del-btn" onclick="resetToDefaults()">Reset Names & Positions</button>
   </div>
 
   <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
@@ -811,15 +849,16 @@
   <script>
     const MY_EMAIL = "your-email@example.com";
 
+    // Squad with editable player names and default volleyball position assignments
     const DEFAULT_NAMES = [
-      { id: 1, name: "S" }, // Default Setter
-      { id: 2, name: "Jordan" },
-      { id: 3, name: "Taylor" },
-      { id: 4, name: "Sam" },
-      { id: 5, name: "Morgan" },
-      { id: 6, name: "Casey" },
-      { id: 7, name: "Riley" },
-      { id: 8, name: "Jamie" }
+      { id: 1, name: "Alex", position: "S" },    // Setter starts at Pos 1
+      { id: 2, name: "Jordan", position: "OH" }, // Pos 6
+      { id: 3, name: "Taylor", position: "MB" }, // Pos 5
+      { id: 4, name: "Sam", position: "OPP" },   // Pos 4
+      { id: 5, name: "Morgan", position: "OH" }, // Pos 3
+      { id: 6, name: "Casey", position: "MB" },  // Pos 2
+      { id: 7, name: "Riley", position: "DS" },  // Left Bench
+      { id: 8, name: "Jamie", position: "L" }    // Right Bench
     ];
 
     const HOME_COORDINATES = {
@@ -872,13 +911,6 @@
 
     function initDefaultSquad() {
       squad = JSON.parse(JSON.stringify(DEFAULT_NAMES));
-    }
-
-    /* Helper: identifies if a player is the Setter */
-    function isSetterPlayer(player) {
-      if (!player) return false;
-      const nm = (player.name || '').trim().toLowerCase();
-      return nm === 's' || nm === 'setter' || nm.startsWith('s ') || nm.startsWith('s(');
     }
 
     function stepOneRotation(prev) {
@@ -1006,9 +1038,7 @@
     function updateFaultUI() {
       const banner = document.getElementById('faultBanner');
       const positions = ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'];
-      const state = calculateStateForRotation(currentRotation);
 
-      // Reset fault styling
       positions.forEach(pos => {
         const token = document.getElementById(`token-${pos}`);
         if (token) token.classList.remove('fault');
@@ -1017,19 +1047,11 @@
       if (activeFaults.length > 0) {
         banner.classList.add('show');
         banner.innerText = `⚠️ OUT OF ROTATION: ${activeFaults[0].msg}`;
-
         activeFaults.forEach(f => {
-          const pA = state[f.posA];
-          const pB = state[f.posB];
           const tA = document.getElementById(`token-${f.posA}`);
           const tB = document.getElementById(`token-${f.posB}`);
-
-          // Rule: If player is Setter in front row, they stay yellow instead of turning red
-          const isAFrontSetter = isSetterPlayer(pA) && ['pos4', 'pos3', 'pos2'].includes(f.posA);
-          const isBFrontSetter = isSetterPlayer(pB) && ['pos4', 'pos3', 'pos2'].includes(f.posB);
-
-          if (tA && !isAFrontSetter) tA.classList.add('fault');
-          if (tB && !isBFrontSetter) tB.classList.add('fault');
+          if (tA) tA.classList.add('fault');
+          if (tB) tB.classList.add('fault');
         });
       } else {
         banner.classList.remove('show');
@@ -1150,7 +1172,7 @@
       currentRotation = targetRot;
       const state = calculateStateForRotation(currentRotation);
 
-      // Default to 'home' scenario on rotation selection
+      // Default to 'home' scenario on every rotation click
       currentScenario = 'home';
       document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
       const homeBtn = document.getElementById('btnScenarioHome');
@@ -1174,6 +1196,14 @@
       }
     }
 
+    function onPlayerPositionChange(playerId, newPos) {
+      const player = squad.find(p => p.id === playerId);
+      if (player) {
+        player.position = newPos.trim().toUpperCase() || "OH";
+        goToRotation(currentRotation);
+      }
+    }
+
     function renderCourtTokens() {
       const container = document.getElementById('courtTokensContainer');
       const state = calculateStateForRotation(currentRotation);
@@ -1188,25 +1218,21 @@
         pos6: 'Pos 6 (MB)'
       };
 
+      const frontRowKeys = ['pos4', 'pos3', 'pos2'];
+
       ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
         const player = state[posKey];
         const coords = playerCoords[posKey];
         const isServer = (posKey === 'pos1');
-        const isSetter = isSetterPlayer(player);
-        const isFrontRow = ['pos4', 'pos3', 'pos2'].includes(posKey);
+        const posTag = (player.position || 'OH').toUpperCase();
+        const isSetter = (posTag === 'S');
+        const isFrontRow = frontRowKeys.includes(posKey);
 
-        // Core Color Rules:
-        // 1. Front-row setter = Yellow (.setter-front)
-        // 2. Back-row setter (Pos 1, 6, 5) = Standard Green (even while serving)
-        let tokenClass = 'player-token';
-        if (isSetter && isFrontRow) {
-          tokenClass += ' setter-front';
-        } else if (isServer) {
-          tokenClass += ' server'; // server maintains green with gold border
-        }
+        // Setter is yellow in the front row, standard green in back row
+        const isSetterFront = isSetter && isFrontRow;
 
         const token = document.createElement('div');
-        token.className = tokenClass;
+        token.className = `player-token ${isSetterFront ? 'setter-front' : ''} ${isServer ? 'server' : ''}`;
         token.id = `token-${posKey}`;
         token.style.left = `${coords.x}%`;
         token.style.top = `${coords.y}%`;
@@ -1217,8 +1243,16 @@
             type="text" 
             class="player-name-input" 
             value="${player.name}" 
-            title="Click to edit name"
+            title="Edit player name"
             onchange="onPlayerNameChange(${player.id}, this.value)"
+            onkeydown="if(event.key === 'Enter') this.blur()"
+          />
+          <input 
+            type="text" 
+            class="position-tag-input" 
+            value="${posTag}" 
+            title="Edit position (S, OH, MB, OPP, L, DS)"
+            onchange="onPlayerPositionChange(${player.id}, this.value)"
             onkeydown="if(event.key === 'Enter') this.blur()"
           />
           <span class="token-pos-badge">${posLabels[posKey]}</span>
@@ -1234,17 +1268,21 @@
       const b2 = document.getElementById('rightBench');
 
       if (state.leftBench && b1) {
+        const posTag = (state.leftBench.position || 'DS').toUpperCase();
         b1.innerHTML = `
           <div class="player-token">
             <input type="text" class="player-name-input" value="${state.leftBench.name}" onchange="onPlayerNameChange(${state.leftBench.id}, this.value)" />
+            <input type="text" class="position-tag-input" value="${posTag}" onchange="onPlayerPositionChange(${state.leftBench.id}, this.value)" />
             <span class="token-pos-badge">Bench #1</span>
           </div>
         `;
       }
       if (state.rightBench && b2) {
+        const posTag = (state.rightBench.position || 'L').toUpperCase();
         b2.innerHTML = `
           <div class="player-token">
             <input type="text" class="player-name-input" value="${state.rightBench.name}" onchange="onPlayerNameChange(${state.rightBench.id}, this.value)" />
+            <input type="text" class="position-tag-input" value="${posTag}" onchange="onPlayerPositionChange(${state.rightBench.id}, this.value)" />
             <span class="token-pos-badge">Bench #2</span>
           </div>
         `;
@@ -1420,10 +1458,11 @@
     }
 
     function resetToDefaults() {
-      if (confirm("Reset current lineup names to defaults?")) {
+      if (confirm("Reset current lineup names and positions to defaults?")) {
         initDefaultSquad();
+        setScenario('home');
         goToRotation(1);
-        document.getElementById('logBox').innerText = "Lineup and names restored to defaults.";
+        document.getElementById('logBox').innerText = "Lineup and positions restored to defaults.";
       }
     }
 
