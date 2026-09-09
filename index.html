@@ -387,7 +387,6 @@
       z-index: 20;
     }
 
-    /* Active Setter turns Yellow */
     .player-token.setter-active {
       background: var(--player-setter-active) !important;
       color: #1e293b !important;
@@ -434,7 +433,6 @@
       pointer-events: auto;
     }
 
-    /* Position Dropdown Inside Token */
     .player-role-select {
       width: 56px;
       background: rgba(0, 0, 0, 0.4);
@@ -675,7 +673,7 @@
       font-style: italic;
     }
 
-    /* Print View Container (Hidden on Screen) */
+    /* Print Canvas (Hidden on regular screen) */
     #printContainer {
       display: none;
     }
@@ -750,11 +748,11 @@
     }
 
     /* =======================================================
-       1-PAGE PRINT ENGINE (Letter, Legal, A4, Portrait/Landscape)
+       EXACT WEBPAGE-MATCHED 1-PAGE PRINT ENGINE
        ======================================================= */
     @media print {
       @page {
-        margin: 0.25in;
+        margin: 0.2in;
         size: auto;
       }
 
@@ -766,19 +764,21 @@
         width: 100% !important;
         height: 100% !important;
         overflow: hidden !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
 
-      /* Hide interactive web components */
+      /* Hide web controls */
       h1, p.subtitle, .config-card, .rotation-toolbar, .scenario-toolbar,
       .fault-indicator-bar, .arena-container, .controls, .log-panel, .comments-card {
         display: none !important;
       }
 
-      /* Display print canvas */
+      /* Container fits 1 page */
       #printContainer {
         display: flex !important;
         flex-direction: column !important;
-        width: 100vw !important;
+        width: 100% !important;
         height: 98vh !important;
         box-sizing: border-box !important;
         page-break-inside: avoid !important;
@@ -787,25 +787,25 @@
       .print-header {
         display: flex !important;
         justify-content: space-between !important;
-        align-items: flex-end !important;
-        border-bottom: 2px solid #000 !important;
-        padding-bottom: 3px !important;
+        align-items: center !important;
+        border-bottom: 2px solid #162447 !important;
+        padding-bottom: 2px !important;
         margin-bottom: 4px !important;
       }
 
       .print-title {
-        font-size: 13pt !important;
-        font-weight: 800 !important;
-        color: #000 !important;
+        font-size: 11pt !important;
+        font-weight: 900 !important;
+        color: #162447 !important;
       }
 
       .print-meta {
-        font-size: 8pt !important;
+        font-size: 7.5pt !important;
         font-weight: bold !important;
-        color: #333 !important;
+        color: #475569 !important;
       }
 
-      /* 1-page compact dynamic grid */
+      /* Grid containing all rotations */
       .print-grid {
         flex: 1 !important;
         display: grid !important;
@@ -815,102 +815,160 @@
         box-sizing: border-box !important;
       }
 
-      /* When teamSize is 6, use 3 columns x 2 rows */
       .print-grid.size-6 {
         grid-template-columns: repeat(3, 1fr) !important;
         grid-template-rows: repeat(2, 1fr) !important;
       }
 
+      /* Rotation Card Replica */
       .print-card {
-        border: 1.5px solid #000 !important;
-        border-radius: 4px !important;
+        border: 1px solid #94a3b8 !important;
+        border-radius: 6px !important;
         padding: 2px !important;
         display: flex !important;
         flex-direction: column !important;
         box-sizing: border-box !important;
-        background: #fff !important;
+        background: #f8fafc !important;
+        overflow: hidden !important;
       }
 
       .print-card-title {
-        font-size: 8pt !important;
+        font-size: 7pt !important;
         font-weight: 800 !important;
         text-align: center !important;
-        background: #eee !important;
-        border-bottom: 1px solid #000 !important;
+        background: #162447 !important;
+        color: #fff !important;
+        border-radius: 3px !important;
         padding: 1px 0 !important;
         margin-bottom: 2px !important;
       }
 
-      .print-court {
+      /* Mini Arena */
+      .print-arena {
         flex: 1 !important;
-        border: 1.5px solid #2980b9 !important;
-        background: #fdf2e9 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 3px !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Exact Wood Court */
+      .print-court-box {
+        flex: 1 !important;
+        height: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+      }
+
+      .print-net {
+        width: 100% !important;
+        height: 3px !important;
+        background: repeating-linear-gradient(90deg, #333, #333 4px, #fff 4px, #fff 8px) !important;
+        margin-bottom: 1px !important;
+        border-radius: 1px !important;
+      }
+
+      .print-court-surface {
+        width: 100% !important;
+        flex: 1 !important;
+        background-color: var(--court-wood) !important;
+        border: 2.5px solid var(--court-border) !important;
+        border-radius: 3px !important;
         position: relative !important;
-        border-radius: 2px !important;
-        display: grid !important;
-        grid-template-columns: 1fr 1fr 1fr !important;
-        grid-template-rows: 1fr 1fr !important;
         box-sizing: border-box !important;
         overflow: hidden !important;
       }
 
-      .print-court::after {
-        content: "" !important;
+      .print-attack-line {
         position: absolute !important;
         top: 33.33% !important;
         left: 0 !important;
         width: 100% !important;
-        height: 1px !important;
-        background: #e67e22 !important;
+        height: 1.5px !important;
+        background-color: #ffffff !important;
+        opacity: 0.9 !important;
       }
 
-      .print-slot {
+      /* Exact Circular Player Tokens in Print */
+      .print-token {
+        width: 24px !important;
+        height: 24px !important;
+        border-radius: 50% !important;
+        background: var(--player-court) !important;
+        color: #ffffff !important;
+        border: 1px solid #ffffff !important;
+        position: absolute !important;
+        transform: translate(-50%, -50%) !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
         align-items: center !important;
-        border: 0.5px dashed rgba(0,0,0,0.15) !important;
+        box-sizing: border-box !important;
+        z-index: 5 !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+      }
+
+      .print-token.is-setter {
+        background: var(--player-setter-active) !important;
+        color: #1e293b !important;
+        border-color: #000 !important;
+      }
+
+      .print-token-name {
+        font-size: 4.8pt !important;
+        font-weight: 800 !important;
+        line-height: 1 !important;
+        max-width: 22px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+      }
+
+      .print-token-role {
+        font-size: 3.8pt !important;
+        font-weight: 900 !important;
+        line-height: 1 !important;
+        opacity: 0.95 !important;
+      }
+
+      /* Bench Wings in Print */
+      .print-wing {
+        width: 28px !important;
+        height: 94% !important;
+        background: #162447 !important;
+        border: 1px solid #1f4068 !important;
+        border-radius: 4px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
         padding: 1px !important;
         box-sizing: border-box !important;
       }
 
-      .print-player {
-        width: 90% !important;
-        border-radius: 3px !important;
+      .print-wing.hidden {
+        display: none !important;
+      }
+
+      .print-wing-title {
+        font-size: 3.5pt !important;
+        font-weight: 800 !important;
+        color: #00d2d3 !important;
+        text-transform: uppercase !important;
+        margin-bottom: 2px !important;
         text-align: center !important;
-        font-size: 6.5pt !important;
-        font-weight: bold !important;
-        line-height: 1.1 !important;
-        padding: 1px 0 !important;
-        border: 1px solid #1e293b !important;
-        background: #27ae60 !important;
-        color: #fff !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        white-space: nowrap !important;
       }
 
-      .print-player.is-setter {
-        background: #f1c40f !important;
-        color: #000 !important;
-        border-color: #000 !important;
-      }
-
-      .print-player-role {
-        font-size: 5pt !important;
-        font-weight: 900 !important;
-        display: block !important;
-        line-height: 1 !important;
-      }
-
-      .print-bench-row {
-        font-size: 6pt !important;
-        display: flex !important;
-        justify-content: space-around !important;
-        border-top: 1px dashed #777 !important;
-        padding-top: 1px !important;
-        margin-top: 2px !important;
-        color: #333 !important;
+      .print-wing .print-token {
+        position: relative !important;
+        transform: none !important;
+        background: var(--player-bench) !important;
+        width: 22px !important;
+        height: 22px !important;
       }
     }
   </style>
@@ -1942,62 +2000,93 @@
     }
 
     /* =======================================================
-       1-PAGE PRINT ENGINE LOGIC
+       EXACT WEBPAGE-STYLE 1-PAGE PRINT ENGINE
        ======================================================= */
     function triggerPrintOnePage() {
       const meta = document.getElementById('printMetaText');
       const grid = document.getElementById('printGridContainer');
 
-      meta.innerText = `Team Size: ${teamSize} | Offensive System: ${offensiveSystem} | ${new Date().toLocaleDateString()}`;
+      meta.innerText = `Team Size: ${teamSize} | System: ${offensiveSystem} | ${new Date().toLocaleDateString()}`;
       grid.className = `print-grid ${teamSize === 6 ? 'size-6' : ''}`;
       grid.innerHTML = '';
 
-      // Build compact layout for all rotations
+      // Standard home percentages to position circular tokens on the court
+      const defaultPositions = {
+        pos4: { x: 18, y: 22 },
+        pos3: { x: 50, y: 20 },
+        pos2: { x: 82, y: 22 },
+        pos5: { x: 18, y: 74 },
+        pos6: { x: 50, y: 74 },
+        pos1: { x: 82, y: 78 }
+      };
+
       for (let rot = 1; rot <= teamSize; rot++) {
         const state = calculateStateForRotation(rot);
         const card = document.createElement('div');
         card.className = 'print-card';
 
-        // Render player slots in exact FIVB court order:
-        // Top Row (Front): Pos 4 (LF), Pos 3 (MF), Pos 2 (RF)
-        // Bottom Row (Back): Pos 5 (LB), Pos 6 (MB), Pos 1 (RB / Server)
-        const courtOrder = ['pos4', 'pos3', 'pos2', 'pos5', 'pos6', 'pos1'];
-        let slotsHTML = '';
+        // 6 circular tokens on court
+        let courtTokensHTML = '';
+        ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+          const pl = state[posKey];
+          const coords = defaultPositions[posKey];
+          const isYellow = shouldHighlightSetter(pl, posKey, state);
 
-        courtOrder.forEach(key => {
-          const pl = state[key];
-          const isYellow = shouldHighlightSetter(pl, key, state);
-          const isServer = (key === 'pos1');
-          slotsHTML += `
-            <div class="print-slot">
-              <div class="print-player ${isYellow ? 'is-setter' : ''}">
-                ${escapeHTML(pl.name)} ${isServer ? '🏐' : ''}
-                <span class="print-player-role">${escapeHTML(pl.position || '')}</span>
-              </div>
+          courtTokensHTML += `
+            <div class="print-token ${isYellow ? 'is-setter' : ''}" style="left:${coords.x}%; top:${coords.y}%;">
+              <span class="print-token-name">${escapeHTML(pl.name)}</span>
+              <span class="print-token-role">${escapeHTML(pl.position || '')}</span>
             </div>
           `;
         });
 
-        // Bench player summaries for 7 or 8 players
-        let benchHTML = '';
-        if (teamSize === 7) {
-          const bp = (sevenPlayerSubSide === 'left') ? state.leftBench : state.rightBench;
-          if (bp) benchHTML = `<div class="print-bench-row"><span>Bench: <b>${escapeHTML(bp.name)}</b> (${escapeHTML(bp.position || 'Sub')})</span></div>`;
-        } else if (teamSize === 8) {
-          benchHTML = `
-            <div class="print-bench-row">
-              <span>L-Bench: <b>${escapeHTML(state.leftBench ? state.leftBench.name : '')}</b></span>
-              <span>R-Bench: <b>${escapeHTML(state.rightBench ? state.rightBench.name : '')}</b></span>
+        // Left Bench Wing (7 or 8 players)
+        let leftWingHTML = '';
+        const showLeftWing = (teamSize === 8) || (teamSize === 7 && sevenPlayerSubSide === 'left');
+        if (showLeftWing && state.leftBench) {
+          leftWingHTML = `
+            <div class="print-wing">
+              <span class="print-wing-title">Bench</span>
+              <div class="print-token">
+                <span class="print-token-name">${escapeHTML(state.leftBench.name)}</span>
+                <span class="print-token-role">${escapeHTML(state.leftBench.position || '')}</span>
+              </div>
             </div>
           `;
+        } else if (teamSize > 6) {
+          leftWingHTML = `<div class="print-wing hidden"></div>`;
+        }
+
+        // Right Bench Wing (7 or 8 players)
+        let rightWingHTML = '';
+        const showRightWing = (teamSize === 8) || (teamSize === 7 && sevenPlayerSubSide === 'right');
+        if (showRightWing && state.rightBench) {
+          rightWingHTML = `
+            <div class="print-wing">
+              <span class="print-wing-title">Bench</span>
+              <div class="print-token">
+                <span class="print-token-name">${escapeHTML(state.rightBench.name)}</span>
+                <span class="print-token-role">${escapeHTML(state.rightBench.position || '')}</span>
+              </div>
+            </div>
+          `;
+        } else if (teamSize > 6) {
+          rightWingHTML = `<div class="print-wing hidden"></div>`;
         }
 
         card.innerHTML = `
           <div class="print-card-title">Rotation ${rot} (Server: ${escapeHTML(state.pos1.name)})</div>
-          <div class="print-court">
-            ${slotsHTML}
+          <div class="print-arena">
+            ${leftWingHTML}
+            <div class="print-court-box">
+              <div class="print-net"></div>
+              <div class="print-court-surface">
+                <div class="print-attack-line"></div>
+                ${courtTokensHTML}
+              </div>
+            </div>
+            ${rightWingHTML}
           </div>
-          ${benchHTML}
         `;
         grid.appendChild(card);
       }
