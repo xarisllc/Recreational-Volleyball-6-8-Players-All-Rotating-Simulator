@@ -397,8 +397,8 @@
 
     /* Draggable Player Token */
     .player-token {
-      width: 70px;
-      height: 70px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       background: var(--player-court);
       color: white;
@@ -431,11 +431,15 @@
       color: #1e293b !important;
       border-color: #ffffff !important;
     }
-    .player-token.setter-active .player-name-input,
-    .player-token.setter-active .player-role-input {
+    .player-token.setter-active .player-name-input {
       color: #1e293b !important;
       background: rgba(255, 255, 255, 0.45) !important;
       border-color: rgba(0, 0, 0, 0.25) !important;
+    }
+    .player-token.setter-active .player-role-select {
+      color: #1e293b !important;
+      background: rgba(255, 255, 255, 0.65) !important;
+      border-color: rgba(0, 0, 0, 0.3) !important;
     }
 
     .player-token.fault {
@@ -449,8 +453,8 @@
       position: relative;
       cursor: default;
       background: var(--player-bench);
-      width: 66px;
-      height: 66px;
+      width: 68px;
+      height: 68px;
     }
 
     .player-name-input {
@@ -468,25 +472,31 @@
       pointer-events: auto;
     }
 
-    .player-role-input {
-      width: 52px;
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px dashed rgba(255, 255, 255, 0.4);
-      border-radius: 3px;
+    /* Position Dropdown Inside Token */
+    .player-role-select {
+      width: 56px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 4px;
       color: #ffeaa7;
-      font-size: 0.58rem;
+      font-size: 0.6rem;
       font-weight: 800;
-      text-transform: uppercase;
       text-align: center;
-      padding: 1px;
+      padding: 1px 0;
       margin-top: 2px;
       outline: none;
       box-sizing: border-box;
       pointer-events: auto;
-      letter-spacing: 0.3px;
+      cursor: pointer;
     }
 
-    .player-name-input:focus, .player-role-input:focus {
+    .player-role-select option {
+      background: #0f172a;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .player-name-input:focus, .player-role-select:focus {
       background: rgba(0, 0, 0, 0.85) !important;
       border-color: #ffd700 !important;
       color: #ffffff !important;
@@ -587,8 +597,8 @@
       border-width: 4px !important;
     }
     body.mode-mobile .player-token {
-      width: 50px !important;
-      height: 50px !important;
+      width: 52px !important;
+      height: 52px !important;
       border-width: 1.5px !important;
       padding: 1px !important;
     }
@@ -597,8 +607,8 @@
       font-size: 0.58rem !important;
       padding: 1px !important;
     }
-    body.mode-mobile .player-role-input {
-      width: 40px !important;
+    body.mode-mobile .player-role-select {
+      width: 44px !important;
       font-size: 0.48rem !important;
       padding: 0 !important;
     }
@@ -611,8 +621,8 @@
     body.mode-mobile .bench-sub-indicator { font-size: 0.5rem !important; padding: 3px 2px !important; }
     body.mode-mobile .bench-flow-note { font-size: 0.48rem !important; }
     body.mode-mobile .bench-wing .player-token {
-      width: 48px !important;
-      height: 48px !important;
+      width: 50px !important;
+      height: 50px !important;
     }
     body.mode-mobile .config-row {
       flex-direction: column !important;
@@ -633,16 +643,16 @@
         border-width: 4px;
       }
       body:not(.mode-desktop) .player-token {
-        width: 50px;
-        height: 50px;
+        width: 52px;
+        height: 52px;
         border-width: 1.5px;
       }
       body:not(.mode-desktop) .player-name-input {
         width: 44px;
         font-size: 0.58rem;
       }
-      body:not(.mode-desktop) .player-role-input {
-        width: 40px;
+      body:not(.mode-desktop) .player-role-select {
+        width: 44px;
         font-size: 0.48rem;
       }
       body:not(.mode-desktop) .bench-wing {
@@ -660,8 +670,8 @@
         font-size: 0.48rem;
       }
       body:not(.mode-desktop) .bench-wing .player-token {
-        width: 48px;
-        height: 48px;
+        width: 50px;
+        height: 50px;
       }
     }
   </style>
@@ -820,16 +830,19 @@
   <script>
     const MY_EMAIL = "your-email@example.com";
 
-    // Default squad with S and S2 designated
+    // Allowed position options for the dropdown
+    const POSITION_OPTIONS = ["", "OH", "OH2", "MB", "MB2", "S", "S2", "RS", "RS2", "DS", "DS2"];
+
+    // Default squad with designated positions
     const DEFAULT_NAMES = [
       { id: 1, name: "Alex", position: "S" },       // Primary Setter (starts at Pos 1)
       { id: 2, name: "Jordan", position: "OH" },   // Starts at Pos 6
       { id: 3, name: "Taylor", position: "MB" },   // Starts at Pos 5
       { id: 4, name: "Sam", position: "S2" },      // Secondary Setter (starts opposite at Pos 4)
-      { id: 5, name: "Morgan", position: "OH" },   // Starts at Pos 3
-      { id: 6, name: "Casey", position: "MB" },    // Starts at Pos 2
+      { id: 5, name: "Morgan", position: "OH2" },  // Starts at Pos 3
+      { id: 6, name: "Casey", position: "MB2" },   // Starts at Pos 2
       { id: 7, name: "Riley", position: "DS" },    // Left Bench
-      { id: 8, name: "Jamie", position: "DS" }     // Right Bench
+      { id: 8, name: "Jamie", position: "DS2" }    // Right Bench
     ];
 
     const HOME_COORDINATES = {
@@ -981,18 +994,12 @@
       document.getElementById('logBox').innerText = `Reset layout for current scenario in Rotation ${currentRotation}.`;
     }
 
-    /* Setter Role Helper */
+    /* Setter Role Identifier */
     function getSetterType(player) {
       if (!player) return null;
       const posText = (player.position || '').trim().toUpperCase();
-      const nameText = (player.name || '').trim().toUpperCase();
-
-      if (posText === 'S2' || nameText.includes('S2') || nameText.includes('SETTER 2')) {
-        return 'S2';
-      }
-      if (posText === 'S' || posText.includes('SET') || nameText.includes('SETTER')) {
-        return 'S';
-      }
+      if (posText === 'S2') return 'S2';
+      if (posText === 'S') return 'S';
       return null;
     }
 
@@ -1003,7 +1010,7 @@
     /* System-specific Setter Coloring:
        - 4-2: Only setter in front row (Pos 4, 3, 2) turns yellow.
        - 6-2: Setter in back row turns yellow.
-              * SPECIAL RULE: When S and S2 are together in the back court, ONLY S turns yellow!
+              * If S and S2 are together in back court, ONLY S turns yellow.
        - 5-1: Setter stays yellow all around.
     */
     function shouldHighlightSetter(player, posKey, currentState) {
@@ -1022,7 +1029,6 @@
       if (offensiveSystem === '6-2') {
         if (!isBackRow) return false;
 
-        // Check if both S and S2 are simultaneously in the back row
         let sInBack = false;
         let s2InBack = false;
 
@@ -1033,12 +1039,10 @@
           if (st === 'S2') s2InBack = true;
         });
 
-        // When S and S2 are together in back court, only S turns yellow
         if (sInBack && s2InBack) {
           return setterType === 'S';
         }
 
-        // Otherwise, whichever setter is in the back row turns yellow
         return true;
       }
 
@@ -1136,7 +1140,7 @@
 
     function attachDragHandlers(el, posKey) {
       const onPointerDown = (e) => {
-        if (e.target.tagName.toLowerCase() === 'input') return;
+        if (['input', 'select', 'option'].includes(e.target.tagName.toLowerCase())) return;
         draggedToken = el;
         draggedPosKey = posKey;
         el.classList.add('dragging');
@@ -1238,9 +1242,29 @@
     function onPlayerPositionChange(playerId, newPosition) {
       const player = squad.find(p => p.id === playerId);
       if (player) {
-        player.position = newPosition.trim().toUpperCase() || 'P';
+        player.position = newPosition.trim().toUpperCase();
         goToRotation(currentRotation);
       }
+    }
+
+    /* Helper: Generate Position Dropdown HTML */
+    function createPositionSelectHTML(playerId, selectedPos) {
+      const current = (selectedPos || '').trim().toUpperCase();
+      const optionsHTML = POSITION_OPTIONS.map(opt => {
+        const isSel = (opt === current) ? 'selected' : '';
+        const display = opt === "" ? "--" : opt;
+        return `<option value="${opt}" ${isSel}>${display}</option>`;
+      }).join('');
+
+      return `
+        <select 
+          class="player-role-select" 
+          title="Select Position"
+          onchange="onPlayerPositionChange(${playerId}, this.value)"
+        >
+          ${optionsHTML}
+        </select>
+      `;
     }
 
     function renderCourtTokens() {
@@ -1269,14 +1293,7 @@
             onchange="onPlayerNameChange(${player.id}, this.value)"
             onkeydown="if(event.key === 'Enter') this.blur()"
           />
-          <input 
-            type="text" 
-            class="player-role-input" 
-            value="${player.position || 'P'}" 
-            title="Click to edit position (S, S2, OH, MB, OPP, etc.)"
-            onchange="onPlayerPositionChange(${player.id}, this.value)"
-            onkeydown="if(event.key === 'Enter') this.blur()"
-          />
+          ${createPositionSelectHTML(player.id, player.position)}
         `;
 
         attachDragHandlers(token, posKey);
@@ -1298,13 +1315,7 @@
               title="Click to edit player name"
               onchange="onPlayerNameChange(${state.leftBench.id}, this.value)" 
             />
-            <input 
-              type="text" 
-              class="player-role-input" 
-              value="${state.leftBench.position || 'BENCH'}" 
-              title="Click to edit position"
-              onchange="onPlayerPositionChange(${state.leftBench.id}, this.value)" 
-            />
+            ${createPositionSelectHTML(state.leftBench.id, state.leftBench.position)}
           </div>
         `;
       }
@@ -1318,13 +1329,7 @@
               title="Click to edit player name"
               onchange="onPlayerNameChange(${state.rightBench.id}, this.value)" 
             />
-            <input 
-              type="text" 
-              class="player-role-input" 
-              value="${state.rightBench.position || 'BENCH'}" 
-              title="Click to edit position"
-              onchange="onPlayerPositionChange(${state.rightBench.id}, this.value)" 
-            />
+            ${createPositionSelectHTML(state.rightBench.id, state.rightBench.position)}
           </div>
         `;
       }
