@@ -10,7 +10,7 @@
     --court-boundary: #30669e;
     --court-line: #ffffff;
     --player-bg: #2d3748;
-    --player-setter-fr: #eab308;
+    --player-setter-active: #eab308;
     --player-text: #ffffff;
     --accent: #2563eb;
   }
@@ -137,14 +137,9 @@
     font-weight: 600;
   }
 
-  .player-token .orig-pos {
-    font-size: 0.55rem;
-    opacity: 0.65;
-  }
-
-  /* Active Front-Row Setter Highlight */
-  .player-token.front-row-setter {
-    background: var(--player-setter-fr) !important;
+  /* Active Setter Highlight (Golden Yellow) */
+  .player-token.active-setter {
+    background: var(--player-setter-active) !important;
     color: #1e293b !important;
     border-color: #fef08a !important;
   }
@@ -203,7 +198,6 @@
     <div class="net-label">— NET —</div>
     <div class="court" id="court">
       <div class="attack-line"></div>
-      <!-- 6 Court Positions (Rendered via JS) -->
     </div>
   </div>
 
@@ -211,18 +205,17 @@
 
 <script>
   let currentSystem = '6-2';
-  let currentRotation = 1; // 1 through 6
+  let currentRotation = 1;
   let currentPhase = 'base';
 
-  // Zone Coordinates (% of width, % of height)
   const ZONE_COORDS = {
     // Standard Home Zones
-    zone1: { x: 82, y: 80 }, // Right Back (Serving)
-    zone2: { x: 82, y: 20 }, // Right Front
-    zone3: { x: 50, y: 20 }, // Middle Front
-    zone4: { x: 18, y: 20 }, // Left Front
-    zone5: { x: 18, y: 80 }, // Left Back
-    zone6: { x: 50, y: 80 }, // Middle Back
+    zone1: { x: 82, y: 80 },
+    zone2: { x: 82, y: 20 },
+    zone3: { x: 50, y: 20 },
+    zone4: { x: 18, y: 20 },
+    zone5: { x: 18, y: 80 },
+    zone6: { x: 50, y: 80 },
 
     // Base Formations
     baseFR_Left: { x: 18, y: 20 },
@@ -232,25 +225,24 @@
     baseBR_Mid: { x: 50, y: 82 },
     baseBR_Right: { x: 78, y: 78 },
 
-    // Setting Target Spot
+    // Setter Target Spot
     setterTarget: { x: 68, y: 14 }
   };
 
-  // Define rosters/roles per system for 6 spots [Pos1, Pos2, Pos3, Pos4, Pos5, Pos6]
   const SYSTEM_CONFIGS = {
     '6-2': {
-      desc: "6-2 System: Back-row setter penetrates to target (P1/P6/P5). Always 3 front-row attackers.",
+      desc: "6-2 System: Back-row setter penetrates to set (highlighted in yellow). 3 front-row attackers.",
       roster: [
         { id: 1, name: "Setter 1", role: "S" },
         { id: 2, name: "Outside 1", role: "OH" },
         { id: 3, name: "Middle 1", role: "MB" },
-        { id: 4, name: "Opposite 1", role: "OPP" },
+        { id: 4, name: "Setter 2 / OPP", role: "S" },
         { id: 5, name: "Outside 2", role: "OH" },
         { id: 6, name: "Middle 2 / L", role: "MB" }
       ]
     },
     '5-1': {
-      desc: "5-1 System: Single setter runs all 6 rotations. Setter is an active front-row attacker/blocker in R2-R4.",
+      desc: "5-1 System: Single setter sets all 6 rotations (highlighted in yellow in all positions).",
       roster: [
         { id: 1, name: "Setter", role: "S" },
         { id: 2, name: "Outside 1", role: "OH" },
@@ -261,7 +253,7 @@
       ]
     },
     '4-2': {
-      desc: "4-2 System: Front-row setter sets from Zone 2 or Zone 3. Simpler recreational offense with no back-row penetration.",
+      desc: "4-2 System: Front-row setter sets (highlighted in yellow). Back-row setter plays standard defense.",
       roster: [
         { id: 1, name: "Setter 2", role: "S" },
         { id: 2, name: "Outside 1", role: "OH" },
@@ -276,7 +268,6 @@
   function getRotatedLineup() {
     const baseRoster = SYSTEM_CONFIGS[currentSystem].roster;
     const shift = (currentRotation - 1) % 6;
-    // Standard volleyball clockwise shift: in Rot 2, player originally in 1 moves to 6, 2 to 1, etc.
     let lineup = [];
     for (let i = 0; i < 6; i++) {
       let originalIdx = (i - shift + 6) % 6;
@@ -292,12 +283,10 @@
     const zone = player.currentCourtZone;
     const isFrontRow = [2, 3, 4].includes(zone);
 
-    // Rotational View: True court boxes
     if (currentPhase === 'rotational') {
       return ZONE_COORDS[`zone${zone}`];
     }
 
-    // Base Defense / Offensive Ready View
     if (currentPhase === 'base') {
       if (player.role === 'S') {
         if (currentSystem === '4-2') {
@@ -307,7 +296,7 @@
           return isFrontRow ? ZONE_COORDS.baseFR_Right : ZONE_COORDS.setterTarget;
         }
         if (currentSystem === '5-1') {
-          return isFrontRow ? ZONE_COORDS.setterTarget : ZONE_COORDS.setterTarget;
+          return ZONE_COORDS.setterTarget;
         }
       }
       if (player.role === 'OH') return isFrontRow ? ZONE_COORDS.baseFR_Left : ZONE_COORDS.baseBR_Mid;
@@ -316,7 +305,6 @@
       return ZONE_COORDS[`zone${zone}`];
     }
 
-    // Serve Receive View
     if (currentPhase === 'receive') {
       if (zone === 1) return { x: 80, y: 65 };
       if (zone === 2) return { x: 75, y: 35 };
@@ -329,6 +317,24 @@
     return ZONE_COORDS[`zone${zone}`];
   }
 
+  // System-specific setter highlighting rules
+  function isHighlightedSetter(player) {
+    if (player.role !== 'S') return false;
+
+    const isFrontRow = [2, 3, 4].includes(player.currentCourtZone);
+    const isBackRow = [1, 5, 6].includes(player.currentCourtZone);
+
+    if (currentSystem === '4-2') {
+      return isFrontRow; // Only front-row setter turns yellow
+    } else if (currentSystem === '6-2') {
+      return isBackRow;  // Only back-row setter turns yellow
+    } else if (currentSystem === '5-1') {
+      return true;       // Setter turns yellow all around the court
+    }
+
+    return false;
+  }
+
   function renderCourt() {
     const court = document.getElementById('court');
     court.innerHTML = '<div class="attack-line"></div>';
@@ -339,11 +345,10 @@
 
     lineup.forEach((p) => {
       const coords = getCoordinates(p);
-      const isFrontRow = [2, 3, 4].includes(p.currentCourtZone);
-      const isSetterInFrontRow = p.role === 'S' && isFrontRow;
+      const shouldHighlight = isHighlightedSetter(p);
 
       const token = document.createElement('div');
-      token.className = `player-token ${isSetterInFrontRow ? 'front-row-setter' : ''}`;
+      token.className = `player-token ${shouldHighlight ? 'active-setter' : ''}`;
       token.style.left = `${coords.x}%`;
       token.style.top = `${coords.y}%`;
 
