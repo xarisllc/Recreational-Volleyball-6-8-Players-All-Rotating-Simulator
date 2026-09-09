@@ -10,7 +10,7 @@
       --court-border: #2980b9;
       --court-line: #ffffff;
       --player-court: #27ae60;
-      --player-setter-front: #f1c40f;
+      --player-setter-active: #f1c40f;
       --player-bench: #8e44ad;
       --player-fault: #e74c3c;
       --panel-bg: #162447;
@@ -425,16 +425,16 @@
       z-index: 20;
     }
 
-    /* Setter in front row turns yellow */
-    .player-token.setter-front {
-      background: var(--player-setter-front) !important;
+    /* Active Setter turns Yellow */
+    .player-token.setter-active {
+      background: var(--player-setter-active) !important;
       color: #1e293b !important;
       border-color: #ffffff !important;
     }
-    .player-token.setter-front .player-name-input,
-    .player-token.setter-front .player-role-input {
+    .player-token.setter-active .player-name-input,
+    .player-token.setter-active .player-role-input {
       color: #1e293b !important;
-      background: rgba(255, 255, 255, 0.4) !important;
+      background: rgba(255, 255, 255, 0.45) !important;
       border-color: rgba(0, 0, 0, 0.25) !important;
     }
 
@@ -671,7 +671,7 @@
   <!-- Main Application Header -->
   <h1>Simeon All-Rotating Recreational Volleyball Simulator</h1>
   <p class="subtitle">
-    Compare <b>Home</b>, <b>Base</b>, <b>Serve</b>, and <b>Receive</b>. Setters turn <b>yellow in the front row</b> and remain <b>green in the back row</b>. Edit names and position tags directly!
+    Compare <b>Home</b>, <b>Base</b>, <b>Serve</b>, and <b>Receive</b>. Select your system (<b>4-2</b>, <b>6-2</b>, or <b>5-1</b>) for automatic setter role highlighting!
   </p>
 
   <!-- Device Formatter -->
@@ -694,6 +694,13 @@
           <option value="6">6 Players (No Bench)</option>
           <option value="7">7 Players (1 Bench)</option>
           <option value="8" selected>8 Players (2 Benches)</option>
+        </select>
+
+        <span class="config-label" style="margin-left: 6px;">System:</span>
+        <select id="offensiveSystemSelect" onchange="onOffensiveSystemChange()">
+          <option value="4-2" selected>4-2 (Front Setter Yellow)</option>
+          <option value="6-2">6-2 (Back Setter Yellow)</option>
+          <option value="5-1">5-1 (Setter Always Yellow)</option>
         </select>
 
         <span id="subSideContainer" style="display:none; align-items:center; gap:6px;">
@@ -813,12 +820,11 @@
   <script>
     const MY_EMAIL = "your-email@example.com";
 
-    // Default squad with configurable names and positions/roles
     const DEFAULT_NAMES = [
       { id: 1, name: "Alex", position: "S" },      // Starts at Pos 1
       { id: 2, name: "Jordan", position: "OH" },  // Starts at Pos 6
       { id: 3, name: "Taylor", position: "MB" },  // Starts at Pos 5
-      { id: 4, name: "Sam", position: "OPP" },    // Starts at Pos 4
+      { id: 4, name: "Sam", position: "S" },      // Starts at Pos 4 (opposite setter in 4-2 / 6-2)
       { id: 5, name: "Morgan", position: "OH" },  // Starts at Pos 3
       { id: 6, name: "Casey", position: "MB" },   // Starts at Pos 2
       { id: 7, name: "Riley", position: "DS" },   // Left Bench
@@ -864,6 +870,7 @@
     };
 
     let teamSize = 8;
+    let offensiveSystem = "4-2"; // '4-2', '6-2', or '5-1'
     let sevenPlayerSubSide = "left";
     let currentRotation = 1;
     let currentScenario = 'home';
@@ -963,7 +970,7 @@
         serve: 'On Serve (Position 1 Serving)',
         receive: 'Serve Receive Formation'
       };
-      document.getElementById('logBox').innerText = `Displaying [${labels[scen]}] for Rotation ${currentRotation}.`;
+      document.getElementById('logBox').innerText = `Displaying [${labels[scen]}] for Rotation ${currentRotation} in ${offensiveSystem} system.`;
     }
 
     function resetScenarioFormation() {
@@ -973,12 +980,31 @@
       document.getElementById('logBox').innerText = `Reset layout for current scenario in Rotation ${currentRotation}.`;
     }
 
-    /* Check if player is designated as Setter */
     function isPlayerSetter(player) {
       if (!player) return false;
       const posText = (player.position || '').trim().toUpperCase();
       const nameText = (player.name || '').trim().toUpperCase();
       return posText === 'S' || posText.includes('SET') || nameText.includes('SETTER');
+    }
+
+    /* System-specific Setter Coloring:
+       - 4-2: Setter turns yellow ONLY in front row (Pos 4, 3, 2).
+       - 6-2: Setter turns yellow ONLY in back row (Pos 5, 6, 1).
+       - 5-1: Setter stays yellow all around (front row and back row).
+    */
+    function shouldHighlightSetter(player, posKey) {
+      if (!isPlayerSetter(player)) return false;
+      const frontRowKeys = ['pos4', 'pos3', 'pos2'];
+      const isFrontRow = frontRowKeys.includes(posKey);
+
+      if (offensiveSystem === '4-2') {
+        return isFrontRow;
+      } else if (offensiveSystem === '6-2') {
+        return !isFrontRow;
+      } else if (offensiveSystem === '5-1') {
+        return true;
+      }
+      return false;
     }
 
     function checkPositionalFaults() {
@@ -1144,7 +1170,6 @@
       currentRotation = targetRot;
       const state = calculateStateForRotation(currentRotation);
 
-      // Default to 'home' scenario on every rotation switch
       currentScenario = 'home';
       document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
       const homeBtn = document.getElementById('btnScenarioHome');
@@ -1156,7 +1181,7 @@
       updateButtonsUI();
       checkPositionalFaults();
 
-      let logText = `Active: Rotation ${currentRotation} of ${teamSize} [HOME (SLOTS)]. Server: [${state.pos1.name}].`;
+      let logText = `Active: Rotation ${currentRotation} of ${teamSize} [${offensiveSystem} System - HOME]. Server: [${state.pos1.name}].`;
       document.getElementById('logBox').innerText = logText;
     }
 
@@ -1181,19 +1206,13 @@
       const state = calculateStateForRotation(currentRotation);
       container.innerHTML = '';
 
-      const frontRowKeys = ['pos4', 'pos3', 'pos2'];
-
       ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
         const player = state[posKey];
         const coords = playerCoords[posKey];
-        const isFrontRow = frontRowKeys.includes(posKey);
-        const isSetter = isPlayerSetter(player);
-
-        // Setter is yellow in front row (Pos 4, 3, 2); stays standard green in back row (Pos 5, 6, 1)
-        const isYellowSetter = isSetter && isFrontRow;
+        const isYellowSetter = shouldHighlightSetter(player, posKey);
 
         const token = document.createElement('div');
-        token.className = `player-token ${isYellowSetter ? 'setter-front' : ''}`;
+        token.className = `player-token ${isYellowSetter ? 'setter-active' : ''}`;
         token.id = `token-${posKey}`;
         token.style.left = `${coords.x}%`;
         token.style.top = `${coords.y}%`;
@@ -1300,6 +1319,16 @@
       goToRotation(1);
     }
 
+    function onOffensiveSystemChange() {
+      offensiveSystem = document.getElementById('offensiveSystemSelect').value;
+      renderCourtTokens();
+      let msg = "";
+      if (offensiveSystem === "4-2") msg = "4-2 selected: Front-row setter is yellow.";
+      if (offensiveSystem === "6-2") msg = "6-2 selected: Back-row setter is yellow.";
+      if (offensiveSystem === "5-1") msg = "5-1 selected: Setter is yellow all around.";
+      document.getElementById('logBox').innerText = msg;
+    }
+
     function onSevenPlayerSideChange() {
       sevenPlayerSubSide = document.getElementById('sevenPlayerSideSelect').value;
       updateWingVisibility();
@@ -1343,6 +1372,7 @@
       const savedRotations = getRotationsFromStorage();
       savedRotations[name] = {
         teamSize,
+        offensiveSystem,
         sevenPlayerSubSide,
         currentScenario,
         playerCoords: JSON.parse(JSON.stringify(playerCoords)),
@@ -1374,6 +1404,7 @@
       const savedRotations = getRotationsFromStorage();
       savedRotations[rotName] = {
         teamSize,
+        offensiveSystem,
         sevenPlayerSubSide,
         currentScenario,
         playerCoords: JSON.parse(JSON.stringify(playerCoords)),
@@ -1440,6 +1471,8 @@
     function resetToDefaults() {
       if (confirm("Reset current lineup names and positions to defaults?")) {
         initDefaultSquad();
+        offensiveSystem = "4-2";
+        document.getElementById('offensiveSystemSelect').value = "4-2";
         setScenario('home');
         goToRotation(1);
         document.getElementById('logBox').innerText = "Lineup names and positions restored to defaults.";
@@ -1449,6 +1482,7 @@
     function buildCurrentPayload() {
       return {
         teamSize,
+        offensiveSystem,
         sevenPlayerSubSide,
         currentRotation,
         currentScenario,
@@ -1460,6 +1494,10 @@
 
     function loadPayloadData(data) {
       if (data.teamSize) teamSize = data.teamSize;
+      if (data.offensiveSystem) {
+        offensiveSystem = data.offensiveSystem;
+        document.getElementById('offensiveSystemSelect').value = offensiveSystem;
+      }
       if (data.sevenPlayerSubSide) sevenPlayerSubSide = data.sevenPlayerSubSide;
       if (data.squad) squad = JSON.parse(JSON.stringify(data.squad));
       if (data.playerCoords) playerCoords = JSON.parse(JSON.stringify(data.playerCoords));
@@ -1523,7 +1561,7 @@
     function emailSuggestions() {
       const subject = encodeURIComponent("Suggestion for Simeon Volleyball Simulator");
       const body = encodeURIComponent(
-        `Hi,\n\nI have a suggestion or question regarding the Simeon All-Rotating Volleyball Simulator:\n\n[Write your idea or feedback here]\n\n---\nContext details:\n- Current Rotation: ${currentRotation}\n- Team Size: ${teamSize}\n- Active Scenario: ${currentScenario.toUpperCase()}`
+        `Hi,\n\nI have a suggestion or question regarding the Simeon All-Rotating Volleyball Simulator:\n\n[Write your idea or feedback here]\n\n---\nContext details:\n- Current Rotation: ${currentRotation}\n- Team Size: ${teamSize}\n- Offensive System: ${offensiveSystem}\n- Active Scenario: ${currentScenario.toUpperCase()}`
       );
       window.location.href = `mailto:${MY_EMAIL}?subject=${subject}&body=${body}`;
     }
