@@ -820,15 +820,16 @@
   <script>
     const MY_EMAIL = "your-email@example.com";
 
+    // Default squad with S and S2 designated
     const DEFAULT_NAMES = [
-      { id: 1, name: "Alex", position: "S" },      // Starts at Pos 1
-      { id: 2, name: "Jordan", position: "OH" },  // Starts at Pos 6
-      { id: 3, name: "Taylor", position: "MB" },  // Starts at Pos 5
-      { id: 4, name: "Sam", position: "S" },      // Starts at Pos 4 (opposite setter in 4-2 / 6-2)
-      { id: 5, name: "Morgan", position: "OH" },  // Starts at Pos 3
-      { id: 6, name: "Casey", position: "MB" },   // Starts at Pos 2
-      { id: 7, name: "Riley", position: "DS" },   // Left Bench
-      { id: 8, name: "Jamie", position: "DS" }    // Right Bench
+      { id: 1, name: "Alex", position: "S" },       // Primary Setter (starts at Pos 1)
+      { id: 2, name: "Jordan", position: "OH" },   // Starts at Pos 6
+      { id: 3, name: "Taylor", position: "MB" },   // Starts at Pos 5
+      { id: 4, name: "Sam", position: "S2" },      // Secondary Setter (starts opposite at Pos 4)
+      { id: 5, name: "Morgan", position: "OH" },   // Starts at Pos 3
+      { id: 6, name: "Casey", position: "MB" },    // Starts at Pos 2
+      { id: 7, name: "Riley", position: "DS" },    // Left Bench
+      { id: 8, name: "Jamie", position: "DS" }     // Right Bench
     ];
 
     const HOME_COORDINATES = {
@@ -870,7 +871,7 @@
     };
 
     let teamSize = 8;
-    let offensiveSystem = "4-2"; // '4-2', '6-2', or '5-1'
+    let offensiveSystem = "4-2";
     let sevenPlayerSubSide = "left";
     let currentRotation = 1;
     let currentScenario = 'home';
@@ -980,30 +981,71 @@
       document.getElementById('logBox').innerText = `Reset layout for current scenario in Rotation ${currentRotation}.`;
     }
 
-    function isPlayerSetter(player) {
-      if (!player) return false;
+    /* Setter Role Helper */
+    function getSetterType(player) {
+      if (!player) return null;
       const posText = (player.position || '').trim().toUpperCase();
       const nameText = (player.name || '').trim().toUpperCase();
-      return posText === 'S' || posText.includes('SET') || nameText.includes('SETTER');
+
+      if (posText === 'S2' || nameText.includes('S2') || nameText.includes('SETTER 2')) {
+        return 'S2';
+      }
+      if (posText === 'S' || posText.includes('SET') || nameText.includes('SETTER')) {
+        return 'S';
+      }
+      return null;
+    }
+
+    function isPlayerSetter(player) {
+      return getSetterType(player) !== null;
     }
 
     /* System-specific Setter Coloring:
-       - 4-2: Setter turns yellow ONLY in front row (Pos 4, 3, 2).
-       - 6-2: Setter turns yellow ONLY in back row (Pos 5, 6, 1).
-       - 5-1: Setter stays yellow all around (front row and back row).
+       - 4-2: Only setter in front row (Pos 4, 3, 2) turns yellow.
+       - 6-2: Setter in back row turns yellow.
+              * SPECIAL RULE: When S and S2 are together in the back court, ONLY S turns yellow!
+       - 5-1: Setter stays yellow all around.
     */
-    function shouldHighlightSetter(player, posKey) {
-      if (!isPlayerSetter(player)) return false;
+    function shouldHighlightSetter(player, posKey, currentState) {
+      const setterType = getSetterType(player);
+      if (!setterType) return false;
+
       const frontRowKeys = ['pos4', 'pos3', 'pos2'];
+      const backRowKeys = ['pos1', 'pos6', 'pos5'];
       const isFrontRow = frontRowKeys.includes(posKey);
+      const isBackRow = backRowKeys.includes(posKey);
 
       if (offensiveSystem === '4-2') {
         return isFrontRow;
-      } else if (offensiveSystem === '6-2') {
-        return !isFrontRow;
-      } else if (offensiveSystem === '5-1') {
+      }
+
+      if (offensiveSystem === '6-2') {
+        if (!isBackRow) return false;
+
+        // Check if both S and S2 are simultaneously in the back row
+        let sInBack = false;
+        let s2InBack = false;
+
+        backRowKeys.forEach(bk => {
+          const bp = currentState[bk];
+          const st = getSetterType(bp);
+          if (st === 'S') sInBack = true;
+          if (st === 'S2') s2InBack = true;
+        });
+
+        // When S and S2 are together in back court, only S turns yellow
+        if (sInBack && s2InBack) {
+          return setterType === 'S';
+        }
+
+        // Otherwise, whichever setter is in the back row turns yellow
         return true;
       }
+
+      if (offensiveSystem === '5-1') {
+        return true;
+      }
+
       return false;
     }
 
@@ -1209,7 +1251,7 @@
       ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
         const player = state[posKey];
         const coords = playerCoords[posKey];
-        const isYellowSetter = shouldHighlightSetter(player, posKey);
+        const isYellowSetter = shouldHighlightSetter(player, posKey, state);
 
         const token = document.createElement('div');
         token.className = `player-token ${isYellowSetter ? 'setter-active' : ''}`;
@@ -1231,7 +1273,7 @@
             type="text" 
             class="player-role-input" 
             value="${player.position || 'P'}" 
-            title="Click to edit position (S, OH, MB, OPP, etc.)"
+            title="Click to edit position (S, S2, OH, MB, OPP, etc.)"
             onchange="onPlayerPositionChange(${player.id}, this.value)"
             onkeydown="if(event.key === 'Enter') this.blur()"
           />
@@ -1324,7 +1366,7 @@
       renderCourtTokens();
       let msg = "";
       if (offensiveSystem === "4-2") msg = "4-2 selected: Front-row setter is yellow.";
-      if (offensiveSystem === "6-2") msg = "6-2 selected: Back-row setter is yellow.";
+      if (offensiveSystem === "6-2") msg = "6-2 selected: Back-row setter is yellow (if S & S2 are back together, only S is yellow).";
       if (offensiveSystem === "5-1") msg = "5-1 selected: Setter is yellow all around.";
       document.getElementById('logBox').innerText = msg;
     }
