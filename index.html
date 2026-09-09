@@ -434,6 +434,7 @@
       pointer-events: auto;
     }
 
+    /* Position Dropdown Inside Token */
     .player-role-select {
       width: 56px;
       background: rgba(0, 0, 0, 0.4);
@@ -514,26 +515,6 @@
     .share-btn { background: #10b981; }
     .share-btn:hover { background: #34d399; }
 
-    .feedback-trigger-btn {
-      background: transparent;
-      border: 1px solid #4a69bd;
-      color: #a4b0be;
-      font-size: 0.78rem;
-      padding: 6px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-
-    .feedback-trigger-btn:hover {
-      background: #1e3799;
-      color: #fff;
-      border-color: #6a89cc;
-    }
-
     .del-btn { background: #d63031; }
     .del-btn:hover { background: #ff7675; }
 
@@ -552,69 +533,83 @@
       text-align: center;
     }
 
-    /* Bottom Feedback Footer Area */
-    .feedback-footer-bar {
-      margin-top: 20px;
-      margin-bottom: 24px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* Feedback Modal Overlay */
-    #feedbackModalOverlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 15, 30, 0.82);
-      backdrop-filter: blur(4px);
-      z-index: 9999;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-      box-sizing: border-box;
-    }
-
-    .feedback-modal {
+    /* Public Comments Section */
+    .comments-card {
       background: var(--panel-bg);
       border: 2px solid var(--panel-border);
       border-radius: 12px;
-      padding: 20px;
-      max-width: 440px;
+      padding: 16px;
+      margin-top: 24px;
+      margin-bottom: 24px;
       width: 100%;
+      max-width: 860px;
       box-sizing: border-box;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
       display: flex;
       flex-direction: column;
       gap: 12px;
+      user-select: text;
+      -webkit-user-select: text;
     }
 
-    .feedback-modal h3 {
+    .comments-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 8px;
+    }
+
+    .comments-header h3 {
       margin: 0;
+      font-size: 1.05rem;
       color: #00d2d3;
-      font-size: 1.15rem;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .feedback-modal p {
-      margin: 0;
-      font-size: 0.82rem;
-      color: #cbd5e1;
-      text-align: center;
-      line-height: 1.4;
+    .comments-count-badge {
+      background: #1f4068;
+      color: #ffeaa7;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
     }
 
-    .feedback-textarea {
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .comment-form-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .comment-name-input {
+      background: #0f172a;
+      border: 1px solid #334e68;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      min-width: 160px;
+      box-sizing: border-box;
+    }
+
+    .comment-text-input {
       width: 100%;
-      height: 110px;
+      height: 65px;
       background: #0f172a;
       border: 1px solid #334e68;
       border-radius: 6px;
       color: #fff;
-      padding: 10px;
+      padding: 8px 10px;
       font-family: inherit;
       font-size: 0.85rem;
       outline: none;
@@ -622,14 +617,59 @@
       box-sizing: border-box;
     }
 
-    .feedback-textarea:focus {
+    .comment-text-input:focus, .comment-name-input:focus {
       border-color: #00d2d3;
     }
 
-    .feedback-btn-row {
+    .comments-list {
       display: flex;
-      gap: 10px;
-      justify-content: flex-end;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .comment-item {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .comment-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+    }
+
+    .comment-item-author {
+      font-weight: 700;
+      color: #f1c40f;
+    }
+
+    .comment-item-date {
+      color: #718096;
+      font-size: 0.72rem;
+    }
+
+    .comment-item-body {
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+
+    .no-comments-msg {
+      font-size: 0.8rem;
+      color: #a0aec0;
+      text-align: center;
+      padding: 14px;
+      font-style: italic;
     }
 
     @media (max-width: 820px) {
@@ -843,27 +883,25 @@
 
   <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
 
-  <!-- Bottom Leave Feedback Section -->
-  <div class="feedback-footer-bar">
-    <button class="feedback-trigger-btn" onclick="openFeedbackModal()">💬 Leave Feedback</button>
-  </div>
-
-  <!-- Leave Feedback Modal Dialog -->
-  <div id="feedbackModalOverlay">
-    <div class="feedback-modal">
-      <h3>💬 Share Feedback</h3>
-      <p>Have ideas, rule adjustments, or bugs to report? Enter your thoughts below to send directly.</p>
-      <textarea id="feedbackCommentInput" class="feedback-textarea" placeholder="Type your suggestion or feedback here..."></textarea>
-      <div class="feedback-btn-row">
-        <button class="del-btn" onclick="closeFeedbackModal()">Cancel</button>
-        <button class="save-btn" onclick="submitFeedback()">Send Feedback</button>
-      </div>
+  <!-- Public Comments Section -->
+  <div class="comments-card">
+    <div class="comments-header">
+      <h3>💬 Public Comments</h3>
+      <span class="comments-count-badge" id="commentsCountBadge">0 Comments</span>
     </div>
+
+    <div class="comment-form">
+      <div class="comment-form-row">
+        <input type="text" id="commentAuthorInput" class="comment-name-input" placeholder="Your Name (e.g. Coach Lester)">
+        <button class="save-btn" onclick="postComment()">Post Comment</button>
+      </div>
+      <textarea id="commentTextInput" class="comment-text-input" placeholder="Add a note or feedback on this lineup..."></textarea>
+    </div>
+
+    <div class="comments-list" id="commentsListContainer"></div>
   </div>
 
   <script>
-    const MY_EMAIL = "your-email@example.com";
-
     const POSITION_OPTIONS = ["", "OH", "OH2", "MB", "MB2", "S", "S2", "RS", "RS2", "DS", "DS2"];
 
     const DEFAULT_NAMES = [
@@ -922,6 +960,7 @@
     let currentScenario = 'home';
     let currentlyLoadedRotationName = null;
     let squad = [];
+    let publicComments = [];
 
     let playerCoords = JSON.parse(JSON.stringify(HOME_COORDINATES));
     let activeFaults = [];
@@ -1406,6 +1445,89 @@
       goToRotation(1);
     }
 
+    /* Public Comments System */
+    function getStoredComments() {
+      try {
+        return JSON.parse(localStorage.getItem('vb_public_comments')) || [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveCommentsToStorage(comments) {
+      localStorage.setItem('vb_public_comments', JSON.stringify(comments));
+    }
+
+    function postComment() {
+      const authorInput = document.getElementById('commentAuthorInput');
+      const textInput = document.getElementById('commentTextInput');
+
+      const author = authorInput.value.trim() || 'Anonymous Player';
+      const text = textInput.value.trim();
+
+      if (!text) {
+        alert("Please write a comment before posting.");
+        return;
+      }
+
+      const newComment = {
+        id: Date.now(),
+        author: author,
+        text: text,
+        date: new Date().toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit'
+        }),
+        rotationContext: `Rot ${currentRotation} (${offensiveSystem})`
+      };
+
+      publicComments.unshift(newComment);
+      saveCommentsToStorage(publicComments);
+      renderCommentsList();
+
+      textInput.value = '';
+      document.getElementById('logBox').innerText = `✓ Comment posted by ${author}!`;
+    }
+
+    function renderCommentsList() {
+      const container = document.getElementById('commentsListContainer');
+      const badge = document.getElementById('commentsCountBadge');
+      container.innerHTML = '';
+
+      badge.innerText = `${publicComments.length} ${publicComments.length === 1 ? 'Comment' : 'Comments'}`;
+
+      if (publicComments.length === 0) {
+        container.innerHTML = '<div class="no-comments-msg">No comments posted yet. Leave the first comment above!</div>';
+        return;
+      }
+
+      publicComments.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'comment-item';
+        item.innerHTML = `
+          <div class="comment-item-header">
+            <span class="comment-item-author">${escapeHTML(c.author)} <span style="font-size:0.68rem; color:#64748b; font-weight:normal;">[${escapeHTML(c.rotationContext || '')}]</span></span>
+            <span class="comment-item-date">${escapeHTML(c.date)}</span>
+          </div>
+          <div class="comment-item-body">${escapeHTML(c.text)}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     /* Storage & Presets */
     function getRotationsFromStorage() {
       try {
@@ -1542,6 +1664,7 @@
         currentScenario,
         playerCoords,
         squad,
+        comments: publicComments,
         presets: getRotationsFromStorage()
       };
     }
@@ -1555,6 +1678,11 @@
       if (data.sevenPlayerSubSide) sevenPlayerSubSide = data.sevenPlayerSubSide;
       if (data.squad) squad = JSON.parse(JSON.stringify(data.squad));
       if (data.playerCoords) playerCoords = JSON.parse(JSON.stringify(data.playerCoords));
+      if (data.comments && Array.isArray(data.comments)) {
+        publicComments = data.comments;
+        saveCommentsToStorage(publicComments);
+        renderCommentsList();
+      }
       if (data.presets) {
         localStorage.setItem('vb_scenarios_presets', JSON.stringify(data.presets));
         populateRotationsDropdown();
@@ -1576,7 +1704,7 @@
       const shareUrl = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
 
       navigator.clipboard.writeText(shareUrl).then(() => {
-        alert("Share Link Copied! Send this URL to teammates. When they open it in GitHub Pages, all your custom names, positions, and presets will load immediately.");
+        alert("Share Link Copied! Send this URL to teammates. When opened in GitHub Pages, all your custom names, positions, comments, and presets will load immediately.");
         document.getElementById('logBox').innerText = "✓ Share link copied to clipboard!";
       }).catch(() => {
         prompt("Copy this URL to send to teammates:", shareUrl);
@@ -1592,7 +1720,7 @@
       a.download = `volleyball_rotation_${teamSize}players.json`;
       a.click();
       URL.revokeObjectURL(url);
-      document.getElementById('logBox').innerText = "✓ Lineup file exported!";
+      document.getElementById('logBox').innerText = "✓ Lineup and comments file exported!";
     }
 
     function importFromFile(e) {
@@ -1610,36 +1738,6 @@
       };
       reader.readAsText(file);
       e.target.value = '';
-    }
-
-    /* Feedback Modal Functions */
-    function openFeedbackModal() {
-      const overlay = document.getElementById('feedbackModalOverlay');
-      const input = document.getElementById('feedbackCommentInput');
-      input.value = '';
-      overlay.style.display = 'flex';
-    }
-
-    function closeFeedbackModal() {
-      const overlay = document.getElementById('feedbackModalOverlay');
-      overlay.style.display = 'none';
-    }
-
-    function submitFeedback() {
-      const feedbackText = document.getElementById('feedbackCommentInput').value.trim();
-      if (!feedbackText) {
-        alert("Please write a quick comment before sending.");
-        return;
-      }
-
-      const subject = encodeURIComponent("Feedback - Simeon Volleyball Simulator");
-      const body = encodeURIComponent(
-        `${feedbackText}\n\n---\nContext:\nRotation: ${currentRotation}\nTeam Size: ${teamSize}\nSystem: ${offensiveSystem}\nScenario: ${currentScenario.toUpperCase()}`
-      );
-
-      window.location.href = `mailto:${MY_EMAIL}?subject=${subject}&body=${body}`;
-      closeFeedbackModal();
-      document.getElementById('logBox').innerText = "Thank you for sharing your feedback!";
     }
 
     function checkUrlForSharedData() {
@@ -1665,6 +1763,8 @@
 
     // Startup Initialization
     initDefaultSquad();
+    publicComments = getStoredComments();
+    renderCommentsList();
     updateWingVisibility();
     populateRotationsDropdown();
     renderRotationButtons();
