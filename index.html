@@ -434,7 +434,6 @@
       pointer-events: auto;
     }
 
-    /* Position Dropdown Inside Token */
     .player-role-select {
       width: 56px;
       background: rgba(0, 0, 0, 0.4);
@@ -515,8 +514,25 @@
     .share-btn { background: #10b981; }
     .share-btn:hover { background: #34d399; }
 
-    .email-btn { background: #0ea5e9; }
-    .email-btn:hover { background: #38bdf8; }
+    .feedback-trigger-btn {
+      background: transparent;
+      border: 1px solid #4a69bd;
+      color: #a4b0be;
+      font-size: 0.78rem;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .feedback-trigger-btn:hover {
+      background: #1e3799;
+      color: #fff;
+      border-color: #6a89cc;
+    }
 
     .del-btn { background: #d63031; }
     .del-btn:hover { background: #ff7675; }
@@ -536,7 +552,86 @@
       text-align: center;
     }
 
-    /* Automatic Responsive Layout for Mobile and Tablet */
+    /* Bottom Feedback Footer Area */
+    .feedback-footer-bar {
+      margin-top: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Feedback Modal Overlay */
+    #feedbackModalOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 15, 30, 0.82);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    .feedback-modal {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 440px;
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feedback-modal h3 {
+      margin: 0;
+      color: #00d2d3;
+      font-size: 1.15rem;
+      text-align: center;
+    }
+
+    .feedback-modal p {
+      margin: 0;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .feedback-textarea {
+      width: 100%;
+      height: 110px;
+      background: #0f172a;
+      border: 1px solid #334e68;
+      border-radius: 6px;
+      color: #fff;
+      padding: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    .feedback-textarea:focus {
+      border-color: #00d2d3;
+    }
+
+    .feedback-btn-row {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
     @media (max-width: 820px) {
       body {
         padding: 6px;
@@ -664,14 +759,13 @@
       </div>
     </div>
 
-    <!-- Row 3: Online GitHub Sharing, File Export/Import & Email Feedback -->
+    <!-- Row 3: Online GitHub Sharing & File Export/Import -->
     <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
       <div class="config-group">
-        <span class="config-label">Share & Connect:</span>
+        <span class="config-label">Share & Sync:</span>
         <button class="share-btn" onclick="copyShareLink()">🔗 Copy Share Link</button>
         <button class="save-btn" onclick="exportToFile()">⬇️ Export File (.json)</button>
         <button class="load-btn" onclick="document.getElementById('fileInput').click()">⬆️ Import File</button>
-        <button class="email-btn" onclick="emailSuggestions()">💡 Email Suggestions</button>
         <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importFromFile(event)">
       </div>
     </div>
@@ -748,6 +842,24 @@
   </div>
 
   <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
+
+  <!-- Bottom Leave Feedback Section -->
+  <div class="feedback-footer-bar">
+    <button class="feedback-trigger-btn" onclick="openFeedbackModal()">💬 Leave Feedback</button>
+  </div>
+
+  <!-- Leave Feedback Modal Dialog -->
+  <div id="feedbackModalOverlay">
+    <div class="feedback-modal">
+      <h3>💬 Share Feedback</h3>
+      <p>Have ideas, rule adjustments, or bugs to report? Enter your thoughts below to send directly.</p>
+      <textarea id="feedbackCommentInput" class="feedback-textarea" placeholder="Type your suggestion or feedback here..."></textarea>
+      <div class="feedback-btn-row">
+        <button class="del-btn" onclick="closeFeedbackModal()">Cancel</button>
+        <button class="save-btn" onclick="submitFeedback()">Send Feedback</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const MY_EMAIL = "your-email@example.com";
@@ -1500,12 +1612,34 @@
       e.target.value = '';
     }
 
-    function emailSuggestions() {
-      const subject = encodeURIComponent("Suggestion for Simeon Volleyball Simulator");
+    /* Feedback Modal Functions */
+    function openFeedbackModal() {
+      const overlay = document.getElementById('feedbackModalOverlay');
+      const input = document.getElementById('feedbackCommentInput');
+      input.value = '';
+      overlay.style.display = 'flex';
+    }
+
+    function closeFeedbackModal() {
+      const overlay = document.getElementById('feedbackModalOverlay');
+      overlay.style.display = 'none';
+    }
+
+    function submitFeedback() {
+      const feedbackText = document.getElementById('feedbackCommentInput').value.trim();
+      if (!feedbackText) {
+        alert("Please write a quick comment before sending.");
+        return;
+      }
+
+      const subject = encodeURIComponent("Feedback - Simeon Volleyball Simulator");
       const body = encodeURIComponent(
-        `Hi,\n\nI have a suggestion or question regarding the Simeon All-Rotating Volleyball Simulator:\n\n[Write your idea or feedback here]\n\n---\nContext details:\n- Current Rotation: ${currentRotation}\n- Team Size: ${teamSize}\n- Offensive System: ${offensiveSystem}\n- Active Scenario: ${currentScenario.toUpperCase()}`
+        `${feedbackText}\n\n---\nContext:\nRotation: ${currentRotation}\nTeam Size: ${teamSize}\nSystem: ${offensiveSystem}\nScenario: ${currentScenario.toUpperCase()}`
       );
+
       window.location.href = `mailto:${MY_EMAIL}?subject=${subject}&body=${body}`;
+      closeFeedbackModal();
+      document.getElementById('logBox').innerText = "Thank you for sharing your feedback!";
     }
 
     function checkUrlForSharedData() {
