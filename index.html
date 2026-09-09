@@ -1,394 +1,1601 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Volleyball Rotation Simulator</title>
-<style>
-  :root {
-    --court-wood: #dfa86c;
-    --court-boundary: #30669e;
-    --court-line: #ffffff;
-    --player-bg: #2d3748;
-    --player-setter-active: #eab308;
-    --player-text: #ffffff;
-    --accent: #2563eb;
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simeon All-Rotating Recreational Volleyball Simulator</title>
+  <style>
+    :root {
+      --court-wood: #e59866;
+      --court-border: #2980b9;
+      --court-line: #ffffff;
+      --player-court: #27ae60;
+      --player-setter-active: #f1c40f;
+      --player-bench: #8e44ad;
+      --player-fault: #e74c3c;
+      --panel-bg: #162447;
+      --panel-border: #1f4068;
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  body { background: #0f172a; color: #f8fafc; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a1a2e;
+      color: #ecf0f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 14px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
 
-  h1 { font-size: 1.5rem; margin-bottom: 12px; font-weight: 700; letter-spacing: 0.5px; }
+    h1 {
+      margin-bottom: 2px;
+      font-size: 1.55rem;
+      text-align: center;
+    }
 
-  /* Controls Panel */
-  .panel {
-    background: #1e293b;
-    border: 1px solid #334155;
-    padding: 16px 20px;
-    border-radius: 12px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-    max-width: 700px;
-    width: 100%;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  }
+    p.subtitle {
+      color: #bdc3c7;
+      margin-top: 0;
+      margin-bottom: 12px;
+      text-align: center;
+      max-width: 720px;
+      font-size: 0.88rem;
+    }
 
-  .control-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 0.85rem;
-  }
+    /* Device View Switcher */
+    .view-toggle-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--panel-border);
+      border-radius: 30px;
+      padding: 4px 10px;
+      margin-bottom: 12px;
+    }
 
-  label { color: #94a3b8; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+    .view-toggle-bar span {
+      font-size: 0.76rem;
+      font-weight: bold;
+      color: #00d2d3;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-  select, button {
-    background: #0f172a;
-    color: #f8fafc;
-    border: 1px solid #475569;
-    border-radius: 6px;
-    padding: 8px 14px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+    .view-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #a4b0be;
+      padding: 3px 10px;
+      font-size: 0.76rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
 
-  select:focus, button:focus { outline: none; border-color: var(--accent); }
-  button:hover { background: #334155; }
-  button.primary { background: var(--accent); border-color: var(--accent); }
-  button.primary:hover { background: #1d4ed8; }
+    .view-btn.active {
+      background: #0984e3;
+      color: #fff;
+      border-color: #74b9ff;
+    }
 
-  /* Court Styling */
-  .court-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 440px;
-    aspect-ratio: 9 / 10;
-    background: var(--court-boundary);
-    padding: 24px;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  }
+    /* Configuration Panel */
+    .config-card {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-bottom: 12px;
+      width: 100%;
+      max-width: 860px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-  .court {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background: var(--court-wood);
-    border: 3px solid var(--court-line);
-    border-top: 5px solid #e2e8f0; /* Net line */
-  }
+    .config-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-  /* 10ft / 3m Attack Line */
-  .attack-line {
-    position: absolute;
-    top: 33.33%;
-    left: 0;
-    width: 100%;
-    border-top: 3px dashed rgba(255, 255, 255, 0.85);
-  }
+    .config-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
 
-  .net-label {
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.75rem;
-    color: #cbd5e1;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: bold;
-  }
+    .config-label {
+      font-size: 0.8rem;
+      color: #00d2d3;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-  /* Player Tokens */
-  .player-token {
-    position: absolute;
-    width: 58px;
-    height: 58px;
-    margin-left: -29px;
-    margin-top: -29px;
-    border-radius: 50%;
-    background: var(--player-bg);
-    color: var(--player-text);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 2.5px solid #ffffff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.35);
-    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    user-select: none;
-  }
+    select, input[type="text"].rotation-name-input {
+      background: #0f172a;
+      border: 1px solid #334e68;
+      color: #fff;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      outline: none;
+    }
 
-  .player-token .name {
-    font-size: 0.75rem;
-    font-weight: 700;
-    white-space: nowrap;
-  }
+    /* Rotation Selector Toolbar */
+    .rotation-toolbar {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-bottom: 10px;
+      width: 100%;
+      max-width: 860px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
 
-  .player-token .role {
-    font-size: 0.65rem;
-    opacity: 0.85;
-    font-weight: 600;
-  }
+    .rotation-toolbar-title {
+      font-size: 0.82rem;
+      color: #00d2d3;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
 
-  /* Active Setter Highlight (Golden Yellow) */
-  .player-token.active-setter {
-    background: var(--player-setter-active) !important;
-    color: #1e293b !important;
-    border-color: #fef08a !important;
-  }
+    .rot-buttons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
 
-  /* Information Banner */
-  .info-bar {
-    margin-top: 16px;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #94a3b8;
-    max-width: 440px;
-  }
-</style>
+    .rot-btn {
+      background: #1f4068;
+      color: #fff;
+      border: 1px solid #32527b;
+      padding: 5px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .rot-btn:hover { background: #2980b9; }
+
+    .rot-btn.active {
+      background: #f39c12;
+      color: #1a1a2e;
+      border-color: #f1c40f;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+    }
+
+    /* Scenario Bar */
+    .scenario-toolbar {
+      background: #0f172a;
+      border: 1px solid #1f4068;
+      border-radius: 8px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      width: 100%;
+      max-width: 860px;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .scenario-btn {
+      background: #1f4068;
+      color: #cbd5e1;
+      border: 1px solid #334e68;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scenario-btn:hover {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .scenario-btn.active {
+      background: #3b82f6;
+      color: #fff;
+      border-color: #60a5fa;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+    }
+
+    /* Fault Banner */
+    .fault-indicator-bar {
+      width: 100%;
+      max-width: 860px;
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid #e74c3c;
+      color: #ff7675;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: bold;
+      text-align: center;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .fault-indicator-bar.show {
+      display: block;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Arena Stage */
+    .arena-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Bench Wings */
+    .bench-wing {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 12px;
+      width: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      min-height: 420px;
+      justify-content: space-between;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .bench-wing.hidden { display: none !important; }
+
+    .bench-wing-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #00d2d3;
+      text-transform: uppercase;
+      text-align: center;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 4px;
+      width: 100%;
+    }
+
+    .bench-sub-indicator {
+      font-size: 0.7rem;
+      color: #f1c40f;
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.2;
+      background: rgba(241, 196, 15, 0.1);
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px dashed rgba(241, 196, 15, 0.4);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .bench-flow-note {
+      font-size: 0.68rem;
+      color: #95a5a6;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    /* Court */
+    .court-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .court-header {
+      font-weight: bold;
+      margin-bottom: 4px;
+      letter-spacing: 2px;
+      color: #f39c12;
+      font-size: 0.8rem;
+    }
+
+    .net-indicator {
+      width: 100%;
+      height: 8px;
+      background: repeating-linear-gradient(90deg, #fff, #fff 5px, #555 5px, #555 10px);
+      margin-bottom: 2px;
+      border-radius: 2px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .court {
+      width: 360px;
+      height: 480px;
+      background-color: var(--court-wood);
+      border: 7px solid var(--court-border);
+      position: relative;
+      border-radius: 4px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-sizing: border-box;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    .attack-line {
+      position: absolute;
+      top: 33.33%;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--court-line);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .court-grid-guides {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 2fr;
+      pointer-events: none;
+    }
+
+    .grid-zone {
+      border: 1px dashed rgba(255,255,255,0.18);
+      position: relative;
+    }
+
+    .zone-marker {
+      position: absolute;
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.45);
+      font-weight: bold;
+      pointer-events: none;
+    }
+    .zm-4 { top: 4px; left: 6px; }
+    .zm-3 { top: 4px; left: 50%; transform: translateX(-50%); }
+    .zm-2 { top: 4px; right: 6px; }
+    .zm-5 { bottom: 4px; left: 6px; }
+    .zm-6 { bottom: 4px; left: 50%; transform: translateX(-50%); }
+    .zm-1 { bottom: 4px; right: 6px; }
+
+    /* Draggable Player Token */
+    .player-token {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: var(--player-court);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+      border: 2px solid white;
+      z-index: 10;
+      text-align: center;
+      padding: 2px;
+      box-sizing: border-box;
+      position: absolute;
+      cursor: grab;
+      touch-action: none;
+      transition: box-shadow 0.15s, border-color 0.15s, background-color 0.15s;
+    }
+
+    .player-token:active, .player-token.dragging {
+      cursor: grabbing;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+      z-index: 20;
+    }
+
+    /* Active Setter turns Yellow */
+    .player-token.setter-active {
+      background: var(--player-setter-active) !important;
+      color: #1e293b !important;
+      border-color: #ffffff !important;
+    }
+    .player-token.setter-active .player-name-input,
+    .player-token.setter-active .player-role-input {
+      color: #1e293b !important;
+      background: rgba(255, 255, 255, 0.45) !important;
+      border-color: rgba(0, 0, 0, 0.25) !important;
+    }
+
+    .player-token.fault {
+      background: var(--player-fault) !important;
+      color: #ffffff !important;
+      border-color: #ffeaa7 !important;
+      box-shadow: 0 0 15px #e74c3c !important;
+    }
+
+    .bench-wing .player-token {
+      position: relative;
+      cursor: default;
+      background: var(--player-bench);
+      width: 66px;
+      height: 66px;
+    }
+
+    .player-name-input {
+      width: 58px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 4px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 0.72rem;
+      text-align: center;
+      padding: 1px 2px;
+      outline: none;
+      box-sizing: border-box;
+      pointer-events: auto;
+    }
+
+    .player-role-input {
+      width: 52px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px dashed rgba(255, 255, 255, 0.4);
+      border-radius: 3px;
+      color: #ffeaa7;
+      font-size: 0.58rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 1px;
+      margin-top: 2px;
+      outline: none;
+      box-sizing: border-box;
+      pointer-events: auto;
+      letter-spacing: 0.3px;
+    }
+
+    .player-name-input:focus, .player-role-input:focus {
+      background: rgba(0, 0, 0, 0.85) !important;
+      border-color: #ffd700 !important;
+      color: #ffffff !important;
+    }
+
+    #overlapCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:active { transform: translateY(2px); }
+
+    .nav-btn { background: #0984e3; }
+    .nav-btn:hover { background: #74b9ff; }
+
+    .reset-pos-btn { background: #e67e22; }
+    .reset-pos-btn:hover { background: #f39c12; }
+
+    .save-btn { background: #27ae60; }
+    .save-btn:hover { background: #2ecc71; }
+
+    .update-btn { background: #f59e0b; color: #1e293b; font-weight: 700; }
+    .update-btn:hover { background: #fbbf24; }
+
+    .load-btn { background: #8e44ad; }
+    .load-btn:hover { background: #9b59b6; }
+
+    .share-btn { background: #10b981; }
+    .share-btn:hover { background: #34d399; }
+
+    .email-btn { background: #0ea5e9; }
+    .email-btn:hover { background: #38bdf8; }
+
+    .del-btn { background: #d63031; }
+    .del-btn:hover { background: #ff7675; }
+
+    .log-panel {
+      margin-top: 14px;
+      background: #111;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #00ffcc;
+      max-width: 860px;
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 40px;
+      text-align: center;
+    }
+
+    /* Responsive Mode Overrides */
+    body.mode-desktop .arena-container {
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 18px !important;
+    }
+
+    body.mode-mobile {
+      padding: 6px !important;
+    }
+    body.mode-mobile h1 { font-size: 1.25rem !important; }
+    body.mode-mobile .subtitle { font-size: 0.74rem !important; margin-bottom: 8px !important; }
+    body.mode-mobile .arena-container {
+      flex-direction: row !important;
+      gap: 6px !important;
+      width: 100% !important;
+    }
+    body.mode-mobile .court {
+      width: 220px !important;
+      height: 310px !important;
+      border-width: 4px !important;
+    }
+    body.mode-mobile .player-token {
+      width: 50px !important;
+      height: 50px !important;
+      border-width: 1.5px !important;
+      padding: 1px !important;
+    }
+    body.mode-mobile .player-name-input {
+      width: 44px !important;
+      font-size: 0.58rem !important;
+      padding: 1px !important;
+    }
+    body.mode-mobile .player-role-input {
+      width: 40px !important;
+      font-size: 0.48rem !important;
+      padding: 0 !important;
+    }
+    body.mode-mobile .bench-wing {
+      width: 72px !important;
+      min-height: 310px !important;
+      padding: 6px 3px !important;
+    }
+    body.mode-mobile .bench-wing-title { font-size: 0.58rem !important; }
+    body.mode-mobile .bench-sub-indicator { font-size: 0.5rem !important; padding: 3px 2px !important; }
+    body.mode-mobile .bench-flow-note { font-size: 0.48rem !important; }
+    body.mode-mobile .bench-wing .player-token {
+      width: 48px !important;
+      height: 48px !important;
+    }
+    body.mode-mobile .config-row {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 6px !important;
+    }
+    body.mode-mobile .config-group { justify-content: space-between !important; }
+    body.mode-mobile select, body.mode-mobile input[type="text"].rotation-name-input { flex: 1 !important; }
+
+    @media (max-width: 820px) {
+      body:not(.mode-desktop) .arena-container {
+        flex-direction: row;
+        gap: 6px;
+      }
+      body:not(.mode-desktop) .court {
+        width: 220px;
+        height: 310px;
+        border-width: 4px;
+      }
+      body:not(.mode-desktop) .player-token {
+        width: 50px;
+        height: 50px;
+        border-width: 1.5px;
+      }
+      body:not(.mode-desktop) .player-name-input {
+        width: 44px;
+        font-size: 0.58rem;
+      }
+      body:not(.mode-desktop) .player-role-input {
+        width: 40px;
+        font-size: 0.48rem;
+      }
+      body:not(.mode-desktop) .bench-wing {
+        width: 72px;
+        min-height: 310px;
+        padding: 6px 3px;
+      }
+      body:not(.mode-desktop) .bench-wing-title {
+        font-size: 0.58rem;
+      }
+      body:not(.mode-desktop) .bench-sub-indicator {
+        font-size: 0.52rem;
+      }
+      body:not(.mode-desktop) .bench-flow-note {
+        font-size: 0.48rem;
+      }
+      body:not(.mode-desktop) .bench-wing .player-token {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  </style>
 </head>
-<body>
+<body class="mode-auto">
 
-  <h1>Volleyball Rotation Simulator</h1>
+  <!-- Main Application Header -->
+  <h1>Simeon All-Rotating Recreational Volleyball Simulator</h1>
+  <p class="subtitle">
+    Compare <b>Home</b>, <b>Base</b>, <b>Serve</b>, and <b>Receive</b>. Select your system (<b>4-2</b>, <b>6-2</b>, or <b>5-1</b>) for automatic setter role highlighting!
+  </p>
 
-  <div class="panel">
-    <!-- Offensive System Selector -->
-    <div class="control-group">
-      <label for="systemSelect">System</label>
-      <select id="systemSelect" onchange="changeSystem(this.value)">
-        <option value="6-2">6-2 (2 Setters, 6 Hitters)</option>
-        <option value="5-1">5-1 (1 Setter, 5 Hitters)</option>
-        <option value="4-2">4-2 (2 Setters, Front-Row Setting)</option>
-      </select>
-    </div>
+  <!-- Device Formatter -->
+  <div class="view-toggle-bar">
+    <span>Format:</span>
+    <button class="view-btn active" id="btnViewAuto" onclick="setViewMode('auto')">Auto</button>
+    <button class="view-btn" id="btnViewMobile" onclick="setViewMode('mobile')">📱 Cellphone</button>
+    <button class="view-btn" id="btnViewDesktop" onclick="setViewMode('desktop')">💻 Desktop</button>
+  </div>
 
-    <!-- Phase Selector -->
-    <div class="control-group">
-      <label for="phaseSelect">Phase</label>
-      <select id="phaseSelect" onchange="setPhase(this.value)">
-        <option value="base">Base Formation</option>
-        <option value="receive">Serve-Receive</option>
-        <option value="rotational">Home / Rotational</option>
-      </select>
-    </div>
+  <!-- Out-of-rotation fault banner -->
+  <div class="fault-indicator-bar" id="faultBanner">⚠️ ROTATION FAULT DETECTED!</div>
 
-    <!-- Rotation Controls -->
-    <div class="control-group">
-      <label>Rotation</label>
-      <div style="display: flex; gap: 6px;">
-        <button onclick="prevRotation()">◀</button>
-        <button id="rotDisplay" style="min-width: 65px; pointer-events: none;">Rot 1</button>
-        <button onclick="nextRotation()">▶</button>
+  <!-- Team Configuration, Presets & File Sharing -->
+  <div class="config-card">
+    <div class="config-row">
+      <div class="config-group">
+        <span class="config-label">Team Size:</span>
+        <select id="teamSizeSelect" onchange="onTeamSizeChange()">
+          <option value="6">6 Players (No Bench)</option>
+          <option value="7">7 Players (1 Bench)</option>
+          <option value="8" selected>8 Players (2 Benches)</option>
+        </select>
+
+        <span class="config-label" style="margin-left: 6px;">System:</span>
+        <select id="offensiveSystemSelect" onchange="onOffensiveSystemChange()">
+          <option value="4-2" selected>4-2 (Front Setter Yellow)</option>
+          <option value="6-2">6-2 (Back Setter Yellow)</option>
+          <option value="5-1">5-1 (Setter Always Yellow)</option>
+        </select>
+
+        <span id="subSideContainer" style="display:none; align-items:center; gap:6px;">
+          <span class="config-label" style="font-size:0.75rem;">Bench Sub At:</span>
+          <select id="sevenPlayerSideSelect" onchange="onSevenPlayerSideChange()">
+            <option value="left" selected>Left Front (Pos 4)</option>
+            <option value="right">Serve (Pos 1)</option>
+          </select>
+        </span>
+      </div>
+
+      <div class="config-group">
+        <span class="config-label">Save New:</span>
+        <input type="text" id="rotationNameInput" class="rotation-name-input" placeholder="e.g. Stacked P1" style="width: 120px;">
+        <button class="save-btn" onclick="saveNamedRotation()">💾 Save</button>
       </div>
     </div>
 
-    <div class="control-group" style="align-self: flex-end;">
-      <button class="primary" onclick="resetRoster()">Reset</button>
+    <!-- Row 2: Saved Rotations Dropdown & Update Changes -->
+    <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+      <div class="config-group">
+        <span class="config-label">Saved Rotations:</span>
+        <select id="savedRotationsSelect" style="min-width: 160px;" onchange="syncSelectedRotationName(this.value)">
+          <option value="">-- Select Rotation Name --</option>
+        </select>
+        <button class="load-btn" onclick="loadSelectedRotation()">📂 Load</button>
+        <button class="update-btn" onclick="updateCurrentLoadedRotation()">💾 Save Changes</button>
+        <button class="del-btn" onclick="deleteCurrentRotation()">🗑️ Delete</button>
+      </div>
+    </div>
+
+    <!-- Row 3: Online GitHub Sharing, File Export/Import & Email Feedback -->
+    <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+      <div class="config-group">
+        <span class="config-label">Share & Connect:</span>
+        <button class="share-btn" onclick="copyShareLink()">🔗 Copy Share Link</button>
+        <button class="save-btn" onclick="exportToFile()">⬇️ Export File (.json)</button>
+        <button class="load-btn" onclick="document.getElementById('fileInput').click()">⬆️ Import File</button>
+        <button class="email-btn" onclick="emailSuggestions()">💡 Email Suggestions</button>
+        <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importFromFile(event)">
+      </div>
     </div>
   </div>
 
-  <div class="court-wrapper">
-    <div class="net-label">— NET —</div>
-    <div class="court" id="court">
-      <div class="attack-line"></div>
-    </div>
+  <!-- Rotation Buttons Toolbar -->
+  <div class="rotation-toolbar">
+    <div class="rotation-toolbar-title" id="rotToolbarTitle">Select Rotation</div>
+    <div class="rot-buttons-row" id="rotButtonsContainer"></div>
   </div>
 
-  <div class="info-bar" id="sysDescription"></div>
+  <!-- Scenario Toolbar -->
+  <div class="scenario-toolbar">
+    <span class="config-label">Scenario:</span>
+    <button class="scenario-btn active" id="btnScenarioHome" onclick="setScenario('home')">🏠 Home (Slots)</button>
+    <button class="scenario-btn" id="btnScenarioBase" onclick="setScenario('base')">🛡️ Base (Defense)</button>
+    <button class="scenario-btn" id="btnScenarioServe" onclick="setScenario('serve')">🏐 On Serve</button>
+    <button class="scenario-btn" id="btnScenarioReceive" onclick="setScenario('receive')">📥 Serve Receive</button>
+  </div>
 
-<script>
-  let currentSystem = '6-2';
-  let currentRotation = 1;
-  let currentPhase = 'base';
+  <!-- Arena Container -->
+  <div class="arena-container">
 
-  const ZONE_COORDS = {
-    // Standard Home Zones
-    zone1: { x: 82, y: 80 },
-    zone2: { x: 82, y: 20 },
-    zone3: { x: 50, y: 20 },
-    zone4: { x: 18, y: 20 },
-    zone5: { x: 18, y: 80 },
-    zone6: { x: 50, y: 80 },
+    <!-- Left Bench -->
+    <div class="bench-wing" id="leftBenchWing">
+      <div class="bench-wing-title" id="leftBenchTitle">Left Bench</div>
+      <div class="bench-sub-indicator" id="leftSubIndicator">&rarr; Subs to LF (Pos 4) &rarr;</div>
+      <div class="bench-slot-area">
+        <div id="leftBench"></div>
+      </div>
+      <div class="bench-flow-note" id="leftFlowNote">&larr; Receives player exiting Pos 5</div>
+    </div>
 
-    // Base Formations
-    baseFR_Left: { x: 18, y: 20 },
-    baseFR_Mid: { x: 50, y: 18 },
-    baseFR_Right: { x: 82, y: 20 },
-    baseBR_Left: { x: 22, y: 78 },
-    baseBR_Mid: { x: 50, y: 82 },
-    baseBR_Right: { x: 78, y: 78 },
+    <!-- Center Interactive Court -->
+    <div class="court-container">
+      <div class="court-header">NET / OPPONENT SIDE</div>
+      <div class="net-indicator"></div>
+      <div class="court" id="courtSurface">
+        <div class="attack-line"></div>
+        <canvas id="overlapCanvas"></canvas>
 
-    // Setter Target Spot
-    setterTarget: { x: 68, y: 14 }
-  };
+        <div class="court-grid-guides">
+          <div class="grid-zone"><span class="zone-marker zm-4">Zone 4 (LF)</span></div>
+          <div class="grid-zone"><span class="zone-marker zm-3">Zone 3 (MF)</span></div>
+          <div class="grid-zone"><span class="zone-marker zm-2">Zone 2 (RF)</span></div>
+          <div class="grid-zone"><span class="zone-marker zm-5">Zone 5 (LB)</span></div>
+          <div class="grid-zone"><span class="zone-marker zm-6">Zone 6 (MB)</span></div>
+          <div class="grid-zone"><span class="zone-marker zm-1">Zone 1 (RB)</span></div>
+        </div>
 
-  const SYSTEM_CONFIGS = {
-    '6-2': {
-      desc: "6-2 System: Back-row setter penetrates to set (highlighted in yellow). 3 front-row attackers.",
-      roster: [
-        { id: 1, name: "Setter 1", role: "S" },
-        { id: 2, name: "Outside 1", role: "OH" },
-        { id: 3, name: "Middle 1", role: "MB" },
-        { id: 4, name: "Setter 2 / OPP", role: "S" },
-        { id: 5, name: "Outside 2", role: "OH" },
-        { id: 6, name: "Middle 2 / L", role: "MB" }
-      ]
-    },
-    '5-1': {
-      desc: "5-1 System: Single setter sets all 6 rotations (highlighted in yellow in all positions).",
-      roster: [
-        { id: 1, name: "Setter", role: "S" },
-        { id: 2, name: "Outside 1", role: "OH" },
-        { id: 3, name: "Middle 1", role: "MB" },
-        { id: 4, name: "Opposite", role: "OPP" },
-        { id: 5, name: "Outside 2", role: "OH" },
-        { id: 6, name: "Middle 2 / L", role: "MB" }
-      ]
-    },
-    '4-2': {
-      desc: "4-2 System: Front-row setter sets (highlighted in yellow). Back-row setter plays standard defense.",
-      roster: [
-        { id: 1, name: "Setter 2", role: "S" },
-        { id: 2, name: "Outside 1", role: "OH" },
-        { id: 3, name: "Middle 1", role: "MB" },
-        { id: 4, name: "Setter 1", role: "S" },
-        { id: 5, name: "Outside 2", role: "OH" },
-        { id: 6, name: "Middle 2 / L", role: "MB" }
-      ]
+        <!-- 6 Interactive Player Tokens -->
+        <div id="courtTokensContainer"></div>
+      </div>
+    </div>
+
+    <!-- Right Bench -->
+    <div class="bench-wing" id="rightBenchWing">
+      <div class="bench-wing-title" id="rightBenchTitle">Right Bench</div>
+      <div class="bench-sub-indicator" id="rightSubIndicator">&larr; Subs to Serve (Pos 1) &larr;</div>
+      <div class="bench-slot-area">
+        <div id="rightBench"></div>
+      </div>
+      <div class="bench-flow-note" id="rightFlowNote">&rarr; Receives player exiting Pos 2</div>
+    </div>
+
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="nav-btn" onclick="goToRotation(currentRotation - 1)">&larr; Prev Rotation</button>
+    <button class="nav-btn" onclick="goToRotation(currentRotation + 1)">Next Rotation &rarr;</button>
+    <button class="reset-pos-btn" onclick="resetScenarioFormation()">Reset Scenario Layout</button>
+    <button class="del-btn" onclick="resetToDefaults()">Reset Lineup</button>
+  </div>
+
+  <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
+
+  <script>
+    const MY_EMAIL = "your-email@example.com";
+
+    const DEFAULT_NAMES = [
+      { id: 1, name: "Alex", position: "S" },      // Starts at Pos 1
+      { id: 2, name: "Jordan", position: "OH" },  // Starts at Pos 6
+      { id: 3, name: "Taylor", position: "MB" },  // Starts at Pos 5
+      { id: 4, name: "Sam", position: "S" },      // Starts at Pos 4 (opposite setter in 4-2 / 6-2)
+      { id: 5, name: "Morgan", position: "OH" },  // Starts at Pos 3
+      { id: 6, name: "Casey", position: "MB" },   // Starts at Pos 2
+      { id: 7, name: "Riley", position: "DS" },   // Left Bench
+      { id: 8, name: "Jamie", position: "DS" }    // Right Bench
+    ];
+
+    const HOME_COORDINATES = {
+      pos4: { x: 18, y: 16 },
+      pos3: { x: 50, y: 16 },
+      pos2: { x: 82, y: 16 },
+      pos5: { x: 18, y: 72 },
+      pos6: { x: 50, y: 72 },
+      pos1: { x: 82, y: 78 }
+    };
+
+    const BASE_DEFENSIVE_COORDINATES = {
+      pos4: { x: 16, y: 10 },
+      pos3: { x: 50, y: 8 },
+      pos2: { x: 84, y: 10 },
+      pos5: { x: 16, y: 68 },
+      pos6: { x: 50, y: 84 },
+      pos1: { x: 84, y: 68 }
+    };
+
+    const SERVE_COORDINATES = {
+      pos4: { x: 16, y: 12 },
+      pos3: { x: 50, y: 10 },
+      pos2: { x: 84, y: 12 },
+      pos5: { x: 22, y: 68 },
+      pos6: { x: 50, y: 70 },
+      pos1: { x: 86, y: 92 }
+    };
+
+    const RECEIVE_SCENARIOS = {
+      1: { pos4: { x: 18, y: 22 }, pos3: { x: 52, y: 20 }, pos2: { x: 82, y: 22 }, pos5: { x: 20, y: 70 }, pos6: { x: 50, y: 74 }, pos1: { x: 80, y: 70 } },
+      2: { pos4: { x: 16, y: 20 }, pos3: { x: 48, y: 22 }, pos2: { x: 84, y: 24 }, pos5: { x: 24, y: 72 }, pos6: { x: 50, y: 76 }, pos1: { x: 78, y: 72 } },
+      3: { pos4: { x: 20, y: 24 }, pos3: { x: 50, y: 22 }, pos2: { x: 80, y: 20 }, pos5: { x: 22, y: 74 }, pos6: { x: 52, y: 74 }, pos1: { x: 82, y: 72 } },
+      4: { pos4: { x: 22, y: 24 }, pos3: { x: 50, y: 22 }, pos2: { x: 82, y: 22 }, pos5: { x: 20, y: 72 }, pos6: { x: 50, y: 74 }, pos1: { x: 80, y: 72 } },
+      5: { pos4: { x: 18, y: 22 }, pos3: { x: 48, y: 22 }, pos2: { x: 82, y: 24 }, pos5: { x: 22, y: 70 }, pos6: { x: 52, y: 72 }, pos1: { x: 82, y: 74 } },
+      6: { pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 22 }, pos5: { x: 24, y: 72 }, pos6: { x: 50, y: 72 }, pos1: { x: 78, y: 72 } },
+      7: { pos4: { x: 18, y: 22 }, pos3: { x: 50, y: 22 }, pos2: { x: 82, y: 22 }, pos5: { x: 22, y: 72 }, pos6: { x: 50, y: 74 }, pos1: { x: 80, y: 72 } },
+      8: { pos4: { x: 18, y: 22 }, pos3: { x: 50, y: 22 }, pos2: { x: 82, y: 22 }, pos5: { x: 22, y: 72 }, pos6: { x: 50, y: 74 }, pos1: { x: 80, y: 72 } }
+    };
+
+    let teamSize = 8;
+    let offensiveSystem = "4-2"; // '4-2', '6-2', or '5-1'
+    let sevenPlayerSubSide = "left";
+    let currentRotation = 1;
+    let currentScenario = 'home';
+    let currentlyLoadedRotationName = null;
+    let squad = [];
+
+    let playerCoords = JSON.parse(JSON.stringify(HOME_COORDINATES));
+    let activeFaults = [];
+
+    function initDefaultSquad() {
+      squad = JSON.parse(JSON.stringify(DEFAULT_NAMES));
     }
-  };
 
-  function getRotatedLineup() {
-    const baseRoster = SYSTEM_CONFIGS[currentSystem].roster;
-    const shift = (currentRotation - 1) % 6;
-    let lineup = [];
-    for (let i = 0; i < 6; i++) {
-      let originalIdx = (i - shift + 6) % 6;
-      lineup.push({
-        ...baseRoster[originalIdx],
-        currentCourtZone: i + 1 // 1: RB, 2: RF, 3: MF, 4: LF, 5: LB, 6: MB
-      });
-    }
-    return lineup;
-  }
-
-  function getCoordinates(player) {
-    const zone = player.currentCourtZone;
-    const isFrontRow = [2, 3, 4].includes(zone);
-
-    if (currentPhase === 'rotational') {
-      return ZONE_COORDS[`zone${zone}`];
-    }
-
-    if (currentPhase === 'base') {
-      if (player.role === 'S') {
-        if (currentSystem === '4-2') {
-          return isFrontRow ? ZONE_COORDS.setterTarget : ZONE_COORDS.baseBR_Right;
-        }
-        if (currentSystem === '6-2') {
-          return isFrontRow ? ZONE_COORDS.baseFR_Right : ZONE_COORDS.setterTarget;
-        }
-        if (currentSystem === '5-1') {
-          return ZONE_COORDS.setterTarget;
+    function stepOneRotation(prev) {
+      if (teamSize === 6) {
+        return {
+          pos4: prev.pos5, pos3: prev.pos4, pos2: prev.pos3,
+          pos1: prev.pos2, pos6: prev.pos1, pos5: prev.pos6
+        };
+      }
+      if (teamSize === 7) {
+        if (sevenPlayerSubSide === "left") {
+          return {
+            pos4: prev.leftBench, pos3: prev.pos4, pos2: prev.pos3,
+            pos1: prev.pos2, pos6: prev.pos1, pos5: prev.pos6,
+            leftBench: prev.pos5
+          };
+        } else {
+          return {
+            pos4: prev.pos5, pos3: prev.pos4, pos2: prev.pos3,
+            pos1: prev.rightBench, pos6: prev.pos1, pos5: prev.pos6,
+            rightBench: prev.pos2
+          };
         }
       }
-      if (player.role === 'OH') return isFrontRow ? ZONE_COORDS.baseFR_Left : ZONE_COORDS.baseBR_Mid;
-      if (player.role === 'MB') return isFrontRow ? ZONE_COORDS.baseFR_Mid : ZONE_COORDS.baseBR_Left;
-      if (player.role === 'OPP') return isFrontRow ? ZONE_COORDS.baseFR_Right : ZONE_COORDS.baseBR_Right;
-      return ZONE_COORDS[`zone${zone}`];
+      if (teamSize === 8) {
+        return {
+          pos4: prev.leftBench, pos3: prev.pos4, pos2: prev.pos3,
+          pos1: prev.rightBench, pos6: prev.pos1, pos5: prev.pos6,
+          leftBench: prev.pos5, rightBench: prev.pos2
+        };
+      }
     }
 
-    if (currentPhase === 'receive') {
-      if (zone === 1) return { x: 80, y: 65 };
-      if (zone === 2) return { x: 75, y: 35 };
-      if (zone === 3) return { x: 50, y: 32 };
-      if (zone === 4) return { x: 25, y: 35 };
-      if (zone === 5) return { x: 25, y: 70 };
-      if (zone === 6) return { x: 50, y: 75 };
+    function calculateStateForRotation(rotNum) {
+      let state = {
+        pos1: squad.find(p => p.id === 1),
+        pos6: squad.find(p => p.id === 2),
+        pos5: squad.find(p => p.id === 3),
+        pos4: squad.find(p => p.id === 4),
+        pos3: squad.find(p => p.id === 5),
+        pos2: squad.find(p => p.id === 6)
+      };
+
+      if (teamSize === 7) {
+        if (sevenPlayerSubSide === "left") state.leftBench = squad.find(p => p.id === 7);
+        else state.rightBench = squad.find(p => p.id === 7);
+      } else if (teamSize === 8) {
+        state.leftBench = squad.find(p => p.id === 7);
+        state.rightBench = squad.find(p => p.id === 8);
+      }
+
+      for (let i = 1; i < rotNum; i++) {
+        state = stepOneRotation(state);
+      }
+      return state;
     }
 
-    return ZONE_COORDS[`zone${zone}`];
-  }
-
-  // System-specific setter highlighting rules
-  function isHighlightedSetter(player) {
-    if (player.role !== 'S') return false;
-
-    const isFrontRow = [2, 3, 4].includes(player.currentCourtZone);
-    const isBackRow = [1, 5, 6].includes(player.currentCourtZone);
-
-    if (currentSystem === '4-2') {
-      return isFrontRow; // Only front-row setter turns yellow
-    } else if (currentSystem === '6-2') {
-      return isBackRow;  // Only back-row setter turns yellow
-    } else if (currentSystem === '5-1') {
-      return true;       // Setter turns yellow all around the court
+    function applyScenarioLayout() {
+      if (currentScenario === 'home') {
+        playerCoords = JSON.parse(JSON.stringify(HOME_COORDINATES));
+      } else if (currentScenario === 'base') {
+        playerCoords = JSON.parse(JSON.stringify(BASE_DEFENSIVE_COORDINATES));
+      } else if (currentScenario === 'serve') {
+        playerCoords = JSON.parse(JSON.stringify(SERVE_COORDINATES));
+      } else if (currentScenario === 'receive') {
+        const rPreset = RECEIVE_SCENARIOS[currentRotation] || RECEIVE_SCENARIOS[1];
+        playerCoords = JSON.parse(JSON.stringify(rPreset));
+      }
     }
 
-    return false;
-  }
+    function setScenario(scen) {
+      currentScenario = scen;
+      document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+      if (scen === 'home') document.getElementById('btnScenarioHome').classList.add('active');
+      if (scen === 'base') document.getElementById('btnScenarioBase').classList.add('active');
+      if (scen === 'serve') document.getElementById('btnScenarioServe').classList.add('active');
+      if (scen === 'receive') document.getElementById('btnScenarioReceive').classList.add('active');
 
-  function renderCourt() {
-    const court = document.getElementById('court');
-    court.innerHTML = '<div class="attack-line"></div>';
+      applyScenarioLayout();
+      renderCourtTokens();
+      checkPositionalFaults();
 
-    const lineup = getRotatedLineup();
-    document.getElementById('rotDisplay').innerText = `Rot ${currentRotation}`;
-    document.getElementById('sysDescription').innerText = SYSTEM_CONFIGS[currentSystem].desc;
+      const labels = {
+        home: 'Home (Starting Rotational Slots)',
+        base: 'Base (Defensive Transition — Ball on Opponent Side)',
+        serve: 'On Serve (Position 1 Serving)',
+        receive: 'Serve Receive Formation'
+      };
+      document.getElementById('logBox').innerText = `Displaying [${labels[scen]}] for Rotation ${currentRotation} in ${offensiveSystem} system.`;
+    }
 
-    lineup.forEach((p) => {
-      const coords = getCoordinates(p);
-      const shouldHighlight = isHighlightedSetter(p);
+    function resetScenarioFormation() {
+      applyScenarioLayout();
+      renderCourtTokens();
+      checkPositionalFaults();
+      document.getElementById('logBox').innerText = `Reset layout for current scenario in Rotation ${currentRotation}.`;
+    }
 
-      const token = document.createElement('div');
-      token.className = `player-token ${shouldHighlight ? 'active-setter' : ''}`;
-      token.style.left = `${coords.x}%`;
-      token.style.top = `${coords.y}%`;
+    function isPlayerSetter(player) {
+      if (!player) return false;
+      const posText = (player.position || '').trim().toUpperCase();
+      const nameText = (player.name || '').trim().toUpperCase();
+      return posText === 'S' || posText.includes('SET') || nameText.includes('SETTER');
+    }
 
-      token.innerHTML = `
-        <span class="name">${p.name}</span>
-        <span class="role">${p.role} (Z${p.currentCourtZone})</span>
-      `;
-      court.appendChild(token);
+    /* System-specific Setter Coloring:
+       - 4-2: Setter turns yellow ONLY in front row (Pos 4, 3, 2).
+       - 6-2: Setter turns yellow ONLY in back row (Pos 5, 6, 1).
+       - 5-1: Setter stays yellow all around (front row and back row).
+    */
+    function shouldHighlightSetter(player, posKey) {
+      if (!isPlayerSetter(player)) return false;
+      const frontRowKeys = ['pos4', 'pos3', 'pos2'];
+      const isFrontRow = frontRowKeys.includes(posKey);
+
+      if (offensiveSystem === '4-2') {
+        return isFrontRow;
+      } else if (offensiveSystem === '6-2') {
+        return !isFrontRow;
+      } else if (offensiveSystem === '5-1') {
+        return true;
+      }
+      return false;
+    }
+
+    function checkPositionalFaults() {
+      if (currentScenario === 'base') {
+        activeFaults = [];
+        updateFaultUI();
+        drawOverlapLines();
+        return;
+      }
+
+      const p = playerCoords;
+      const faults = [];
+
+      if (p.pos4.y >= p.pos5.y) faults.push({ posA: 'pos4', posB: 'pos5', msg: 'Pos 4 (LF) must be closer to net than Pos 5 (LB)' });
+      if (p.pos3.y >= p.pos6.y) faults.push({ posA: 'pos3', posB: 'pos6', msg: 'Pos 3 (MF) must be closer to net than Pos 6 (MB)' });
+      if (p.pos2.y >= p.pos1.y) faults.push({ posA: 'pos2', posB: 'pos1', msg: 'Pos 2 (RF) must be closer to net than Pos 1 (RB)' });
+
+      if (p.pos4.x >= p.pos3.x) faults.push({ posA: 'pos4', posB: 'pos3', msg: 'Pos 4 (LF) must be left of Pos 3 (MF)' });
+      if (p.pos3.x >= p.pos2.x) faults.push({ posA: 'pos3', posB: 'pos2', msg: 'Pos 3 (MF) must be left of Pos 2 (RF)' });
+
+      if (p.pos5.x >= p.pos6.x) faults.push({ posA: 'pos5', posB: 'pos6', msg: 'Pos 5 (LB) must be left of Pos 6 (MB)' });
+      if (p.pos6.x >= p.pos1.x) faults.push({ posA: 'pos6', posB: 'pos1', msg: 'Pos 6 (MB) must be left of Pos 1 (RB)' });
+
+      activeFaults = faults;
+      updateFaultUI();
+      drawOverlapLines();
+    }
+
+    function updateFaultUI() {
+      const banner = document.getElementById('faultBanner');
+      const positions = ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'];
+
+      positions.forEach(pos => {
+        const token = document.getElementById(`token-${pos}`);
+        if (token) token.classList.remove('fault');
+      });
+
+      if (activeFaults.length > 0) {
+        banner.classList.add('show');
+        banner.innerText = `⚠️ OUT OF ROTATION: ${activeFaults[0].msg}`;
+        activeFaults.forEach(f => {
+          const tA = document.getElementById(`token-${f.posA}`);
+          const tB = document.getElementById(`token-${f.posB}`);
+          if (tA) tA.classList.add('fault');
+          if (tB) tB.classList.add('fault');
+        });
+      } else {
+        banner.classList.remove('show');
+        banner.innerText = '';
+      }
+    }
+
+    function drawOverlapLines() {
+      const canvas = document.getElementById('overlapCanvas');
+      const court = document.getElementById('courtSurface');
+      if (!canvas || !court) return;
+
+      canvas.width = court.clientWidth;
+      canvas.height = court.clientHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (activeFaults.length === 0) return;
+
+      activeFaults.forEach(f => {
+        const ptA = playerCoords[f.posA];
+        const ptB = playerCoords[f.posB];
+
+        const xA = (ptA.x / 100) * canvas.width;
+        const yA = (ptA.y / 100) * canvas.height;
+        const xB = (ptB.x / 100) * canvas.width;
+        const yB = (ptB.y / 100) * canvas.height;
+
+        ctx.beginPath();
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = '#e74c3c';
+        ctx.lineWidth = 2.5;
+        ctx.moveTo(xA, yA);
+        ctx.lineTo(xB, yB);
+        ctx.stroke();
+      });
+    }
+
+    /* Dragging Logic */
+    let draggedToken = null;
+    let draggedPosKey = null;
+
+    function attachDragHandlers(el, posKey) {
+      const onPointerDown = (e) => {
+        if (e.target.tagName.toLowerCase() === 'input') return;
+        draggedToken = el;
+        draggedPosKey = posKey;
+        el.classList.add('dragging');
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+        e.preventDefault();
+      };
+
+      el.addEventListener('pointerdown', onPointerDown);
+    }
+
+    function onPointerMove(e) {
+      if (!draggedToken || !draggedPosKey) return;
+      const court = document.getElementById('courtSurface');
+      const rect = court.getBoundingClientRect();
+
+      let relX = e.clientX - rect.left;
+      let relY = e.clientY - rect.top;
+
+      relX = Math.max(16, Math.min(rect.width - 16, relX));
+      relY = Math.max(16, Math.min(rect.height - 16, relY));
+
+      const pctX = (relX / rect.width) * 100;
+      const pctY = (relY / rect.height) * 100;
+
+      playerCoords[draggedPosKey].x = pctX;
+      playerCoords[draggedPosKey].y = pctY;
+
+      draggedToken.style.left = `${pctX}%`;
+      draggedToken.style.top = `${pctY}%`;
+
+      checkPositionalFaults();
+    }
+
+    function onPointerUp() {
+      if (draggedToken) draggedToken.classList.remove('dragging');
+      draggedToken = null;
+      draggedPosKey = null;
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+    }
+
+    function updateWingVisibility() {
+      const leftWing = document.getElementById('leftBenchWing');
+      const rightWing = document.getElementById('rightBenchWing');
+      const subSideBox = document.getElementById('subSideContainer');
+
+      if (teamSize === 6) {
+        leftWing.classList.add('hidden');
+        rightWing.classList.add('hidden');
+        subSideBox.style.display = 'none';
+      } else if (teamSize === 7) {
+        subSideBox.style.display = 'inline-flex';
+        if (sevenPlayerSubSide === 'left') {
+          leftWing.classList.remove('hidden');
+          rightWing.classList.add('hidden');
+        } else {
+          leftWing.classList.add('hidden');
+          rightWing.classList.remove('hidden');
+        }
+      } else if (teamSize === 8) {
+        leftWing.classList.remove('hidden');
+        rightWing.classList.remove('hidden');
+        subSideBox.style.display = 'none';
+      }
+    }
+
+    function goToRotation(targetRot) {
+      if (targetRot < 1) targetRot = teamSize;
+      if (targetRot > teamSize) targetRot = 1;
+
+      currentRotation = targetRot;
+      const state = calculateStateForRotation(currentRotation);
+
+      currentScenario = 'home';
+      document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+      const homeBtn = document.getElementById('btnScenarioHome');
+      if (homeBtn) homeBtn.classList.add('active');
+
+      applyScenarioLayout();
+      renderCourtTokens();
+      renderBenchTokens(state);
+      updateButtonsUI();
+      checkPositionalFaults();
+
+      let logText = `Active: Rotation ${currentRotation} of ${teamSize} [${offensiveSystem} System - HOME]. Server: [${state.pos1.name}].`;
+      document.getElementById('logBox').innerText = logText;
+    }
+
+    function onPlayerNameChange(playerId, newName) {
+      const player = squad.find(p => p.id === playerId);
+      if (player) {
+        player.name = newName.trim() || `Player ${playerId}`;
+        goToRotation(currentRotation);
+      }
+    }
+
+    function onPlayerPositionChange(playerId, newPosition) {
+      const player = squad.find(p => p.id === playerId);
+      if (player) {
+        player.position = newPosition.trim().toUpperCase() || 'P';
+        goToRotation(currentRotation);
+      }
+    }
+
+    function renderCourtTokens() {
+      const container = document.getElementById('courtTokensContainer');
+      const state = calculateStateForRotation(currentRotation);
+      container.innerHTML = '';
+
+      ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+        const player = state[posKey];
+        const coords = playerCoords[posKey];
+        const isYellowSetter = shouldHighlightSetter(player, posKey);
+
+        const token = document.createElement('div');
+        token.className = `player-token ${isYellowSetter ? 'setter-active' : ''}`;
+        token.id = `token-${posKey}`;
+        token.style.left = `${coords.x}%`;
+        token.style.top = `${coords.y}%`;
+        token.style.transform = 'translate(-50%, -50%)';
+
+        token.innerHTML = `
+          <input 
+            type="text" 
+            class="player-name-input" 
+            value="${player.name}" 
+            title="Click to edit player name"
+            onchange="onPlayerNameChange(${player.id}, this.value)"
+            onkeydown="if(event.key === 'Enter') this.blur()"
+          />
+          <input 
+            type="text" 
+            class="player-role-input" 
+            value="${player.position || 'P'}" 
+            title="Click to edit position (S, OH, MB, OPP, etc.)"
+            onchange="onPlayerPositionChange(${player.id}, this.value)"
+            onkeydown="if(event.key === 'Enter') this.blur()"
+          />
+        `;
+
+        attachDragHandlers(token, posKey);
+        container.appendChild(token);
+      });
+    }
+
+    function renderBenchTokens(state) {
+      const b1 = document.getElementById('leftBench');
+      const b2 = document.getElementById('rightBench');
+
+      if (state.leftBench && b1) {
+        b1.innerHTML = `
+          <div class="player-token">
+            <input 
+              type="text" 
+              class="player-name-input" 
+              value="${state.leftBench.name}" 
+              title="Click to edit player name"
+              onchange="onPlayerNameChange(${state.leftBench.id}, this.value)" 
+            />
+            <input 
+              type="text" 
+              class="player-role-input" 
+              value="${state.leftBench.position || 'BENCH'}" 
+              title="Click to edit position"
+              onchange="onPlayerPositionChange(${state.leftBench.id}, this.value)" 
+            />
+          </div>
+        `;
+      }
+      if (state.rightBench && b2) {
+        b2.innerHTML = `
+          <div class="player-token">
+            <input 
+              type="text" 
+              class="player-name-input" 
+              value="${state.rightBench.name}" 
+              title="Click to edit player name"
+              onchange="onPlayerNameChange(${state.rightBench.id}, this.value)" 
+            />
+            <input 
+              type="text" 
+              class="player-role-input" 
+              value="${state.rightBench.position || 'BENCH'}" 
+              title="Click to edit position"
+              onchange="onPlayerPositionChange(${state.rightBench.id}, this.value)" 
+            />
+          </div>
+        `;
+      }
+    }
+
+    function renderRotationButtons() {
+      const container = document.getElementById('rotButtonsContainer');
+      document.getElementById('rotToolbarTitle').innerText = `Select Rotation (1 - ${teamSize})`;
+      container.innerHTML = '';
+      for (let i = 1; i <= teamSize; i++) {
+        const btn = document.createElement('button');
+        btn.className = `rot-btn ${i === currentRotation ? 'active' : ''}`;
+        btn.id = `rot-btn-${i}`;
+        btn.innerText = `Rot ${i}`;
+        btn.onclick = () => goToRotation(i);
+        container.appendChild(btn);
+      }
+    }
+
+    function updateButtonsUI() {
+      for (let i = 1; i <= teamSize; i++) {
+        const btn = document.getElementById(`rot-btn-${i}`);
+        if (btn) {
+          if (i === currentRotation) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      }
+    }
+
+    function onTeamSizeChange() {
+      teamSize = parseInt(document.getElementById('teamSizeSelect').value, 10);
+      updateWingVisibility();
+      renderRotationButtons();
+      goToRotation(1);
+    }
+
+    function onOffensiveSystemChange() {
+      offensiveSystem = document.getElementById('offensiveSystemSelect').value;
+      renderCourtTokens();
+      let msg = "";
+      if (offensiveSystem === "4-2") msg = "4-2 selected: Front-row setter is yellow.";
+      if (offensiveSystem === "6-2") msg = "6-2 selected: Back-row setter is yellow.";
+      if (offensiveSystem === "5-1") msg = "5-1 selected: Setter is yellow all around.";
+      document.getElementById('logBox').innerText = msg;
+    }
+
+    function onSevenPlayerSideChange() {
+      sevenPlayerSubSide = document.getElementById('sevenPlayerSideSelect').value;
+      updateWingVisibility();
+      goToRotation(1);
+    }
+
+    function setViewMode(mode) {
+      document.body.classList.remove('mode-auto', 'mode-mobile', 'mode-desktop');
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+
+      if (mode === 'mobile') {
+        document.body.classList.add('mode-mobile');
+        document.getElementById('btnViewMobile').classList.add('active');
+      } else if (mode === 'desktop') {
+        document.body.classList.add('mode-desktop');
+        document.getElementById('btnViewDesktop').classList.add('active');
+      } else {
+        document.body.classList.add('mode-auto');
+        document.getElementById('btnViewAuto').classList.add('active');
+      }
+      setTimeout(checkPositionalFaults, 60);
+    }
+
+    /* Storage & Presets */
+    function getRotationsFromStorage() {
+      try {
+        return JSON.parse(localStorage.getItem('vb_scenarios_presets')) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveNamedRotation() {
+      const nameInput = document.getElementById('rotationNameInput');
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert("Please enter a Rotation Name.");
+        return;
+      }
+
+      const savedRotations = getRotationsFromStorage();
+      savedRotations[name] = {
+        teamSize,
+        offensiveSystem,
+        sevenPlayerSubSide,
+        currentScenario,
+        playerCoords: JSON.parse(JSON.stringify(playerCoords)),
+        squad: JSON.parse(JSON.stringify(squad))
+      };
+
+      localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
+      currentlyLoadedRotationName = name;
+      nameInput.value = '';
+      populateRotationsDropdown(name);
+      document.getElementById('logBox').innerText = `✓ Lineup and positions saved under "${name}"!`;
+    }
+
+    function syncSelectedRotationName(val) {
+      if (val) {
+        currentlyLoadedRotationName = val;
+      }
+    }
+
+    function updateCurrentLoadedRotation() {
+      const select = document.getElementById('savedRotationsSelect');
+      const rotName = select.value || currentlyLoadedRotationName;
+
+      if (!rotName) {
+        alert("Please select or load a Rotation Name first, or type a new name and click 'Save'.");
+        return;
+      }
+
+      const savedRotations = getRotationsFromStorage();
+      savedRotations[rotName] = {
+        teamSize,
+        offensiveSystem,
+        sevenPlayerSubSide,
+        currentScenario,
+        playerCoords: JSON.parse(JSON.stringify(playerCoords)),
+        squad: JSON.parse(JSON.stringify(squad))
+      };
+
+      localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
+      currentlyLoadedRotationName = rotName;
+      populateRotationsDropdown(rotName);
+      document.getElementById('logBox').innerText = `✓ Saved changes to "${rotName}"!`;
+    }
+
+    function loadSelectedRotation() {
+      const select = document.getElementById('savedRotationsSelect');
+      const rotName = select.value;
+      if (!rotName) {
+        alert("Please select a Rotation Name from the dropdown.");
+        return;
+      }
+
+      const savedRotations = getRotationsFromStorage();
+      const loaded = savedRotations[rotName];
+      if (!loaded) return;
+
+      currentlyLoadedRotationName = rotName;
+      loadPayloadData(loaded);
+      document.getElementById('logBox').innerText = `✓ Successfully loaded "${rotName}".`;
+    }
+
+    function deleteCurrentRotation() {
+      const select = document.getElementById('savedRotationsSelect');
+      const rotName = select.value;
+      if (!rotName) {
+        alert("Select a saved rotation name from the dropdown to delete.");
+        return;
+      }
+
+      if (confirm(`Delete Rotation Name "${rotName}"?`)) {
+        const savedRotations = getRotationsFromStorage();
+        delete savedRotations[rotName];
+        localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
+        if (currentlyLoadedRotationName === rotName) {
+          currentlyLoadedRotationName = null;
+        }
+        populateRotationsDropdown();
+        document.getElementById('logBox').innerText = `Deleted "${rotName}".`;
+      }
+    }
+
+    function populateRotationsDropdown(selectName = "") {
+      const savedRotations = getRotationsFromStorage();
+      const select = document.getElementById('savedRotationsSelect');
+      select.innerHTML = '<option value="">-- Select Rotation Name --</option>';
+
+      Object.keys(savedRotations).forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.innerText = key;
+        if (key === selectName) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function resetToDefaults() {
+      if (confirm("Reset current lineup names and positions to defaults?")) {
+        initDefaultSquad();
+        offensiveSystem = "4-2";
+        document.getElementById('offensiveSystemSelect').value = "4-2";
+        setScenario('home');
+        goToRotation(1);
+        document.getElementById('logBox').innerText = "Lineup names and positions restored to defaults.";
+      }
+    }
+
+    function buildCurrentPayload() {
+      return {
+        teamSize,
+        offensiveSystem,
+        sevenPlayerSubSide,
+        currentRotation,
+        currentScenario,
+        playerCoords,
+        squad,
+        presets: getRotationsFromStorage()
+      };
+    }
+
+    function loadPayloadData(data) {
+      if (data.teamSize) teamSize = data.teamSize;
+      if (data.offensiveSystem) {
+        offensiveSystem = data.offensiveSystem;
+        document.getElementById('offensiveSystemSelect').value = offensiveSystem;
+      }
+      if (data.sevenPlayerSubSide) sevenPlayerSubSide = data.sevenPlayerSubSide;
+      if (data.squad) squad = JSON.parse(JSON.stringify(data.squad));
+      if (data.playerCoords) playerCoords = JSON.parse(JSON.stringify(data.playerCoords));
+      if (data.presets) {
+        localStorage.setItem('vb_scenarios_presets', JSON.stringify(data.presets));
+        populateRotationsDropdown();
+      }
+
+      document.getElementById('teamSizeSelect').value = teamSize;
+      document.getElementById('sevenPlayerSideSelect').value = sevenPlayerSubSide;
+
+      updateWingVisibility();
+      renderRotationButtons();
+      setScenario(data.currentScenario || 'home');
+      goToRotation(data.currentRotation || 1);
+    }
+
+    function copyShareLink() {
+      const payload = buildCurrentPayload();
+      const jsonStr = JSON.stringify(payload);
+      const encoded = encodeURIComponent(btoa(jsonStr));
+      const shareUrl = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
+
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert("Share Link Copied! Send this URL to teammates. When they open it in GitHub Pages, all your custom names, positions, and presets will load immediately.");
+        document.getElementById('logBox').innerText = "✓ Share link copied to clipboard!";
+      }).catch(() => {
+        prompt("Copy this URL to send to teammates:", shareUrl);
+      });
+    }
+
+    function exportToFile() {
+      const payload = buildCurrentPayload();
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `volleyball_rotation_${teamSize}players.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      document.getElementById('logBox').innerText = "✓ Lineup file exported!";
+    }
+
+    function importFromFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target.result);
+          loadPayloadData(data);
+          document.getElementById('logBox').innerText = `✓ Imported lineup file: ${file.name}`;
+        } catch (err) {
+          alert("Invalid volleyball lineup file.");
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
+
+    function emailSuggestions() {
+      const subject = encodeURIComponent("Suggestion for Simeon Volleyball Simulator");
+      const body = encodeURIComponent(
+        `Hi,\n\nI have a suggestion or question regarding the Simeon All-Rotating Volleyball Simulator:\n\n[Write your idea or feedback here]\n\n---\nContext details:\n- Current Rotation: ${currentRotation}\n- Team Size: ${teamSize}\n- Offensive System: ${offensiveSystem}\n- Active Scenario: ${currentScenario.toUpperCase()}`
+      );
+      window.location.href = `mailto:${MY_EMAIL}?subject=${subject}&body=${body}`;
+    }
+
+    function checkUrlForSharedData() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const dataParam = urlParams.get('data');
+      if (dataParam) {
+        try {
+          const decoded = atob(decodeURIComponent(dataParam));
+          const data = JSON.parse(decoded);
+          loadPayloadData(data);
+          document.getElementById('logBox').innerText = "✓ Shared lineup loaded successfully from URL link!";
+          return true;
+        } catch (e) {
+          console.error("Could not parse share data from URL", e);
+        }
+      }
+      return false;
+    }
+
+    window.addEventListener('resize', () => {
+      drawOverlapLines();
     });
-  }
 
-  function nextRotation() {
-    currentRotation = currentRotation === 6 ? 1 : currentRotation + 1;
-    renderCourt();
-  }
+    // Startup Initialization
+    initDefaultSquad();
+    updateWingVisibility();
+    populateRotationsDropdown();
+    renderRotationButtons();
 
-  function prevRotation() {
-    currentRotation = currentRotation === 1 ? 6 : currentRotation - 1;
-    renderCourt();
-  }
-
-  function changeSystem(sys) {
-    currentSystem = sys;
-    renderCourt();
-  }
-
-  function setPhase(phase) {
-    currentPhase = phase;
-    renderCourt();
-  }
-
-  function resetRoster() {
-    currentRotation = 1;
-    currentPhase = 'base';
-    document.getElementById('phaseSelect').value = 'base';
-    renderCourt();
-  }
-
-  // Initial render
-  renderCourt();
-</script>
+    if (!checkUrlForSharedData()) {
+      goToRotation(1);
+    }
+  </script>
 </body>
 </html>
