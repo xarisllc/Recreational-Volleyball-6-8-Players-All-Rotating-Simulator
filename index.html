@@ -45,44 +45,6 @@
       font-size: 0.88rem;
     }
 
-    /* Device View Switcher */
-    .view-toggle-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--panel-border);
-      border-radius: 30px;
-      padding: 4px 10px;
-      margin-bottom: 12px;
-    }
-
-    .view-toggle-bar span {
-      font-size: 0.76rem;
-      font-weight: bold;
-      color: #00d2d3;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .view-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      color: #a4b0be;
-      padding: 3px 10px;
-      font-size: 0.76rem;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-
-    .view-btn.active {
-      background: #0984e3;
-      color: #fff;
-      border-color: #74b9ff;
-    }
-
     /* Configuration Panel */
     .config-card {
       background: var(--panel-bg);
@@ -574,123 +536,83 @@
       text-align: center;
     }
 
-    /* Responsive Mode Overrides */
-    body.mode-desktop .arena-container {
-      flex-direction: row !important;
-      align-items: center !important;
-      gap: 18px !important;
-    }
-
-    body.mode-mobile {
-      padding: 6px !important;
-    }
-    body.mode-mobile h1 { font-size: 1.25rem !important; }
-    body.mode-mobile .subtitle { font-size: 0.74rem !important; margin-bottom: 8px !important; }
-    body.mode-mobile .arena-container {
-      flex-direction: row !important;
-      gap: 6px !important;
-      width: 100% !important;
-    }
-    body.mode-mobile .court {
-      width: 220px !important;
-      height: 310px !important;
-      border-width: 4px !important;
-    }
-    body.mode-mobile .player-token {
-      width: 52px !important;
-      height: 52px !important;
-      border-width: 1.5px !important;
-      padding: 1px !important;
-    }
-    body.mode-mobile .player-name-input {
-      width: 44px !important;
-      font-size: 0.58rem !important;
-      padding: 1px !important;
-    }
-    body.mode-mobile .player-role-select {
-      width: 44px !important;
-      font-size: 0.48rem !important;
-      padding: 0 !important;
-    }
-    body.mode-mobile .bench-wing {
-      width: 72px !important;
-      min-height: 310px !important;
-      padding: 6px 3px !important;
-    }
-    body.mode-mobile .bench-wing-title { font-size: 0.58rem !important; }
-    body.mode-mobile .bench-sub-indicator { font-size: 0.5rem !important; padding: 3px 2px !important; }
-    body.mode-mobile .bench-flow-note { font-size: 0.48rem !important; }
-    body.mode-mobile .bench-wing .player-token {
-      width: 50px !important;
-      height: 50px !important;
-    }
-    body.mode-mobile .config-row {
-      flex-direction: column !important;
-      align-items: stretch !important;
-      gap: 6px !important;
-    }
-    body.mode-mobile .config-group { justify-content: space-between !important; }
-    body.mode-mobile select, body.mode-mobile input[type="text"].rotation-name-input { flex: 1 !important; }
-
+    /* Automatic Responsive Layout for Mobile and Tablet */
     @media (max-width: 820px) {
-      body:not(.mode-desktop) .arena-container {
+      body {
+        padding: 6px;
+      }
+      h1 {
+        font-size: 1.25rem;
+      }
+      p.subtitle {
+        font-size: 0.74rem;
+        margin-bottom: 8px;
+      }
+      .arena-container {
         flex-direction: row;
         gap: 6px;
+        width: 100%;
       }
-      body:not(.mode-desktop) .court {
+      .court {
         width: 220px;
         height: 310px;
         border-width: 4px;
       }
-      body:not(.mode-desktop) .player-token {
+      .player-token {
         width: 52px;
         height: 52px;
         border-width: 1.5px;
       }
-      body:not(.mode-desktop) .player-name-input {
+      .player-name-input {
         width: 44px;
         font-size: 0.58rem;
+        padding: 1px;
       }
-      body:not(.mode-desktop) .player-role-select {
+      .player-role-select {
         width: 44px;
         font-size: 0.48rem;
+        padding: 0;
       }
-      body:not(.mode-desktop) .bench-wing {
+      .bench-wing {
         width: 72px;
         min-height: 310px;
         padding: 6px 3px;
       }
-      body:not(.mode-desktop) .bench-wing-title {
+      .bench-wing-title {
         font-size: 0.58rem;
       }
-      body:not(.mode-desktop) .bench-sub-indicator {
-        font-size: 0.52rem;
+      .bench-sub-indicator {
+        font-size: 0.5rem;
+        padding: 3px 2px;
       }
-      body:not(.mode-desktop) .bench-flow-note {
+      .bench-flow-note {
         font-size: 0.48rem;
       }
-      body:not(.mode-desktop) .bench-wing .player-token {
+      .bench-wing .player-token {
         width: 50px;
         height: 50px;
+      }
+      .config-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      .config-group {
+        justify-content: space-between;
+      }
+      select, input[type="text"].rotation-name-input {
+        flex: 1;
       }
     }
   </style>
 </head>
-<body class="mode-auto">
+<body>
 
   <!-- Main Application Header -->
   <h1>Simeon All-Rotating Recreational Volleyball Simulator</h1>
   <p class="subtitle">
     Compare <b>Home</b>, <b>Base</b>, <b>Serve</b>, and <b>Receive</b>. Select your system (<b>4-2</b>, <b>6-2</b>, or <b>5-1</b>) for automatic setter role highlighting!
   </p>
-
-  <!-- Device Formatter -->
-  <div class="view-toggle-bar">
-    <span>Format:</span>
-    <button class="view-btn active" id="btnViewAuto" onclick="setViewMode('auto')">Auto</button>
-    <button class="view-btn" id="btnViewMobile" onclick="setViewMode('mobile')">📱 Cellphone</button>
-    <button class="view-btn" id="btnViewDesktop" onclick="setViewMode('desktop')">💻 Desktop</button>
-  </div>
 
   <!-- Out-of-rotation fault banner -->
   <div class="fault-indicator-bar" id="faultBanner">⚠️ ROTATION FAULT DETECTED!</div>
@@ -830,19 +752,17 @@
   <script>
     const MY_EMAIL = "your-email@example.com";
 
-    // Allowed position options for the dropdown
     const POSITION_OPTIONS = ["", "OH", "OH2", "MB", "MB2", "S", "S2", "RS", "RS2", "DS", "DS2"];
 
-    // Default squad with designated positions
     const DEFAULT_NAMES = [
-      { id: 1, name: "Alex", position: "S" },       // Primary Setter (starts at Pos 1)
-      { id: 2, name: "Jordan", position: "OH" },   // Starts at Pos 6
-      { id: 3, name: "Taylor", position: "MB" },   // Starts at Pos 5
-      { id: 4, name: "Sam", position: "S2" },      // Secondary Setter (starts opposite at Pos 4)
-      { id: 5, name: "Morgan", position: "OH2" },  // Starts at Pos 3
-      { id: 6, name: "Casey", position: "MB2" },   // Starts at Pos 2
-      { id: 7, name: "Riley", position: "DS" },    // Left Bench
-      { id: 8, name: "Jamie", position: "DS2" }    // Right Bench
+      { id: 1, name: "Alex", position: "S" },
+      { id: 2, name: "Jordan", position: "OH" },
+      { id: 3, name: "Taylor", position: "MB" },
+      { id: 4, name: "Sam", position: "S2" },
+      { id: 5, name: "Morgan", position: "OH2" },
+      { id: 6, name: "Casey", position: "MB2" },
+      { id: 7, name: "Riley", position: "DS" },
+      { id: 8, name: "Jamie", position: "DS2" }
     ];
 
     const HOME_COORDINATES = {
@@ -994,7 +914,6 @@
       document.getElementById('logBox').innerText = `Reset layout for current scenario in Rotation ${currentRotation}.`;
     }
 
-    /* Setter Role Identifier */
     function getSetterType(player) {
       if (!player) return null;
       const posText = (player.position || '').trim().toUpperCase();
@@ -1007,12 +926,6 @@
       return getSetterType(player) !== null;
     }
 
-    /* System-specific Setter Coloring:
-       - 4-2: Only setter in front row (Pos 4, 3, 2) turns yellow.
-       - 6-2: Setter in back row turns yellow.
-              * If S and S2 are together in back court, ONLY S turns yellow.
-       - 5-1: Setter stays yellow all around.
-    */
     function shouldHighlightSetter(player, posKey, currentState) {
       const setterType = getSetterType(player);
       if (!setterType) return false;
@@ -1247,7 +1160,6 @@
       }
     }
 
-    /* Helper: Generate Position Dropdown HTML */
     function createPositionSelectHTML(playerId, selectedPos) {
       const current = (selectedPos || '').trim().toUpperCase();
       const optionsHTML = POSITION_OPTIONS.map(opt => {
@@ -1380,23 +1292,6 @@
       sevenPlayerSubSide = document.getElementById('sevenPlayerSideSelect').value;
       updateWingVisibility();
       goToRotation(1);
-    }
-
-    function setViewMode(mode) {
-      document.body.classList.remove('mode-auto', 'mode-mobile', 'mode-desktop');
-      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-
-      if (mode === 'mobile') {
-        document.body.classList.add('mode-mobile');
-        document.getElementById('btnViewMobile').classList.add('active');
-      } else if (mode === 'desktop') {
-        document.body.classList.add('mode-desktop');
-        document.getElementById('btnViewDesktop').classList.add('active');
-      } else {
-        document.body.classList.add('mode-auto');
-        document.getElementById('btnViewAuto').classList.add('active');
-      }
-      setTimeout(checkPositionalFaults, 60);
     }
 
     /* Storage & Presets */
