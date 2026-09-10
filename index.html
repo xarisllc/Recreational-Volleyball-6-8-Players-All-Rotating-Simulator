@@ -41,8 +41,131 @@
       margin-top: 0;
       margin-bottom: 12px;
       text-align: center;
-      max-width: 720px;
+      max-width: 860px;
       font-size: 0.88rem;
+    }
+
+    /* Outer Wrapper to Support Left Roster Sidebar */
+    .app-main-layout {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+      max-width: 1180px;
+      box-sizing: border-box;
+    }
+
+    /* Roster Sidebar (Room for 30 Players) */
+    .roster-card {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 12px;
+      width: 240px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .roster-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 6px;
+    }
+
+    .roster-title {
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #00d2d3;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .roster-badge {
+      background: #1f4068;
+      color: #ffeaa7;
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    .roster-list-container {
+      max-height: 480px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 4px;
+    }
+
+    .roster-entry-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 3px 6px;
+    }
+
+    .roster-num {
+      font-size: 0.68rem;
+      color: #94a3b8;
+      font-weight: bold;
+      width: 20px;
+      text-align: right;
+    }
+
+    .roster-name-input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      width: 100%;
+      outline: none;
+    }
+
+    .roster-name-input:focus {
+      color: #f1c40f;
+    }
+
+    .roster-actions-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .roster-btn {
+      flex: 1;
+      padding: 4px 6px;
+      font-size: 0.72rem;
+      border-radius: 4px;
+      background: #1f4068;
+      border: 1px solid #334e68;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .roster-btn:hover { background: #2563eb; }
+
+    /* Main Content Area */
+    .simulator-workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 860px;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     /* Configuration Panel */
@@ -53,7 +176,6 @@
       padding: 10px 16px;
       margin-bottom: 12px;
       width: 100%;
-      max-width: 860px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
@@ -101,7 +223,6 @@
       padding: 10px 16px;
       margin-bottom: 10px;
       width: 100%;
-      max-width: 860px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
@@ -158,7 +279,6 @@
       gap: 8px;
       justify-content: center;
       width: 100%;
-      max-width: 860px;
       box-sizing: border-box;
       margin-bottom: 12px;
       flex-wrap: wrap;
@@ -176,10 +296,7 @@
       transition: all 0.2s;
     }
 
-    .scenario-btn:hover {
-      background: #2563eb;
-      color: #fff;
-    }
+    .scenario-btn:hover { background: #2563eb; color: #fff; }
 
     .scenario-btn.active {
       background: #3b82f6;
@@ -191,7 +308,6 @@
     /* Fault Banner */
     .fault-indicator-bar {
       width: 100%;
-      max-width: 860px;
       background: rgba(231, 76, 60, 0.15);
       border: 1px solid #e74c3c;
       color: #ff7675;
@@ -345,19 +461,35 @@
 
     .zone-marker {
       position: absolute;
-      font-size: 0.65rem;
-      color: rgba(255, 255, 255, 0.45);
-      font-weight: bold;
+      font-size: 0.58rem;
+      color: #ffffff;
+      background: transparent !important;
+      font-weight: 700;
       pointer-events: none;
+      letter-spacing: 0.2px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.85);
+      white-space: nowrap;
     }
-    .zm-4 { top: 4px; left: 6px; }
-    .zm-3 { top: 4px; left: 50%; transform: translateX(-50%); }
-    .zm-2 { top: 4px; right: 6px; }
-    .zm-5 { bottom: 4px; left: 6px; }
+    .zm-4 { top: 3px; left: 5px; }
+    .zm-3 { top: 3px; left: 50%; transform: translateX(-50%); }
+    .zm-2 { top: 3px; right: 5px; }
+    .zm-5 { bottom: 4px; left: 5px; }
     .zm-6 { bottom: 4px; left: 50%; transform: translateX(-50%); }
-    .zm-1 { bottom: 4px; right: 6px; }
+    .zm-1 { bottom: 4px; right: 5px; }
 
-    /* Draggable Player Token */
+    /* Player Token Anchor Wrapper */
+    .player-token-wrapper {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      touch-action: none;
+    }
+
+    /* Player Token Circle */
     .player-token {
       width: 72px;
       height: 72px;
@@ -371,17 +503,14 @@
       font-weight: bold;
       box-shadow: 0 4px 10px rgba(0,0,0,0.35);
       border: 2px solid white;
-      z-index: 10;
       text-align: center;
-      padding: 2px;
       box-sizing: border-box;
-      position: absolute;
       cursor: grab;
-      touch-action: none;
+      overflow: hidden;
       transition: box-shadow 0.15s, border-color 0.15s, background-color 0.15s;
     }
 
-    .player-token:active, .player-token.dragging {
+    .player-token-wrapper.dragging .player-token {
       cursor: grabbing;
       box-shadow: 0 10px 20px rgba(0,0,0,0.6);
       z-index: 20;
@@ -393,15 +522,11 @@
       color: #1e293b !important;
       border-color: #ffffff !important;
     }
-    .player-token.setter-active .player-name-input {
+
+    .player-token.setter-active select {
       color: #1e293b !important;
-      background: rgba(255, 255, 255, 0.45) !important;
-      border-color: rgba(0, 0, 0, 0.25) !important;
-    }
-    .player-token.setter-active .player-role-select {
-      color: #1e293b !important;
-      background: rgba(255, 255, 255, 0.65) !important;
-      border-color: rgba(0, 0, 0, 0.3) !important;
+      background: rgba(255, 255, 255, 0.7) !important;
+      border-color: rgba(0, 0, 0, 0.2) !important;
     }
 
     .player-token.fault {
@@ -412,40 +537,55 @@
     }
 
     .bench-wing .player-token {
-      position: relative;
       cursor: default;
       background: var(--player-bench);
       width: 68px;
       height: 68px;
     }
 
-    .player-name-input {
-      width: 58px;
-      background: rgba(0, 0, 0, 0.35);
+    .token-inner {
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    /* Name Dropdown inside Circle */
+    .player-name-select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.45);
       border: 1px solid rgba(255, 255, 255, 0.4);
       border-radius: 4px;
       color: #fff;
       font-weight: bold;
-      font-size: 0.72rem;
+      font-size: 0.65rem;
       text-align: center;
-      padding: 1px 2px;
+      padding: 1px 0;
       outline: none;
       box-sizing: border-box;
       pointer-events: auto;
+      cursor: pointer;
     }
 
-    /* Position Dropdown Inside Token */
+    .player-name-select option {
+      background: #0f172a;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Position Dropdown inside Circle */
     .player-role-select {
-      width: 56px;
-      background: rgba(0, 0, 0, 0.4);
+      width: 82%;
+      background: rgba(0, 0, 0, 0.45);
       border: 1px solid rgba(255, 255, 255, 0.4);
       border-radius: 4px;
       color: #ffeaa7;
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       font-weight: 800;
       text-align: center;
       padding: 1px 0;
-      margin-top: 2px;
       outline: none;
       box-sizing: border-box;
       pointer-events: auto;
@@ -458,32 +598,27 @@
       font-weight: bold;
     }
 
-    .player-name-input:focus, .player-role-select:focus {
-      background: rgba(0, 0, 0, 0.85) !important;
+    .player-name-select:focus, .player-role-select:focus {
       border-color: #ffd700 !important;
-      color: #ffffff !important;
     }
 
-    /* Mobile Thumb Handle (Hidden on desktop) */
+    /* Mobile Thumb Handle */
     .token-drag-handle {
       display: none;
-      position: absolute;
-      bottom: -22px;
-      left: 50%;
-      transform: translateX(-50%);
       width: 24px;
-      height: 20px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 10px;
-      font-size: 0.65rem;
+      height: 17px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 9px;
+      font-size: 0.62rem;
       align-items: center;
       justify-content: center;
       cursor: grab;
       touch-action: none;
       box-shadow: 0 2px 5px rgba(0,0,0,0.5);
       pointer-events: auto;
-      z-index: 15;
+      margin-top: 2px;
+      user-select: none;
     }
 
     #overlapCanvas {
@@ -700,17 +835,27 @@
       font-style: italic;
     }
 
-    /* Print Canvas (Hidden on regular screen) */
     #printContainer {
       display: none;
     }
 
     /* =======================================================
-       AUTOMATIC RESPONSIVE CELLPHONE / TABLET ADJUSTMENTS
+       RESPONSIVE CELLPHONE STYLING (Screens <= 820px)
        ======================================================= */
     @media (max-width: 820px) {
       body {
         padding: 6px;
+      }
+      .app-main-layout {
+        flex-direction: column;
+        align-items: center;
+      }
+      .roster-card {
+        width: 100%;
+        max-width: 360px;
+      }
+      .roster-list-container {
+        max-height: 160px;
       }
       h1 {
         font-size: 1.25rem;
@@ -729,36 +874,72 @@
         height: 330px;
         border-width: 4px;
       }
-      /* Proportional Circle Token: Generous size to fit name and dropdown */
+
+      .zone-marker {
+        font-size: 0.50rem !important;
+        background: transparent !important;
+        color: #ffffff !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.95) !important;
+      }
+      .zm-4 { top: 2px !important; left: 3px !important; }
+      .zm-3 { top: 2px !important; left: 50% !important; transform: translateX(-50%) !important; }
+      .zm-2 { top: 2px !important; right: 3px !important; }
+      .zm-5 { bottom: 2px !important; left: 3px !important; }
+      .zm-6 { bottom: 2px !important; left: 50% !important; transform: translateX(-50%) !important; }
+      .zm-1 { bottom: 2px !important; right: 3px !important; }
+
       .player-token {
-        width: 64px;
-        height: 64px;
-        border-width: 2px;
-        padding: 1px;
-      }
-      /* Sized name input strictly inside the circle */
-      .player-name-input {
-        width: 52px;
-        height: 17px;
-        font-size: 0.65rem;
-        padding: 0 2px;
-        border-radius: 3px;
-      }
-      /* Sized position dropdown strictly inside the circle */
-      .player-role-select {
-        width: 44px;
-        height: 16px;
-        font-size: 0.55rem;
+        width: 58px;
+        height: 58px;
+        border-width: 1.5px;
         padding: 0;
-        margin-top: 2px;
-        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .token-inner {
+        width: 90%;
+        gap: 1px;
+      }
+
+      .player-name-select {
+        width: 100% !important;
+        height: 15px !important;
+        font-size: 0.52rem !important;
+        line-height: 1 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 2px !important;
+        background: rgba(0, 0, 0, 0.45) !important;
+        text-align: center;
+        text-align-last: center;
+      }
+
+      .player-role-select {
+        width: 82% !important;
+        height: 15px !important;
+        font-size: 0.52rem !important;
+        line-height: 1 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 2px !important;
+        background: rgba(0, 0, 0, 0.5) !important;
         text-align-last: center;
         text-align: center;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
       }
-      /* Reveal Thumb Handle for Mobile Touch Dragging */
+
       .token-drag-handle {
         display: flex;
+        width: 22px;
+        height: 16px;
+        font-size: 0.58rem;
+        margin-top: 1px;
       }
+
       .bench-wing {
         width: 72px;
         min-height: 330px;
@@ -775,8 +956,8 @@
         font-size: 0.48rem;
       }
       .bench-wing .player-token {
-        width: 60px;
-        height: 60px;
+        width: 54px;
+        height: 54px;
       }
       .bench-wing .token-drag-handle {
         display: none !important;
@@ -795,7 +976,7 @@
     }
 
     /* =======================================================
-       PROPORTIONAL 1-PAGE PRINT ENGINE (Matches Webpage scale)
+       PROPORTIONAL 1-PAGE PRINT ENGINE
        ======================================================= */
     @media print {
       @page {
@@ -816,7 +997,7 @@
       }
 
       h1, p.subtitle, .config-card, .rotation-toolbar, .scenario-toolbar,
-      .fault-indicator-bar, .arena-container, .controls, .log-panel, .comments-card, .token-drag-handle {
+      .fault-indicator-bar, .arena-container, .controls, .log-panel, .comments-card, .token-drag-handle, .roster-card {
         display: none !important;
       }
 
@@ -1025,164 +1206,188 @@
   <!-- Main Application Header -->
   <h1>All-Rotating Recreational Volleyball Simulator</h1>
   <p class="subtitle">
-    Compare <b>Home</b>, <b>Base</b>, <b>Serve</b>, and <b>Receive</b>. Select your system (<b>4-2</b>, <b>6-2</b>, or <b>5-1</b>) for automatic setter role highlighting!
+    Compare <b>Home</b>, <b>Base</b>, <b>Serve</b>, and <b>Receive</b>. Manage up to 30 roster players on the left and select them directly from circle dropdowns!
   </p>
 
   <!-- Out-of-rotation fault banner -->
   <div class="fault-indicator-bar" id="faultBanner">⚠️ ROTATION FAULT DETECTED!</div>
 
-  <!-- Team Configuration, Presets & File Sharing -->
-  <div class="config-card">
-    <div class="config-row">
-      <div class="config-group">
-        <span class="config-label">Team Size:</span>
-        <select id="teamSizeSelect" onchange="onTeamSizeChange()">
-          <option value="6">6 Players (No Bench)</option>
-          <option value="7">7 Players (1 Bench)</option>
-          <option value="8" selected>8 Players (2 Benches)</option>
-        </select>
+  <div class="app-main-layout">
 
-        <span class="config-label" style="margin-left: 6px;">System:</span>
-        <select id="offensiveSystemSelect" onchange="onOffensiveSystemChange()">
-          <option value="4-2" selected>4-2 (Front Setter Yellow)</option>
-          <option value="6-2">6-2 (Back Setter Yellow)</option>
-          <option value="5-1">5-1 (Setter Always Yellow)</option>
-        </select>
-
-        <span id="subSideContainer" style="display:none; align-items:center; gap:6px;">
-          <span class="config-label" style="font-size:0.75rem;">Bench Sub At:</span>
-          <select id="sevenPlayerSideSelect" onchange="onSevenPlayerSideChange()">
-            <option value="left" selected>Left Front (Pos 4)</option>
-            <option value="right">Serve (Pos 1)</option>
-          </select>
-        </span>
+    <!-- Left Side: 30-Player Roster Panel -->
+    <div class="roster-card">
+      <div class="roster-header">
+        <span class="roster-title">📋 Team Roster</span>
+        <span class="roster-badge" id="rosterCountBadge">8 / 30</span>
       </div>
 
-      <div class="config-group">
-        <span class="config-label">Save New:</span>
-        <input type="text" id="rotationNameInput" class="rotation-name-input" placeholder="e.g. Stacked P1" style="width: 120px;">
-        <button class="save-btn" onclick="saveNamedRotation()">💾 Save</button>
+      <div class="roster-list-container" id="rosterListContainer"></div>
+
+      <div class="roster-actions-row">
+        <button class="roster-btn" onclick="addNewRosterPlayer()">+ Add</button>
+        <button class="roster-btn" onclick="removeLastRosterPlayer()">- Remove</button>
+        <button class="roster-btn" onclick="resetRosterToDefault()">Reset</button>
       </div>
     </div>
 
-    <!-- Row 2: Saved Rotations Dropdown & Update Changes -->
-    <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
-      <div class="config-group">
-        <span class="config-label">Saved Rotations:</span>
-        <select id="savedRotationsSelect" style="min-width: 160px;" onchange="syncSelectedRotationName(this.value)">
-          <option value="">-- Select Rotation Name --</option>
-        </select>
-        <button class="load-btn" onclick="loadSelectedRotation()">📂 Load</button>
-        <button class="update-btn" onclick="updateCurrentLoadedRotation()">💾 Save Changes</button>
-        <button class="del-btn" onclick="deleteCurrentRotation()">🗑️ Delete</button>
-      </div>
-    </div>
+    <!-- Right Side: Simulator Area -->
+    <div class="simulator-workspace">
 
-    <!-- Row 3: Online GitHub Sharing, File Export/Import & Print -->
-    <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
-      <div class="config-group">
-        <span class="config-label">Share & Export:</span>
-        <button class="share-btn" onclick="copyShareLink()">🔗 Copy Share Link</button>
-        <button class="print-btn" onclick="triggerPrintOnePage()">🖨️ Print Lineup (1-Page)</button>
-        <button class="save-btn" onclick="exportToFile()">⬇️ Export File (.json)</button>
-        <button class="load-btn" onclick="document.getElementById('fileInput').click()">⬆️ Import File</button>
-        <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importFromFile(event)">
-      </div>
-    </div>
-  </div>
+      <!-- Team Configuration, Presets & File Sharing -->
+      <div class="config-card">
+        <div class="config-row">
+          <div class="config-group">
+            <span class="config-label">Team Size:</span>
+            <select id="teamSizeSelect" onchange="onTeamSizeChange()">
+              <option value="6">6 Players (No Bench)</option>
+              <option value="7">7 Players (1 Bench)</option>
+              <option value="8" selected>8 Players (2 Benches)</option>
+            </select>
 
-  <!-- Rotation Buttons Toolbar -->
-  <div class="rotation-toolbar">
-    <div class="rotation-toolbar-title" id="rotToolbarTitle">Select Rotation</div>
-    <div class="rot-buttons-row" id="rotButtonsContainer"></div>
-  </div>
+            <span class="config-label" style="margin-left: 6px;">System:</span>
+            <select id="offensiveSystemSelect" onchange="onOffensiveSystemChange()">
+              <option value="4-2" selected>4-2 (Front Setter Yellow)</option>
+              <option value="6-2">6-2 (Back Setter Yellow)</option>
+              <option value="5-1">5-1 (Setter Always Yellow)</option>
+            </select>
 
-  <!-- Scenario Toolbar -->
-  <div class="scenario-toolbar">
-    <span class="config-label">Scenario:</span>
-    <button class="scenario-btn active" id="btnScenarioHome" onclick="setScenario('home')">🏠 Home (Slots)</button>
-    <button class="scenario-btn" id="btnScenarioBase" onclick="setScenario('base')">🛡️ Base (Defense)</button>
-    <button class="scenario-btn" id="btnScenarioServe" onclick="setScenario('serve')">🏐 On Serve</button>
-    <button class="scenario-btn" id="btnScenarioReceive" onclick="setScenario('receive')">📥 Serve Receive</button>
-  </div>
+            <span id="subSideContainer" style="display:none; align-items:center; gap:6px;">
+              <span class="config-label" style="font-size:0.75rem;">Bench Sub At:</span>
+              <select id="sevenPlayerSideSelect" onchange="onSevenPlayerSideChange()">
+                <option value="left" selected>Left Front (Pos 4)</option>
+                <option value="right">Serve (Pos 1)</option>
+              </select>
+            </span>
+          </div>
 
-  <!-- Arena Container -->
-  <div class="arena-container">
-
-    <!-- Left Bench -->
-    <div class="bench-wing" id="leftBenchWing">
-      <div class="bench-wing-title" id="leftBenchTitle">Left Bench</div>
-      <div class="bench-sub-indicator" id="leftSubIndicator">&rarr; Subs to LF (Pos 4) &rarr;</div>
-      <div class="bench-slot-area">
-        <div id="leftBench"></div>
-      </div>
-      <div class="bench-flow-note" id="leftFlowNote">&larr; Receives player exiting Pos 5</div>
-    </div>
-
-    <!-- Center Interactive Court -->
-    <div class="court-container">
-      <div class="court-header">NET / OPPONENT SIDE</div>
-      <div class="net-indicator"></div>
-      <div class="court" id="courtSurface">
-        <div class="attack-line"></div>
-        <canvas id="overlapCanvas"></canvas>
-
-        <div class="court-grid-guides">
-          <div class="grid-zone"><span class="zone-marker zm-4">Zone 4 (LF)</span></div>
-          <div class="grid-zone"><span class="zone-marker zm-3">Zone 3 (MF)</span></div>
-          <div class="grid-zone"><span class="zone-marker zm-2">Zone 2 (RF)</span></div>
-          <div class="grid-zone"><span class="zone-marker zm-5">Zone 5 (LB)</span></div>
-          <div class="grid-zone"><span class="zone-marker zm-6">Zone 6 (MB)</span></div>
-          <div class="grid-zone"><span class="zone-marker zm-1">Zone 1 (RB)</span></div>
+          <div class="config-group">
+            <span class="config-label">Save New:</span>
+            <input type="text" id="rotationNameInput" class="rotation-name-input" placeholder="e.g. Stacked P1" style="width: 120px;">
+            <button class="save-btn" onclick="saveNamedRotation()">💾 Save</button>
+          </div>
         </div>
 
-        <!-- 6 Interactive Player Tokens -->
-        <div id="courtTokensContainer"></div>
-      </div>
-    </div>
+        <!-- Row 2: Saved Rotations Dropdown & Update Changes -->
+        <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+          <div class="config-group">
+            <span class="config-label">Saved Rotations:</span>
+            <select id="savedRotationsSelect" style="min-width: 160px;" onchange="syncSelectedRotationName(this.value)">
+              <option value="">-- Select Rotation Name --</option>
+            </select>
+            <button class="load-btn" onclick="loadSelectedRotation()">📂 Load</button>
+            <button class="update-btn" onclick="updateCurrentLoadedRotation()">💾 Save Changes</button>
+            <button class="del-btn" onclick="deleteCurrentRotation()">🗑️ Delete</button>
+          </div>
+        </div>
 
-    <!-- Right Bench -->
-    <div class="bench-wing" id="rightBenchWing">
-      <div class="bench-wing-title" id="rightBenchTitle">Right Bench</div>
-      <div class="bench-sub-indicator" id="rightSubIndicator">&larr; Subs to Serve (Pos 1) &larr;</div>
-      <div class="bench-slot-area">
-        <div id="rightBench"></div>
+        <!-- Row 3: Online GitHub Sharing, File Export/Import & Print -->
+        <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+          <div class="config-group">
+            <span class="config-label">Share & Export:</span>
+            <button class="share-btn" onclick="copyShareLink()">🔗 Copy Share Link</button>
+            <button class="print-btn" onclick="triggerPrintOnePage()">🖨️ Print Lineup (1-Page)</button>
+            <button class="save-btn" onclick="exportToFile()">⬇️ Export File (.json)</button>
+            <button class="load-btn" onclick="document.getElementById('fileInput').click()">⬆️ Import File</button>
+            <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importFromFile(event)">
+          </div>
+        </div>
       </div>
-      <div class="bench-flow-note" id="rightFlowNote">&rarr; Receives player exiting Pos 2</div>
-    </div>
 
+      <!-- Rotation Buttons Toolbar -->
+      <div class="rotation-toolbar">
+        <div class="rotation-toolbar-title" id="rotToolbarTitle">Select Rotation</div>
+        <div class="rot-buttons-row" id="rotButtonsContainer"></div>
+      </div>
+
+      <!-- Scenario Toolbar -->
+      <div class="scenario-toolbar">
+        <span class="config-label">Scenario:</span>
+        <button class="scenario-btn active" id="btnScenarioHome" onclick="setScenario('home')">🏠 Home (Slots)</button>
+        <button class="scenario-btn" id="btnScenarioBase" onclick="setScenario('base')">🛡️ Base (Defense)</button>
+        <button class="scenario-btn" id="btnScenarioServe" onclick="setScenario('serve')">🏐 On Serve</button>
+        <button class="scenario-btn" id="btnScenarioReceive" onclick="setScenario('receive')">📥 Serve Receive</button>
+      </div>
+
+      <!-- Arena Container -->
+      <div class="arena-container">
+
+        <!-- Left Bench -->
+        <div class="bench-wing" id="leftBenchWing">
+          <div class="bench-wing-title" id="leftBenchTitle">Left Bench</div>
+          <div class="bench-sub-indicator" id="leftSubIndicator">&rarr; Subs to LF (Pos 4) &rarr;</div>
+          <div class="bench-slot-area">
+            <div id="leftBench"></div>
+          </div>
+          <div class="bench-flow-note" id="leftFlowNote">&larr; Receives player exiting Pos 5</div>
+        </div>
+
+        <!-- Center Interactive Court -->
+        <div class="court-container">
+          <div class="court-header">NET / OPPONENT SIDE</div>
+          <div class="net-indicator"></div>
+          <div class="court" id="courtSurface">
+            <div class="attack-line"></div>
+            <canvas id="overlapCanvas"></canvas>
+
+            <div class="court-grid-guides">
+              <div class="grid-zone"><span class="zone-marker zm-4">Zone 4 (LF)</span></div>
+              <div class="grid-zone"><span class="zone-marker zm-3">Zone 3 (MF)</span></div>
+              <div class="grid-zone"><span class="zone-marker zm-2">Zone 2 (RF)</span></div>
+              <div class="grid-zone"><span class="zone-marker zm-5">Zone 5 (LB)</span></div>
+              <div class="grid-zone"><span class="zone-marker zm-6">Zone 6 (MB)</span></div>
+              <div class="grid-zone"><span class="zone-marker zm-1">Zone 1 (RB)</span></div>
+            </div>
+
+            <!-- 6 Interactive Player Tokens -->
+            <div id="courtTokensContainer"></div>
+          </div>
+        </div>
+
+        <!-- Right Bench -->
+        <div class="bench-wing" id="rightBenchWing">
+          <div class="bench-wing-title" id="rightBenchTitle">Right Bench</div>
+          <div class="bench-sub-indicator" id="rightSubIndicator">&larr; Subs to Serve (Pos 1) &larr;</div>
+          <div class="bench-slot-area">
+            <div id="rightBench"></div>
+          </div>
+          <div class="bench-flow-note" id="rightFlowNote">&rarr; Receives player exiting Pos 2</div>
+        </div>
+
+      </div>
+
+      <!-- Controls -->
+      <div class="controls">
+        <button class="nav-btn" onclick="goToRotation(currentRotation - 1)">&larr; Prev Rotation</button>
+        <button class="nav-btn" onclick="goToRotation(currentRotation + 1)">Next Rotation &rarr;</button>
+        <button class="undo-btn" onclick="undoPosition()">↩️ Undo</button>
+        <button class="reset-pos-btn" onclick="resetScenarioFormation()">Reset Scenario Layout</button>
+        <button class="del-btn" onclick="resetToDefaults()">Reset Lineup</button>
+      </div>
+
+      <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
+
+      <!-- Public Comments Section -->
+      <div class="comments-card">
+        <div class="comments-header">
+          <h3>💬 Public Comments</h3>
+          <span class="comments-count-badge" id="commentsCountBadge">0 Comments</span>
+        </div>
+
+        <div class="comment-form">
+          <div class="comment-form-row">
+            <input type="text" id="commentAuthorInput" class="comment-name-input" placeholder="Your Name (e.g. Coach Lester)">
+            <button class="save-btn" onclick="postComment()">Post Comment</button>
+          </div>
+          <textarea id="commentTextInput" class="comment-text-input" placeholder="Add a note or feedback on this lineup..."></textarea>
+        </div>
+
+        <div class="comments-list" id="commentsListContainer"></div>
+      </div>
+
+    </div>
   </div>
 
-  <!-- Controls -->
-  <div class="controls">
-    <button class="nav-btn" onclick="goToRotation(currentRotation - 1)">&larr; Prev Rotation</button>
-    <button class="nav-btn" onclick="goToRotation(currentRotation + 1)">Next Rotation &rarr;</button>
-    <button class="undo-btn" onclick="undoPosition()">↩️ Undo</button>
-    <button class="reset-pos-btn" onclick="resetScenarioFormation()">Reset Scenario Layout</button>
-    <button class="del-btn" onclick="resetToDefaults()">Reset Lineup</button>
-  </div>
-
-  <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
-
-  <!-- Public Comments Section -->
-  <div class="comments-card">
-    <div class="comments-header">
-      <h3>💬 Public Comments</h3>
-      <span class="comments-count-badge" id="commentsCountBadge">0 Comments</span>
-    </div>
-
-    <div class="comment-form">
-      <div class="comment-form-row">
-        <input type="text" id="commentAuthorInput" class="comment-name-input" placeholder="Your Name (e.g. Coach Lester)">
-        <button class="save-btn" onclick="postComment()">Post Comment</button>
-      </div>
-      <textarea id="commentTextInput" class="comment-text-input" placeholder="Add a note or feedback on this lineup..."></textarea>
-    </div>
-
-    <div class="comments-list" id="commentsListContainer"></div>
-  </div>
-
-  <!-- Dedicated 1-Page Printout Canvas (Rendered only on print) -->
+  <!-- Dedicated 1-Page Printout Canvas -->
   <div id="printContainer">
     <div class="print-header">
       <span class="print-title">All-Rotating Volleyball Lineup Card</span>
@@ -1194,7 +1399,16 @@
   <script>
     const POSITION_OPTIONS = ["", "OH", "OH2", "MB", "MB2", "S", "S2", "RS", "RS2", "DS", "DS2"];
 
-    const DEFAULT_NAMES = [
+    const DEFAULT_ROSTER = [
+      "Alex", "Jordan", "Taylor", "Sam", "Morgan", "Casey", "Riley", "Jamie",
+      "Chris", "Pat", "Avery", "Dakota", "Reese", "Quinn", "Skyler", "Cameron",
+      "Logan", "Kendall", "Hayden", "Rowan", "Finley", "Emerson", "Harper", "Peyton",
+      "Dallas", "Micah", "Sawyer", "Elliot", "Parker", "Eden"
+    ];
+
+    let rosterNames = DEFAULT_ROSTER.slice(0, 12);
+
+    const DEFAULT_LINEUP = [
       { id: 1, name: "Alex", position: "S" },
       { id: 2, name: "Jordan", position: "OH" },
       { id: 3, name: "Taylor", position: "MB" },
@@ -1206,41 +1420,41 @@
     ];
 
     const HOME_COORDINATES = {
-      pos4: { x: 18, y: 16 },
-      pos3: { x: 50, y: 16 },
-      pos2: { x: 82, y: 16 },
-      pos5: { x: 18, y: 72 },
-      pos6: { x: 50, y: 72 },
+      pos4: { x: 18, y: 20 },
+      pos3: { x: 50, y: 20 },
+      pos2: { x: 82, y: 20 },
+      pos5: { x: 18, y: 74 },
+      pos6: { x: 50, y: 74 },
       pos1: { x: 82, y: 78 }
     };
 
     const BASE_DEFENSIVE_COORDINATES = {
-      pos4: { x: 16, y: 10 },
-      pos3: { x: 50, y: 8 },
-      pos2: { x: 84, y: 10 },
-      pos5: { x: 16, y: 68 },
-      pos6: { x: 50, y: 84 },
-      pos1: { x: 84, y: 68 }
+      pos4: { x: 18, y: 20 },
+      pos3: { x: 50, y: 20 },
+      pos2: { x: 82, y: 20 },
+      pos5: { x: 18, y: 72 },
+      pos6: { x: 50, y: 76 },
+      pos1: { x: 82, y: 72 }
     };
 
     const SERVE_COORDINATES = {
-      pos4: { x: 16, y: 12 },
-      pos3: { x: 50, y: 10 },
-      pos2: { x: 84, y: 12 },
-      pos5: { x: 22, y: 68 },
-      pos6: { x: 50, y: 70 },
-      pos1: { x: 86, y: 92 }
+      pos4: { x: 18, y: 20 },
+      pos3: { x: 50, y: 20 },
+      pos2: { x: 82, y: 20 },
+      pos5: { x: 22, y: 72 },
+      pos6: { x: 50, y: 74 },
+      pos1: { x: 84, y: 82 }
     };
 
     const RECEIVE_SCENARIOS = {
-      1: { pos4: { x: 18, y: 22 }, pos3: { x: 52, y: 20 }, pos2: { x: 82, y: 22 }, pos5: { x: 20, y: 70 }, pos6: { x: 50, y: 74 }, pos1: { x: 80, y: 70 } },
-      2: { pos4: { x: 16, y: 20 }, pos3: { x: 48, y: 22 }, pos2: { x: 84, y: 24 }, pos5: { x: 24, y: 72 }, pos6: { x: 50, y: 76 }, pos1: { x: 78, y: 72 } },
-      3: { pos4: { x: 20, y: 24 }, pos3: { x: 50, y: 22 }, pos2: { x: 80, y: 20 }, pos5: { x: 22, y: 74 }, pos6: { x: 52, y: 74 }, pos1: { x: 82, y: 72 } },
-      4: { pos4: { x: 22, y: 24 }, pos3: { x: 50, y: 22 }, pos2: { x: 82, y: 22 }, pos5: { x: 20, y: 72 }, pos6: { x: 50, y: 74 }, pos1: { x: 80, y: 72 } },
-      5: { pos4: { x: 18, y: 22 }, pos3: { x: 48, y: 22 }, pos2: { x: 82, y: 24 }, pos5: { x: 22, y: 70 }, pos6: { x: 52, y: 72 }, pos1: { x: 82, y: 74 } },
-      6: { pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 22 }, pos5: { x: 24, y: 72 }, pos6: { x: 50, y: 72 }, pos1: { x: 78, y: 72 } },
-      7: { pos4: { x: 18, y: 22 }, pos3: { x: 50, y: 22 }, pos2: { x: 82, y: 22 }, pos5: { x: 22, y: 72 }, pos6: { x: 50, y: 74 }, pos1: { x: 80, y: 72 } },
-      8: { pos4: { x: 18, y: 22 }, pos3: { x: 50, y: 22 }, pos2: { x: 82, y: 22 }, pos5: { x: 22, y: 72 }, pos6: { x: 50, y: 74 }, pos1: { x: 80, y: 72 } }
+      1: { pos4: { x: 18, y: 24 }, pos3: { x: 52, y: 22 }, pos2: { x: 82, y: 24 }, pos5: { x: 20, y: 72 }, pos6: { x: 50, y: 75 }, pos1: { x: 80, y: 72 } },
+      2: { pos4: { x: 16, y: 22 }, pos3: { x: 48, y: 24 }, pos2: { x: 84, y: 26 }, pos5: { x: 24, y: 74 }, pos6: { x: 50, y: 77 }, pos1: { x: 78, y: 74 } },
+      3: { pos4: { x: 20, y: 26 }, pos3: { x: 50, y: 24 }, pos2: { x: 80, y: 22 }, pos5: { x: 22, y: 75 }, pos6: { x: 52, y: 75 }, pos1: { x: 82, y: 73 } },
+      4: { pos4: { x: 22, y: 26 }, pos3: { x: 50, y: 24 }, pos2: { x: 82, y: 24 }, pos5: { x: 20, y: 73 }, pos6: { x: 50, y: 75 }, pos1: { x: 80, y: 73 } },
+      5: { pos4: { x: 18, y: 24 }, pos3: { x: 48, y: 24 }, pos2: { x: 82, y: 26 }, pos5: { x: 22, y: 72 }, pos6: { x: 52, y: 74 }, pos1: { x: 82, y: 75 } },
+      6: { pos4: { x: 18, y: 22 }, pos3: { x: 50, y: 22 }, pos2: { x: 82, y: 24 }, pos5: { x: 24, y: 74 }, pos6: { x: 50, y: 74 }, pos1: { x: 78, y: 74 } },
+      7: { pos4: { x: 18, y: 24 }, pos3: { x: 50, y: 24 }, pos2: { x: 82, y: 24 }, pos5: { x: 22, y: 74 }, pos6: { x: 50, y: 75 }, pos1: { x: 80, y: 73 } },
+      8: { pos4: { x: 18, y: 24 }, pos3: { x: 50, y: 24 }, pos2: { x: 82, y: 24 }, pos5: { x: 22, y: 74 }, pos6: { x: 50, y: 75 }, pos1: { x: 80, y: 73 } }
     };
 
     let teamSize = 8;
@@ -1254,19 +1468,154 @@
 
     let playerCoords = JSON.parse(JSON.stringify(HOME_COORDINATES));
     let activeFaults = [];
-
-    // Movement History for Undo
     let positionHistory = [];
 
     function initDefaultSquad() {
-      squad = JSON.parse(JSON.stringify(DEFAULT_NAMES));
+      squad = JSON.parse(JSON.stringify(DEFAULT_LINEUP));
+    }
+
+    function renderRosterList() {
+      const container = document.getElementById('rosterListContainer');
+      const badge = document.getElementById('rosterCountBadge');
+      container.innerHTML = '';
+      badge.innerText = `${rosterNames.length} / 30`;
+
+      rosterNames.forEach((name, idx) => {
+        const row = document.createElement('div');
+        row.className = 'roster-entry-row';
+        row.innerHTML = `
+          <span class="roster-num">#${idx + 1}</span>
+          <input 
+            type="text" 
+            class="roster-name-input" 
+            value="${escapeHTML(name)}" 
+            onchange="onRosterNameEdited(${idx}, this.value)"
+          />
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function onRosterNameEdited(index, newNameRaw) {
+      const trimmed = newNameRaw.trim();
+      const oldName = rosterNames[index];
+
+      if (!trimmed) {
+        alert("Player name cannot be blank.");
+        renderRosterList();
+        return;
+      }
+
+      const duplicateIndex = rosterNames.findIndex((n, idx) => idx !== index && n.toLowerCase() === trimmed.toLowerCase());
+      if (duplicateIndex !== -1) {
+        alert(`⚠️ DUPLICATE NAME WARNING:\n\nThe name "${trimmed}" is already used by Player #${duplicateIndex + 1} in the roster.\n\nPlayer names must be unique.`);
+        renderRosterList();
+        return;
+      }
+
+      rosterNames[index] = trimmed;
+      squad.forEach(player => {
+        if (player.name === oldName) player.name = trimmed;
+      });
+
+      renderRosterList();
+      renderCourtTokens();
+      renderBenchTokens(calculateStateForRotation(currentRotation));
+    }
+
+    function addNewRosterPlayer() {
+      if (rosterNames.length >= 30) {
+        alert("Roster limit reached! Maximum capacity is 30 players.");
+        return;
+      }
+
+      let nextName = `Player ${rosterNames.length + 1}`;
+      let counter = rosterNames.length + 1;
+      while (rosterNames.some(n => n.toLowerCase() === nextName.toLowerCase())) {
+        counter++;
+        nextName = `Player ${counter}`;
+      }
+
+      rosterNames.push(nextName);
+      renderRosterList();
+      renderCourtTokens();
+      renderBenchTokens(calculateStateForRotation(currentRotation));
+    }
+
+    function removeLastRosterPlayer() {
+      if (rosterNames.length <= 6) {
+        alert("Roster must maintain at least 6 players for volleyball rotations.");
+        return;
+      }
+      rosterNames.pop();
+      renderRosterList();
+      renderCourtTokens();
+      renderBenchTokens(calculateStateForRotation(currentRotation));
+    }
+
+    function resetRosterToDefault() {
+      if (confirm("Reset roster to default list of players?")) {
+        rosterNames = DEFAULT_ROSTER.slice(0, 12);
+        initDefaultSquad();
+        renderRosterList();
+        goToRotation(1);
+      }
+    }
+
+    /* Helper generating Name Dropdown: EXCLUDING names in use + adding a blank option */
+    function createPlayerNameSelectHTML(playerId, selectedName) {
+      const current = (selectedName || '').trim();
+
+      // Gather names currently assigned to other active court or bench positions
+      const currentState = calculateStateForRotation(currentRotation);
+      const assignedNames = new Set();
+      ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6', 'leftBench', 'rightBench'].forEach(k => {
+        if (currentState[k] && currentState[k].id !== playerId) {
+          assignedNames.add(currentState[k].name.toLowerCase());
+        }
+      });
+
+      let hasMatch = false;
+      const optionsHTML = rosterNames
+        .filter(name => {
+          const isSelectedElsewhere = assignedNames.has(name.toLowerCase());
+          const isCurrent = (name.toLowerCase() === current.toLowerCase());
+          return !isSelectedElsewhere || isCurrent;
+        })
+        .map(name => {
+          const isCurrent = (name.toLowerCase() === current.toLowerCase());
+          if (isCurrent) hasMatch = true;
+          const isSel = isCurrent ? 'selected' : '';
+          return `<option value="${escapeHTML(name)}" ${isSel}>${escapeHTML(name)}</option>`;
+        }).join('');
+
+      const fallback = (!hasMatch && current) ? `<option value="${escapeHTML(current)}" selected>${escapeHTML(current)}</option>` : '';
+      const isBlankSelected = (!current || current === "") ? 'selected' : '';
+
+      return `
+        <select 
+          class="player-name-select" 
+          title="Select Player"
+          onchange="onPlayerSelectedFromDropdown(${playerId}, this.value)"
+        >
+          <option value="" ${isBlankSelected}>-- Select --</option>
+          ${fallback}
+          ${optionsHTML}
+        </select>
+      `;
+    }
+
+    function onPlayerSelectedFromDropdown(playerId, chosenName) {
+      const player = squad.find(p => p.id === playerId);
+      if (player) {
+        player.name = chosenName;
+        goToRotation(currentRotation);
+      }
     }
 
     function recordHistoryState() {
       positionHistory.push(JSON.stringify(playerCoords));
-      if (positionHistory.length > 25) {
-        positionHistory.shift();
-      }
+      if (positionHistory.length > 25) positionHistory.shift();
     }
 
     function undoPosition() {
@@ -1314,20 +1663,20 @@
 
     function calculateStateForRotation(rotNum) {
       let state = {
-        pos1: squad.find(p => p.id === 1),
-        pos6: squad.find(p => p.id === 2),
-        pos5: squad.find(p => p.id === 3),
-        pos4: squad.find(p => p.id === 4),
-        pos3: squad.find(p => p.id === 5),
-        pos2: squad.find(p => p.id === 6)
+        pos1: squad.find(p => p.id === 1) || { id: 1, name: rosterNames[0], position: "S" },
+        pos6: squad.find(p => p.id === 2) || { id: 2, name: rosterNames[1], position: "OH" },
+        pos5: squad.find(p => p.id === 3) || { id: 3, name: rosterNames[2], position: "MB" },
+        pos4: squad.find(p => p.id === 4) || { id: 4, name: rosterNames[3], position: "S2" },
+        pos3: squad.find(p => p.id === 5) || { id: 5, name: rosterNames[4], position: "OH2" },
+        pos2: squad.find(p => p.id === 6) || { id: 6, name: rosterNames[5], position: "MB2" }
       };
 
       if (teamSize === 7) {
-        if (sevenPlayerSubSide === "left") state.leftBench = squad.find(p => p.id === 7);
-        else state.rightBench = squad.find(p => p.id === 7);
+        if (sevenPlayerSubSide === "left") state.leftBench = squad.find(p => p.id === 7) || { id: 7, name: rosterNames[6], position: "DS" };
+        else state.rightBench = squad.find(p => p.id === 7) || { id: 7, name: rosterNames[6], position: "DS" };
       } else if (teamSize === 8) {
-        state.leftBench = squad.find(p => p.id === 7);
-        state.rightBench = squad.find(p => p.id === 8);
+        state.leftBench = squad.find(p => p.id === 7) || { id: 7, name: rosterNames[6], position: "DS" };
+        state.rightBench = squad.find(p => p.id === 8) || { id: 8, name: rosterNames[7], position: "DS2" };
       }
 
       for (let i = 1; i < rotNum; i++) {
@@ -1512,33 +1861,32 @@
       });
     }
 
-    /* Dragging Logic with History Tracking */
-    let draggedToken = null;
+    /* Dragging Logic */
+    let draggedWrapper = null;
     let draggedPosKey = null;
 
-    function attachDragHandlers(el, posKey) {
+    function attachDragHandlers(wrapper, posKey) {
       const onPointerDown = (e) => {
         if (['input', 'select', 'option'].includes(e.target.tagName.toLowerCase())) return;
         recordHistoryState();
-        draggedToken = el;
+        draggedWrapper = wrapper;
         draggedPosKey = posKey;
-        el.classList.add('dragging');
+        wrapper.classList.add('dragging');
 
         window.addEventListener('pointermove', onPointerMove);
         window.addEventListener('pointerup', onPointerUp);
         e.preventDefault();
       };
 
-      el.addEventListener('pointerdown', onPointerDown);
+      wrapper.addEventListener('pointerdown', onPointerDown);
 
-      // Connect Thumb Handle explicitly
-      const handle = el.querySelector('.token-drag-handle');
+      const handle = wrapper.querySelector('.token-drag-handle');
       if (handle) {
         handle.addEventListener('pointerdown', (e) => {
           recordHistoryState();
-          draggedToken = el;
+          draggedWrapper = wrapper;
           draggedPosKey = posKey;
-          el.classList.add('dragging');
+          wrapper.classList.add('dragging');
 
           window.addEventListener('pointermove', onPointerMove);
           window.addEventListener('pointerup', onPointerUp);
@@ -1549,7 +1897,7 @@
     }
 
     function onPointerMove(e) {
-      if (!draggedToken || !draggedPosKey) return;
+      if (!draggedWrapper || !draggedPosKey) return;
       const court = document.getElementById('courtSurface');
       const rect = court.getBoundingClientRect();
 
@@ -1565,15 +1913,15 @@
       playerCoords[draggedPosKey].x = pctX;
       playerCoords[draggedPosKey].y = pctY;
 
-      draggedToken.style.left = `${pctX}%`;
-      draggedToken.style.top = `${pctY}%`;
+      draggedWrapper.style.left = `${pctX}%`;
+      draggedWrapper.style.top = `${pctY}%`;
 
       checkPositionalFaults();
     }
 
     function onPointerUp() {
-      if (draggedToken) draggedToken.classList.remove('dragging');
-      draggedToken = null;
+      if (draggedWrapper) draggedWrapper.classList.remove('dragging');
+      draggedWrapper = null;
       draggedPosKey = null;
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
@@ -1616,7 +1964,7 @@
       const homeBtn = document.getElementById('btnScenarioHome');
       if (homeBtn) homeBtn.classList.add('active');
 
-      positionHistory = []; // Reset undo stack on rotation switch
+      positionHistory = [];
       applyScenarioLayout();
       renderCourtTokens();
       renderBenchTokens(state);
@@ -1625,14 +1973,6 @@
 
       let logText = `Active: Rotation ${currentRotation} of ${teamSize} [${offensiveSystem} System - HOME]. Server: [${state.pos1.name}].`;
       document.getElementById('logBox').innerText = logText;
-    }
-
-    function onPlayerNameChange(playerId, newName) {
-      const player = squad.find(p => p.id === playerId);
-      if (player) {
-        player.name = newName.trim() || `Player ${playerId}`;
-        goToRotation(currentRotation);
-      }
     }
 
     function onPlayerPositionChange(playerId, newPosition) {
@@ -1672,28 +2012,24 @@
         const coords = playerCoords[posKey];
         const isYellowSetter = shouldHighlightSetter(player, posKey, state);
 
-        const token = document.createElement('div');
-        token.className = `player-token ${isYellowSetter ? 'setter-active' : ''}`;
-        token.id = `token-${posKey}`;
-        token.style.left = `${coords.x}%`;
-        token.style.top = `${coords.y}%`;
-        token.style.transform = 'translate(-50%, -50%)';
+        const wrapper = document.createElement('div');
+        wrapper.className = 'player-token-wrapper';
+        wrapper.id = `wrapper-${posKey}`;
+        wrapper.style.left = `${coords.x}%`;
+        wrapper.style.top = `${coords.y}%`;
 
-        token.innerHTML = `
-          <input 
-            type="text" 
-            class="player-name-input" 
-            value="${player.name}" 
-            title="Click to edit player name"
-            onchange="onPlayerNameChange(${player.id}, this.value)"
-            onkeydown="if(event.key === 'Enter') this.blur()"
-          />
-          ${createPositionSelectHTML(player.id, player.position)}
+        wrapper.innerHTML = `
+          <div class="player-token ${isYellowSetter ? 'setter-active' : ''}" id="token-${posKey}">
+            <div class="token-inner">
+              ${createPlayerNameSelectHTML(player.id, player.name)}
+              ${createPositionSelectHTML(player.id, player.position)}
+            </div>
+          </div>
           <div class="token-drag-handle" title="Touch & drag player">👍</div>
         `;
 
-        attachDragHandlers(token, posKey);
-        container.appendChild(token);
+        attachDragHandlers(wrapper, posKey);
+        container.appendChild(wrapper);
       });
     }
 
@@ -1704,28 +2040,20 @@
       if (state.leftBench && b1) {
         b1.innerHTML = `
           <div class="player-token">
-            <input 
-              type="text" 
-              class="player-name-input" 
-              value="${state.leftBench.name}" 
-              title="Click to edit player name"
-              onchange="onPlayerNameChange(${state.leftBench.id}, this.value)" 
-            />
-            ${createPositionSelectHTML(state.leftBench.id, state.leftBench.position)}
+            <div class="token-inner">
+              ${createPlayerNameSelectHTML(state.leftBench.id, state.leftBench.name)}
+              ${createPositionSelectHTML(state.leftBench.id, state.leftBench.position)}
+            </div>
           </div>
         `;
       }
       if (state.rightBench && b2) {
         b2.innerHTML = `
           <div class="player-token">
-            <input 
-              type="text" 
-              class="player-name-input" 
-              value="${state.rightBench.name}" 
-              title="Click to edit player name"
-              onchange="onPlayerNameChange(${state.rightBench.id}, this.value)" 
-            />
-            ${createPositionSelectHTML(state.rightBench.id, state.rightBench.position)}
+            <div class="token-inner">
+              ${createPlayerNameSelectHTML(state.rightBench.id, state.rightBench.name)}
+              ${createPositionSelectHTML(state.rightBench.id, state.rightBench.position)}
+            </div>
           </div>
         `;
       }
@@ -1885,20 +2213,19 @@
         sevenPlayerSubSide,
         currentScenario,
         playerCoords: JSON.parse(JSON.stringify(playerCoords)),
-        squad: JSON.parse(JSON.stringify(squad))
+        squad: JSON.parse(JSON.stringify(squad)),
+        rosterNames: JSON.parse(JSON.stringify(rosterNames))
       };
 
       localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
       currentlyLoadedRotationName = name;
       nameInput.value = '';
       populateRotationsDropdown(name);
-      document.getElementById('logBox').innerText = `✓ Lineup and positions saved under "${name}"!`;
+      document.getElementById('logBox').innerText = `✓ Lineup, roster and positions saved under "${name}"!`;
     }
 
     function syncSelectedRotationName(val) {
-      if (val) {
-        currentlyLoadedRotationName = val;
-      }
+      if (val) currentlyLoadedRotationName = val;
     }
 
     function updateCurrentLoadedRotation() {
@@ -1917,7 +2244,8 @@
         sevenPlayerSubSide,
         currentScenario,
         playerCoords: JSON.parse(JSON.stringify(playerCoords)),
-        squad: JSON.parse(JSON.stringify(squad))
+        squad: JSON.parse(JSON.stringify(squad)),
+        rosterNames: JSON.parse(JSON.stringify(rosterNames))
       };
 
       localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
@@ -1978,13 +2306,13 @@
     }
 
     function resetToDefaults() {
-      if (confirm("Reset current lineup names and positions to defaults?")) {
+      if (confirm("Reset current lineup to defaults?")) {
         initDefaultSquad();
         offensiveSystem = "4-2";
         document.getElementById('offensiveSystemSelect').value = "4-2";
         setScenario('home');
         goToRotation(1);
-        document.getElementById('logBox').innerText = "Lineup names and positions restored to defaults.";
+        document.getElementById('logBox').innerText = "Lineup restored to defaults.";
       }
     }
 
@@ -1997,6 +2325,7 @@
         currentScenario,
         playerCoords,
         squad,
+        rosterNames,
         comments: publicComments,
         presets: getRotationsFromStorage()
       };
@@ -2009,6 +2338,10 @@
         document.getElementById('offensiveSystemSelect').value = offensiveSystem;
       }
       if (data.sevenPlayerSubSide) sevenPlayerSubSide = data.sevenPlayerSubSide;
+      if (data.rosterNames && Array.isArray(data.rosterNames)) {
+        rosterNames = JSON.parse(JSON.stringify(data.rosterNames));
+        renderRosterList();
+      }
       if (data.squad) squad = JSON.parse(JSON.stringify(data.squad));
       if (data.playerCoords) playerCoords = JSON.parse(JSON.stringify(data.playerCoords));
       if (data.comments && Array.isArray(data.comments)) {
@@ -2037,7 +2370,7 @@
       const shareUrl = `${window.location.origin}${window.location.pathname}?data=${encoded}`;
 
       navigator.clipboard.writeText(shareUrl).then(() => {
-        alert("Share Link Copied! Send this URL to teammates. When opened in GitHub Pages, all your custom names, positions, comments, and presets will load immediately.");
+        alert("Share Link Copied! Send this URL to teammates. When opened in GitHub Pages, all your custom roster names, positions, comments, and presets will load immediately.");
         document.getElementById('logBox').innerText = "✓ Share link copied to clipboard!";
       }).catch(() => {
         prompt("Copy this URL to send to teammates:", shareUrl);
@@ -2053,7 +2386,7 @@
       a.download = `volleyball_rotation_${teamSize}players.json`;
       a.click();
       URL.revokeObjectURL(url);
-      document.getElementById('logBox').innerText = "✓ Lineup and comments file exported!";
+      document.getElementById('logBox').innerText = "✓ Lineup, roster and comments file exported!";
     }
 
     function importFromFile(e) {
@@ -2186,6 +2519,7 @@
 
     // Startup Initialization
     initDefaultSquad();
+    renderRosterList();
     publicComments = getStoredComments();
     renderCommentsList();
     updateWingVisibility();
