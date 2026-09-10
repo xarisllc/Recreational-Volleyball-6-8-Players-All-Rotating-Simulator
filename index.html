@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All-Rotating Recreational Volleyball Simulator</title>
   <style>
     :root {
@@ -312,8 +312,7 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
       box-sizing: border-box;
       overflow: hidden;
-      touch-action: none !important;
-      -webkit-touch-callout: none;
+      touch-action: none;
     }
 
     .attack-line {
@@ -378,8 +377,7 @@
       box-sizing: border-box;
       position: absolute;
       cursor: grab;
-      touch-action: none !important;
-      -webkit-touch-callout: none;
+      touch-action: none;
       transition: box-shadow 0.15s, border-color 0.15s, background-color 0.15s;
     }
 
@@ -466,6 +464,28 @@
       color: #ffffff !important;
     }
 
+    /* Mobile Thumb Handle (Hidden on desktop) */
+    .token-drag-handle {
+      display: none;
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 20px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 10px;
+      font-size: 0.65rem;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      touch-action: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      pointer-events: auto;
+      z-index: 15;
+    }
+
     #overlapCanvas {
       position: absolute;
       top: 0;
@@ -501,6 +521,9 @@
 
     .nav-btn { background: #0984e3; }
     .nav-btn:hover { background: #74b9ff; }
+
+    .undo-btn { background: #64748b; }
+    .undo-btn:hover { background: #475569; }
 
     .reset-pos-btn { background: #e67e22; }
     .reset-pos-btn:hover { background: #f39c12; }
@@ -702,42 +725,43 @@
         width: 100%;
       }
       .court {
-        width: 220px;
-        height: 310px;
+        width: 230px;
+        height: 330px;
         border-width: 4px;
       }
+      /* Proportional Circle Token: Generous size to fit name and dropdown */
       .player-token {
-        width: 55px;
-        height: 55px;
-        border-width: 1.5px;
+        width: 64px;
+        height: 64px;
+        border-width: 2px;
         padding: 1px;
-        overflow: hidden;
       }
+      /* Sized name input strictly inside the circle */
       .player-name-input {
-        width: 38px;
+        width: 52px;
+        height: 17px;
+        font-size: 0.65rem;
+        padding: 0 2px;
+        border-radius: 3px;
+      }
+      /* Sized position dropdown strictly inside the circle */
+      .player-role-select {
+        width: 44px;
         height: 16px;
         font-size: 0.55rem;
-        padding: 0 1px;
-        border-radius: 3px;
-        border-width: 0.5px;
-      }
-      .player-role-select {
-        width: 34px;
-        height: 15px;
-        font-size: 0.48rem;
         padding: 0;
-        margin-top: 1px;
+        margin-top: 2px;
         border-radius: 3px;
-        border-width: 0.5px;
         text-align-last: center;
         text-align: center;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
+      }
+      /* Reveal Thumb Handle for Mobile Touch Dragging */
+      .token-drag-handle {
+        display: flex;
       }
       .bench-wing {
         width: 72px;
-        min-height: 310px;
+        min-height: 330px;
         padding: 6px 3px;
       }
       .bench-wing-title {
@@ -751,8 +775,11 @@
         font-size: 0.48rem;
       }
       .bench-wing .player-token {
-        width: 52px;
-        height: 52px;
+        width: 60px;
+        height: 60px;
+      }
+      .bench-wing .token-drag-handle {
+        display: none !important;
       }
       .config-row {
         flex-direction: column;
@@ -789,7 +816,7 @@
       }
 
       h1, p.subtitle, .config-card, .rotation-toolbar, .scenario-toolbar,
-      .fault-indicator-bar, .arena-container, .controls, .log-panel, .comments-card {
+      .fault-indicator-bar, .arena-container, .controls, .log-panel, .comments-card, .token-drag-handle {
         display: none !important;
       }
 
@@ -1130,6 +1157,7 @@
   <div class="controls">
     <button class="nav-btn" onclick="goToRotation(currentRotation - 1)">&larr; Prev Rotation</button>
     <button class="nav-btn" onclick="goToRotation(currentRotation + 1)">Next Rotation &rarr;</button>
+    <button class="undo-btn" onclick="undoPosition()">↩️ Undo</button>
     <button class="reset-pos-btn" onclick="resetScenarioFormation()">Reset Scenario Layout</button>
     <button class="del-btn" onclick="resetToDefaults()">Reset Lineup</button>
   </div>
@@ -1227,8 +1255,30 @@
     let playerCoords = JSON.parse(JSON.stringify(HOME_COORDINATES));
     let activeFaults = [];
 
+    // Movement History for Undo
+    let positionHistory = [];
+
     function initDefaultSquad() {
       squad = JSON.parse(JSON.stringify(DEFAULT_NAMES));
+    }
+
+    function recordHistoryState() {
+      positionHistory.push(JSON.stringify(playerCoords));
+      if (positionHistory.length > 25) {
+        positionHistory.shift();
+      }
+    }
+
+    function undoPosition() {
+      if (positionHistory.length > 0) {
+        const previousState = positionHistory.pop();
+        playerCoords = JSON.parse(previousState);
+        renderCourtTokens();
+        checkPositionalFaults();
+        document.getElementById('logBox').innerText = "↩️ Undid last movement.";
+      } else {
+        document.getElementById('logBox').innerText = "No earlier movements to undo.";
+      }
     }
 
     function stepOneRotation(prev) {
@@ -1307,6 +1357,7 @@
       if (scen === 'serve') document.getElementById('btnScenarioServe').classList.add('active');
       if (scen === 'receive') document.getElementById('btnScenarioReceive').classList.add('active');
 
+      recordHistoryState();
       applyScenarioLayout();
       renderCourtTokens();
       checkPositionalFaults();
@@ -1321,6 +1372,7 @@
     }
 
     function resetScenarioFormation() {
+      recordHistoryState();
       applyScenarioLayout();
       renderCourtTokens();
       checkPositionalFaults();
@@ -1460,48 +1512,52 @@
       });
     }
 
-    /* =======================================================
-       SMOOTH POINTER & TOUCH DRAGGING ENGINE
-       ======================================================= */
+    /* Dragging Logic with History Tracking */
     let draggedToken = null;
     let draggedPosKey = null;
 
     function attachDragHandlers(el, posKey) {
-      el.addEventListener('pointerdown', (e) => {
-        // Allow clicks inside input & select to focus without dragging
-        if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'select') {
-          return;
-        }
-
+      const onPointerDown = (e) => {
+        if (['input', 'select', 'option'].includes(e.target.tagName.toLowerCase())) return;
+        recordHistoryState();
         draggedToken = el;
         draggedPosKey = posKey;
         el.classList.add('dragging');
 
-        // Lock pointer onto this element to prevent mobile gesture scrolling
-        try {
-          el.setPointerCapture(e.pointerId);
-        } catch (err) {}
-
-        window.addEventListener('pointermove', onPointerMove, { passive: false });
+        window.addEventListener('pointermove', onPointerMove);
         window.addEventListener('pointerup', onPointerUp);
-        window.addEventListener('pointercancel', onPointerUp);
         e.preventDefault();
-      });
+      };
+
+      el.addEventListener('pointerdown', onPointerDown);
+
+      // Connect Thumb Handle explicitly
+      const handle = el.querySelector('.token-drag-handle');
+      if (handle) {
+        handle.addEventListener('pointerdown', (e) => {
+          recordHistoryState();
+          draggedToken = el;
+          draggedPosKey = posKey;
+          el.classList.add('dragging');
+
+          window.addEventListener('pointermove', onPointerMove);
+          window.addEventListener('pointerup', onPointerUp);
+          e.preventDefault();
+          e.stopPropagation();
+        });
+      }
     }
 
     function onPointerMove(e) {
       if (!draggedToken || !draggedPosKey) return;
-      e.preventDefault();
-
       const court = document.getElementById('courtSurface');
       const rect = court.getBoundingClientRect();
 
       let relX = e.clientX - rect.left;
       let relY = e.clientY - rect.top;
 
-      // Bound strictly inside court edges
-      relX = Math.max(14, Math.min(rect.width - 14, relX));
-      relY = Math.max(14, Math.min(rect.height - 14, relY));
+      relX = Math.max(16, Math.min(rect.width - 16, relX));
+      relY = Math.max(16, Math.min(rect.height - 16, relY));
 
       const pctX = (relX / rect.width) * 100;
       const pctY = (relY / rect.height) * 100;
@@ -1515,20 +1571,12 @@
       checkPositionalFaults();
     }
 
-    function onPointerUp(e) {
-      if (draggedToken) {
-        draggedToken.classList.remove('dragging');
-        if (e && e.pointerId && draggedToken.releasePointerCapture) {
-          try {
-            draggedToken.releasePointerCapture(e.pointerId);
-          } catch (err) {}
-        }
-      }
+    function onPointerUp() {
+      if (draggedToken) draggedToken.classList.remove('dragging');
       draggedToken = null;
       draggedPosKey = null;
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointercancel', onPointerUp);
     }
 
     function updateWingVisibility() {
@@ -1568,6 +1616,7 @@
       const homeBtn = document.getElementById('btnScenarioHome');
       if (homeBtn) homeBtn.classList.add('active');
 
+      positionHistory = []; // Reset undo stack on rotation switch
       applyScenarioLayout();
       renderCourtTokens();
       renderBenchTokens(state);
@@ -1640,6 +1689,7 @@
             onkeydown="if(event.key === 'Enter') this.blur()"
           />
           ${createPositionSelectHTML(player.id, player.position)}
+          <div class="token-drag-handle" title="Touch & drag player">👍</div>
         `;
 
         attachDragHandlers(token, posKey);
