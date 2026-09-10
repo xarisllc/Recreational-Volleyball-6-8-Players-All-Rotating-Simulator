@@ -680,6 +680,422 @@
       display: none;
     }
 
+    /* =======================================================
+       AUTOMATIC RESPONSIVE CELLPHONE / TABLET ADJUSTMENTS
+       ======================================================= */
+    @media (max-width: 820px) {
+      body {
+        padding: 6px;
+      }
+      h1 {
+        font-size: 1.25rem;
+      }
+      p.subtitle {
+        font-size: 0.74rem;
+        margin-bottom: 8px;
+      }
+      .arena-container {
+        flex-direction: row;
+        gap: 6px;
+        width: 100%;
+      }
+      .court {
+        width: 220px;
+        height: 310px;
+        border-width: 4px;
+      }
+      /* Clean circle sizing on mobile */
+      .player-token {
+        width: 55px;
+        height: 55px;
+        border-width: 1.5px;
+        padding: 1px;
+        overflow: hidden;
+      }
+      /* Proportional name input fitting strictly inside the circle */
+      .player-name-input {
+        width: 38px;
+        height: 16px;
+        font-size: 0.55rem;
+        padding: 0 1px;
+        border-radius: 3px;
+        border-width: 0.5px;
+      }
+      /* Proportional position dropdown fitting strictly inside the circle */
+      .player-role-select {
+        width: 34px;
+        height: 15px;
+        font-size: 0.48rem;
+        padding: 0;
+        margin-top: 1px;
+        border-radius: 3px;
+        border-width: 0.5px;
+        text-align-last: center;
+        text-align: center;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+      }
+      .bench-wing {
+        width: 72px;
+        min-height: 310px;
+        padding: 6px 3px;
+      }
+      .bench-wing-title {
+        font-size: 0.58rem;
+      }
+      .bench-sub-indicator {
+        font-size: 0.5rem;
+        padding: 3px 2px;
+      }
+      .bench-flow-note {
+        font-size: 0.48rem;
+      }
+      .bench-wing .player-token {
+        width: 52px;
+        height: 52px;
+      }
+      .config-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      .config-group {
+        justify-content: space-between;
+      }
+      select, input[type="text"].rotation-name-input {
+        flex: 1;
+      }
+    }
+
+    /* =======================================================
+       PROPORTIONAL 1-PAGE PRINT ENGINE (Matches Webpage scale)
+       ======================================================= */
+    @media print {
+      @page {
+        margin: 0.2in;
+        size: landscape;
+      }
+
+      html, body {
+        background: #fff !important;
+        color: #000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        overflow: hidden !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      /* Hide interactive web components */
+      h1, p.subtitle, .config-card, .rotation-toolbar, .scenario-toolbar,
+      .fault-indicator-bar, .arena-container, .controls, .log-panel, .comments-card {
+        display: none !important;
+      }
+
+      /* Full 1-page wrapper */
+      #printContainer {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        height: 98vh !important;
+        box-sizing: border-box !important;
+        page-break-inside: avoid !important;
+      }
+
+      .print-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        border-bottom: 2px solid #162447 !important;
+        padding-bottom: 3px !important;
+        margin-bottom: 4px !important;
+      }
+
+      .print-title {
+        font-size: 11pt !important;
+        font-weight: 900 !important;
+        color: #162447 !important;
+      }
+
+      .print-meta {
+        font-size: 7.5pt !important;
+        font-weight: bold !important;
+        color: #475569 !important;
+      }
+
+      /* 1-Page Grid: 4 columns x 2 rows (or 3x2 for 6 players) */
+      .print-grid {
+        flex: 1 !important;
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        grid-template-rows: repeat(2, 1fr) !important;
+        gap: 6px !important;
+        box-sizing: border-box !important;
+      }
+
+      .print-grid.size-6 {
+        grid-template-columns: repeat(3, 1fr) !important;
+      55, 0.4);
+      border-radius: 4px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 0.72rem;
+      text-align: center;
+      padding: 1px 2px;
+      outline: none;
+      box-sizing: border-box;
+      pointer-events: auto;
+    }
+
+    /* Position Dropdown Inside Token */
+    .player-role-select {
+      width: 56px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 4px;
+      color: #ffeaa7;
+      font-size: 0.6rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 1px 0;
+      margin-top: 2px;
+      outline: none;
+      box-sizing: border-box;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .player-role-select option {
+      background: #0f172a;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .player-name-input:focus, .player-role-select:focus {
+      background: rgba(0, 0, 0, 0.85) !important;
+      border-color: #ffd700 !important;
+      color: #ffffff !important;
+    }
+
+    #overlapCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:active { transform: translateY(2px); }
+
+    .nav-btn { background: #0984e3; }
+    .nav-btn:hover { background: #74b9ff; }
+
+    .reset-pos-btn { background: #e67e22; }
+    .reset-pos-btn:hover { background: #f39c12; }
+
+    .save-btn { background: #27ae60; }
+    .save-btn:hover { background: #2ecc71; }
+
+    .update-btn { background: #f59e0b; color: #1e293b; font-weight: 700; }
+    .update-btn:hover { background: #fbbf24; }
+
+    .load-btn { background: #8e44ad; }
+    .load-btn:hover { background: #9b59b6; }
+
+    .share-btn { background: #10b981; }
+    .share-btn:hover { background: #34d399; }
+
+    .print-btn { background: #6366f1; }
+    .print-btn:hover { background: #818cf8; }
+
+    .del-btn { background: #d63031; }
+    .del-btn:hover { background: #ff7675; }
+
+    .log-panel {
+      margin-top: 14px;
+      background: #111;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #00ffcc;
+      max-width: 860px;
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 40px;
+      text-align: center;
+    }
+
+    /* Public Comments Section */
+    .comments-card {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 860px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .comments-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 8px;
+    }
+
+    .comments-header h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: #00d2d3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .comments-count-badge {
+      background: #1f4068;
+      color: #ffeaa7;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .comment-form-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .comment-name-input {
+      background: #0f172a;
+      border: 1px solid #334e68;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      min-width: 160px;
+      box-sizing: border-box;
+    }
+
+    .comment-text-input {
+      width: 100%;
+      height: 65px;
+      background: #0f172a;
+      border: 1px solid #334e68;
+      border-radius: 6px;
+      color: #fff;
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    .comment-text-input:focus, .comment-name-input:focus {
+      border-color: #00d2d3;
+    }
+
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .comment-item {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .comment-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+    }
+
+    .comment-item-author {
+      font-weight: 700;
+      color: #f1c40f;
+    }
+
+    .comment-item-date {
+      color: #718096;
+      font-size: 0.72rem;
+    }
+
+    .comment-item-body {
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+
+    .no-comments-msg {
+      font-size: 0.8rem;
+      color: #a0aec0;
+      text-align: center;
+      padding: 14px;
+      font-style: italic;
+    }
+
+    /* Print Canvas (Hidden on regular screen) */
+    #printContainer {
+      display: none;
+    }
+
     /* Automatic Responsive Layout for Mobile/Tablet */
     @media (max-width: 820px) {
       body {
