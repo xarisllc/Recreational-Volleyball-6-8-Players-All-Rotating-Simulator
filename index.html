@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simeon All-Rotating Recreational Volleyball Simulator</title>
+  <title>All-Rotating Recreational Volleyball Simulator</title>
   <style>
     :root {
       --court-wood: #e59866;
@@ -387,6 +387,7 @@
       z-index: 20;
     }
 
+    /* Active Setter turns Yellow */
     .player-token.setter-active {
       background: var(--player-setter-active) !important;
       color: #1e293b !important;
@@ -433,6 +434,7 @@
       pointer-events: auto;
     }
 
+    /* Position Dropdown Inside Token */
     .player-role-select {
       width: 56px;
       background: rgba(0, 0, 0, 0.4);
@@ -748,12 +750,12 @@
     }
 
     /* =======================================================
-       EXACT WEBPAGE-MATCHED 1-PAGE PRINT ENGINE
+       PROPORTIONAL 1-PAGE PRINT ENGINE (Matches Webpage scale)
        ======================================================= */
     @media print {
       @page {
         margin: 0.2in;
-        size: auto;
+        size: landscape; /* Landscape default guarantees optimal aspect ratio */
       }
 
       html, body {
@@ -768,13 +770,13 @@
         print-color-adjust: exact !important;
       }
 
-      /* Hide web controls */
+      /* Hide interactive web components */
       h1, p.subtitle, .config-card, .rotation-toolbar, .scenario-toolbar,
       .fault-indicator-bar, .arena-container, .controls, .log-panel, .comments-card {
         display: none !important;
       }
 
-      /* Container fits 1 page */
+      /* Full 1-page wrapper */
       #printContainer {
         display: flex !important;
         flex-direction: column !important;
@@ -789,7 +791,7 @@
         justify-content: space-between !important;
         align-items: center !important;
         border-bottom: 2px solid #162447 !important;
-        padding-bottom: 2px !important;
+        padding-bottom: 3px !important;
         margin-bottom: 4px !important;
       }
 
@@ -805,7 +807,7 @@
         color: #475569 !important;
       }
 
-      /* Grid containing all rotations */
+      /* 1-Page Grid: 4 columns x 2 rows (or 3x2 for 6 players) */
       .print-grid {
         flex: 1 !important;
         display: grid !important;
@@ -820,11 +822,11 @@
         grid-template-rows: repeat(2, 1fr) !important;
       }
 
-      /* Rotation Card Replica */
+      /* Card Container */
       .print-card {
         border: 1px solid #94a3b8 !important;
         border-radius: 6px !important;
-        padding: 2px !important;
+        padding: 2px 4px 4px 4px !important;
         display: flex !important;
         flex-direction: column !important;
         box-sizing: border-box !important;
@@ -839,35 +841,37 @@
         background: #162447 !important;
         color: #fff !important;
         border-radius: 3px !important;
-        padding: 1px 0 !important;
+        padding: 1.5px 0 !important;
         margin-bottom: 2px !important;
       }
 
-      /* Mini Arena */
+      /* Mini Arena row with Benches and Court */
       .print-arena {
         flex: 1 !important;
         display: flex !important;
         flex-direction: row !important;
         align-items: center !important;
         justify-content: center !important;
-        gap: 3px !important;
+        gap: 4px !important;
         box-sizing: border-box !important;
+        height: 90% !important;
       }
 
-      /* Exact Wood Court */
+      /* Court Box keeps volleyball court proportions (3:4 ratio) */
       .print-court-box {
-        flex: 1 !important;
         height: 100% !important;
+        aspect-ratio: 3 / 4 !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
+        box-sizing: border-box !important;
       }
 
       .print-net {
         width: 100% !important;
-        height: 3px !important;
-        background: repeating-linear-gradient(90deg, #333, #333 4px, #fff 4px, #fff 8px) !important;
-        margin-bottom: 1px !important;
+        height: 4px !important;
+        background: repeating-linear-gradient(90deg, #222, #222 5px, #fff 5px, #fff 10px) !important;
+        margin-bottom: 1.5px !important;
         border-radius: 1px !important;
       }
 
@@ -875,7 +879,7 @@
         width: 100% !important;
         flex: 1 !important;
         background-color: var(--court-wood) !important;
-        border: 2.5px solid var(--court-border) !important;
+        border: 3px solid var(--court-border) !important;
         border-radius: 3px !important;
         position: relative !important;
         box-sizing: border-box !important;
@@ -887,19 +891,19 @@
         top: 33.33% !important;
         left: 0 !important;
         width: 100% !important;
-        height: 1.5px !important;
+        height: 2px !important;
         background-color: #ffffff !important;
         opacity: 0.9 !important;
       }
 
-      /* Exact Circular Player Tokens in Print */
+      /* PROPORTIONAL PLAYER TOKENS (20% of court width, perfectly round) */
       .print-token {
-        width: 24px !important;
-        height: 24px !important;
+        width: 20% !important;
+        aspect-ratio: 1 / 1 !important;
         border-radius: 50% !important;
         background: var(--player-court) !important;
         color: #ffffff !important;
-        border: 1px solid #ffffff !important;
+        border: 1.5px solid #ffffff !important;
         position: absolute !important;
         transform: translate(-50%, -50%) !important;
         display: flex !important;
@@ -908,20 +912,21 @@
         align-items: center !important;
         box-sizing: border-box !important;
         z-index: 5 !important;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.3) !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.35) !important;
+        padding: 1px !important;
       }
 
       .print-token.is-setter {
         background: var(--player-setter-active) !important;
         color: #1e293b !important;
-        border-color: #000 !important;
+        border-color: #ffffff !important;
       }
 
       .print-token-name {
-        font-size: 4.8pt !important;
+        font-size: 6.2pt !important;
         font-weight: 800 !important;
         line-height: 1 !important;
-        max-width: 22px !important;
+        width: 96% !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
@@ -929,37 +934,43 @@
       }
 
       .print-token-role {
-        font-size: 3.8pt !important;
+        font-size: 5pt !important;
         font-weight: 900 !important;
         line-height: 1 !important;
-        opacity: 0.95 !important;
+        margin-top: 1px !important;
+        color: #ffeaa7 !important;
       }
 
-      /* Bench Wings in Print */
+      .print-token.is-setter .print-token-role {
+        color: #1e293b !important;
+      }
+
+      /* Proportional Bench Wings */
       .print-wing {
-        width: 28px !important;
-        height: 94% !important;
+        height: 100% !important;
+        width: 22% !important;
         background: #162447 !important;
-        border: 1px solid #1f4068 !important;
+        border: 1.5px solid #1f4068 !important;
         border-radius: 4px !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 1px !important;
+        padding: 2px !important;
         box-sizing: border-box !important;
+        gap: 3px !important;
       }
 
       .print-wing.hidden {
-        display: none !important;
+        visibility: hidden !important;
+        display: flex !important;
       }
 
       .print-wing-title {
-        font-size: 3.5pt !important;
+        font-size: 5pt !important;
         font-weight: 800 !important;
         color: #00d2d3 !important;
         text-transform: uppercase !important;
-        margin-bottom: 2px !important;
         text-align: center !important;
       }
 
@@ -967,8 +978,7 @@
         position: relative !important;
         transform: none !important;
         background: var(--player-bench) !important;
-        width: 22px !important;
-        height: 22px !important;
+        width: 90% !important;
       }
     }
   </style>
@@ -2012,12 +2022,12 @@
 
       // Standard home percentages to position circular tokens on the court
       const defaultPositions = {
-        pos4: { x: 18, y: 22 },
+        pos4: { x: 20, y: 22 },
         pos3: { x: 50, y: 20 },
-        pos2: { x: 82, y: 22 },
-        pos5: { x: 18, y: 74 },
+        pos2: { x: 80, y: 22 },
+        pos5: { x: 20, y: 74 },
         pos6: { x: 50, y: 74 },
-        pos1: { x: 82, y: 78 }
+        pos1: { x: 80, y: 78 }
       };
 
       for (let rot = 1; rot <= teamSize; rot++) {
