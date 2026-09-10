@@ -755,7 +755,7 @@
     @media print {
       @page {
         margin: 0.2in;
-        size: landscape; /* Landscape default guarantees optimal aspect ratio */
+        size: landscape;
       }
 
       html, body {
@@ -2020,7 +2020,6 @@
       grid.className = `print-grid ${teamSize === 6 ? 'size-6' : ''}`;
       grid.innerHTML = '';
 
-      // Standard home percentages to position circular tokens on the court
       const defaultPositions = {
         pos4: { x: 20, y: 22 },
         pos3: { x: 50, y: 20 },
