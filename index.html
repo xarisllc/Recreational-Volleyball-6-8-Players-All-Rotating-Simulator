@@ -405,6 +405,34 @@
       flex-direction: column;
       align-items: center;
       flex-shrink: 0;
+      position: relative;
+    }
+
+    .animate-btn-container {
+      display: none;
+    }
+
+    .animate-btn-container.show {
+      display: inline-block;
+    }
+
+    .animate-btn {
+      background: #8b5cf6;
+      color: white;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      cursor: pointer;
+      border: 1px solid #a78bfa;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .animate-btn:hover {
+      background: #7c3aed;
+      box-shadow: 0 6px 16px rgba(139, 92, 246, 0.6);
     }
 
     .court-header {
@@ -446,6 +474,50 @@
       background-color: var(--court-line);
       opacity: 0.9;
       pointer-events: none;
+    }
+
+    /* Explanation Banner overlay just beneath the 10-foot line */
+    .animation-flash-banner {
+      position: absolute;
+      top: 36%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      border: 2px solid #38bdf8;
+      color: #38bdf8;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      z-index: 30;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+      pointer-events: none;
+      display: none;
+      text-align: center;
+      white-space: nowrap;
+      animation: bannerPulse 1.5s infinite;
+    }
+
+    @keyframes bannerPulse {
+      0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.85; transform: translateX(-50%) scale(1.02); }
+    }
+
+    /* Animated volleyball style */
+    .animated-ball {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #f1c40f;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(241, 196, 15, 0.9);
+      z-index: 25;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      display: none;
     }
 
     .court-grid-guides {
@@ -492,6 +564,7 @@
       justify-content: center;
       z-index: 10;
       touch-action: none;
+      transition: left 0.05s linear, top 0.05s linear;
     }
 
     .player-token {
@@ -653,6 +726,7 @@
       flex-wrap: wrap;
       justify-content: center;
       position: relative;
+      align-items: center;
     }
 
     .dropdown-btn-wrapper {
@@ -996,142 +1070,6 @@
     }
 
     /* =======================================================
-       RESPONSIVE CELLPHONE STYLING (Screens <= 820px)
-       ======================================================= */
-    @media (max-width: 820px) {
-      body {
-        padding: 6px;
-      }
-      .app-main-layout {
-        flex-direction: column;
-        align-items: center;
-      }
-      .roster-card {
-        width: 100%;
-        max-width: 360px;
-      }
-      .roster-list-container {
-        max-height: 160px;
-      }
-      h1 {
-        font-size: 1.25rem;
-      }
-      p.subtitle {
-        font-size: 0.74rem;
-        margin-bottom: 8px;
-      }
-      .arena-container {
-        flex-direction: row;
-        gap: 6px;
-        width: 100%;
-      }
-      .court {
-        width: 230px;
-        height: 330px;
-        border-width: 4px;
-      }
-
-      .zone-marker {
-        font-size: 0.50rem !important;
-        background: transparent !important;
-        color: #ffffff !important;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.95) !important;
-      }
-      .zm-4 { top: 2px !important; left: 3px !important; }
-      .zm-3 { top: 2px !important; left: 50% !important; transform: translateX(-50%) !important; }
-      .zm-2 { top: 2px !important; right: 3px !important; }
-      .zm-5 { bottom: 2px !important; left: 3px !important; }
-      .zm-6 { bottom: 2px !important; left: 50% !important; transform: translateX(-50%) !important; }
-      .zm-1 { bottom: 2px !important; right: 3px !important; }
-
-      .player-token {
-        width: 58px;
-        height: 58px;
-        border-width: 1.5px;
-        padding: 0;
-        overflow: hidden;
-      }
-
-      .token-inner {
-        width: 90%;
-        gap: 1px;
-      }
-
-      .player-name-select {
-        width: 100% !important;
-        height: 15px !important;
-        font-size: 0.52rem !important;
-        line-height: 1 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        border: none !important;
-        border-radius: 2px !important;
-        background: rgba(0, 0, 0, 0.45) !important;
-        text-align: center;
-        text-align-last: center;
-      }
-
-      .player-role-select {
-        width: 82% !important;
-        height: 15px !important;
-        font-size: 0.52rem !important;
-        line-height: 1 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        border: none !important;
-        border-radius: 2px !important;
-        background: rgba(0, 0, 0, 0.5) !important;
-        text-align-last: center;
-        text-align: center;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-      }
-
-      .token-drag-handle {
-        display: flex;
-        width: 22px;
-        height: 16px;
-        font-size: 0.58rem;
-        margin-top: 1px;
-      }
-
-      .bench-wing {
-        width: 72px;
-        min-height: 330px;
-        padding: 6px 3px;
-      }
-      .bench-wing-title {
-        font-size: 0.58rem;
-      }
-      .bench-sub-indicator {
-        font-size: 0.5rem;
-        padding: 3px 2px;
-      }
-      .bench-flow-note {
-        font-size: 0.48rem;
-      }
-      .bench-wing .player-token {
-        width: 54px;
-        height: 54px;
-      }
-      .bench-wing .token-drag-handle {
-        display: none !important;
-      }
-      .config-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 6px;
-      }
-      .config-group {
-        justify-content: space-between;
-      }
-      select, input[type="text"].rotation-name-input {
-        flex: 1;
-      }
-    }
-
-    /* =======================================================
        EXACT STRICT PRINT MEDIA ISOLATION ENGINE
        ======================================================= */
     @media print {
@@ -1201,7 +1139,6 @@
         color: #475569 !important;
       }
 
-      /* 1-page grid fit for 1 scenario */
       .print-grid-fit {
         flex: 1 !important;
         display: grid !important;
@@ -1222,7 +1159,6 @@
         grid-template-rows: repeat(2, 1fr) !important;
       }
 
-      /* Multi-scenario landscape page blocks: strictly 2 rotations per page */
       .print-page-block {
         display: flex !important;
         flex-direction: column !important;
@@ -1448,7 +1384,7 @@
 
   <h1>All-Rotating Recreational Volleyball Simulator</h1>
   <p class="subtitle">
-    Compare <b>Home</b>, <b>On Serve</b>, <b>Base</b>, and <b>Receive</b>. Manage up to 30 roster players on the left with custom jersey numbers and select them directly from circle dropdowns!
+    Compare <b>Home</b>, <b>On Serve</b>, <b>Base</b>, <b>Attack</b>, and <b>Receive</b>. Manage up to 30 roster players on the left with custom jersey numbers and select them directly from circle dropdowns!
   </p>
 
   <div class="fault-indicator-bar" id="faultBanner">⚠️ ROTATION FAULT DETECTED!</div>
@@ -1511,6 +1447,7 @@
             <select id="savedRotationsSelect" style="min-width: 160px;" onchange="loadSelectedRotationFromDropdown(this.value)">
               <option value="">-- Select Rotation Name --</option>
             </select>
+            <button class="undo-btn" onclick="resetAllLayoutsToDefault()">✨ New Rotation</button>
             <button class="update-btn" onclick="updateCurrentLoadedRotation()">💾 Save Changes</button>
             <button class="del-btn" onclick="deleteCurrentRotation()">🗑️ Delete</button>
           </div>
@@ -1538,6 +1475,7 @@
         <button class="scenario-btn active" id="btnScenarioHome" onclick="setScenario('home')">🏠 Home (Slots)</button>
         <button class="scenario-btn" id="btnScenarioServe" onclick="setScenario('serve')">🏐 On Serve</button>
         <button class="scenario-btn" id="btnScenarioBase" onclick="setScenario('base')">🛡️ Base (Defense)</button>
+        <button class="scenario-btn" id="btnScenarioAttack" onclick="setScenario('attack')">⚔️ Attack</button>
         <button class="scenario-btn" id="btnScenarioReceive" onclick="setScenario('receive')">📥 Serve Receive</button>
       </div>
 
@@ -1557,13 +1495,15 @@
           <div class="net-indicator"></div>
           <div class="court" id="courtSurface">
             <div class="attack-line"></div>
+            <div class="animation-flash-banner" id="animFlashBanner">Transition to Attack</div>
+            <div class="animated-ball" id="animatedBall"></div>
             <canvas id="overlapCanvas"></canvas>
 
             <div class="court-grid-guides">
               <div class="grid-zone"><span class="zone-marker zm-4">Zone 4 (LF)</span></div>
               <div class="grid-zone"><span class="zone-marker zm-3">Zone 3 (MF)</span></div>
               <div class="grid-zone"><span class="zone-marker zm-2">Zone 2 (RF)</span></div>
-              <div class="grid-zone"><span class="zone-marker zm-5">Zone 5 (LB)</span></div>
+              <div class="grid-zone"><span class="grid-zone"><span class="zone-marker zm-5">Zone 5 (LB)</span></div>
               <div class="grid-zone"><span class="zone-marker zm-6">Zone 6 (MB)</span></div>
               <div class="grid-zone"><span class="zone-marker zm-1">Zone 1 (RB)</span></div>
             </div>
@@ -1597,6 +1537,10 @@
         </div>
 
         <button class="del-btn" onclick="resetToDefaults()">Reset Lineup</button>
+
+        <div class="animate-btn-container" id="animateBtnContainer">
+          <button class="animate-btn" id="animateBtn" onclick="toggleAnimation()">▶ Animate</button>
+        </div>
       </div>
 
       <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
@@ -1634,6 +1578,10 @@
         <label class="print-option-item">
           <input type="checkbox" id="chkPrintServe" checked>
           <span>🏐 On Serve</span>
+        </label>
+        <label class="print-option-item">
+          <input type="checkbox" id="chkPrintAttack">
+          <span>⚔️ Attack</span>
         </label>
         <label class="print-option-item">
           <input type="checkbox" id="chkPrintBase">
@@ -1718,7 +1666,6 @@
       { id: 8, name: "", position: "" }
     ];
 
-    // Multi-system layout cache so switching offensive systems restores distinct coordinates
     let systemScenarioStores = {
       "4-2": {},
       "6-2": {},
@@ -1736,13 +1683,17 @@
         pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 20 },
         pos5: { x: 18, y: 74 }, pos6: { x: 50, y: 74 }, pos1: { x: 82, y: 74 }
       },
+      attack: {
+        pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 20 },
+        pos5: { x: 18, y: 74 }, pos6: { x: 50, y: 74 }, pos1: { x: 82, y: 74 }
+      },
       base: {
         pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 20 },
-        pos5: { x: 18, y: 72 }, pos6: { x: 50, y: 76 }, pos1: { x: 82, y: 72 }
+        pos5: { x: 18, y: 74 }, pos6: { x: 50, y: 74 }, pos1: { x: 82, y: 74 }
       },
       serve: {
         pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 20 },
-        pos5: { x: 22, y: 72 }, pos6: { x: 50, y: 74 }, pos1: { x: 84, y: 93 }
+        pos5: { x: 18, y: 74 }, pos6: { x: 50, y: 74 }, pos1: { x: 82, y: 74 }
       },
       receive: {
         1: { pos4: { x: 18, y: 24 }, pos3: { x: 52, y: 22 }, pos2: { x: 82, y: 24 }, pos5: { x: 20, y: 74 }, pos6: { x: 50, y: 54 }, pos1: { x: 80, y: 74 } },
@@ -1768,6 +1719,7 @@
     let playerCoords = {};
     let activeFaults = [];
     let positionHistory = [];
+    let isAnimating = false;
 
     function initDefaultSquad() {
       squad = JSON.parse(JSON.stringify(DEFAULT_LINEUP));
@@ -1782,7 +1734,7 @@
           const rPreset = DEFAULT_SCENARIO_COORDS.receive[currentRotation] || DEFAULT_SCENARIO_COORDS.receive[1];
           playerCoords = JSON.parse(JSON.stringify(rPreset));
         } else {
-          playerCoords = JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS[currentScenario]));
+          playerCoords = JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS[currentScenario] || DEFAULT_SCENARIO_COORDS.home));
         }
       }
     }
@@ -1792,6 +1744,398 @@
       scenarioCoordsStore[key] = JSON.parse(JSON.stringify(playerCoords));
       if (!systemScenarioStores[offensiveSystem]) systemScenarioStores[offensiveSystem] = {};
       systemScenarioStores[offensiveSystem][key] = JSON.parse(JSON.stringify(playerCoords));
+    }
+
+    function updateAnimateButtonVisibility() {
+      const container = document.getElementById('animateBtnContainer');
+      if (currentScenario === 'home') {
+        container.classList.remove('show');
+      } else {
+        container.classList.add('show');
+      }
+    }
+
+    function toggleAnimation() {
+      if (isAnimating || currentScenario === 'home') return;
+      isAnimating = true;
+      const btn = document.getElementById('animateBtn');
+      btn.innerText = "⏸ Animating...";
+      btn.disabled = true;
+
+      const flashBanner = document.getElementById('animFlashBanner');
+      const ball = document.getElementById('animatedBall');
+
+      let homeKey = getStorageKey(currentRotation, 'home');
+      let homeCoords = scenarioCoordsStore[homeKey] || JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS.home));
+
+      let targetKey = getStorageKey(currentRotation, currentScenario);
+      let targetCoords = scenarioCoordsStore[targetKey];
+      if (!targetCoords) {
+        if (currentScenario === 'receive') {
+          targetCoords = JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS.receive[currentRotation] || DEFAULT_SCENARIO_COORDS.receive[1]));
+        } else {
+          targetCoords = JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS[currentScenario]));
+        }
+      }
+
+      // Special Sequence for 'base' scenario animation as requested
+      if (currentScenario === 'base') {
+        let attackKey = getStorageKey(currentRotation, 'attack');
+        let attackCoords = scenarioCoordsStore[attackKey] || JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS.attack));
+
+        // Start at Base layout
+        playerCoords = JSON.parse(JSON.stringify(targetCoords));
+        renderCourtTokens();
+
+        // 1. Touch 1: Ball comes from over the net to Zone 6 (Base position)
+        setTimeout(() => {
+          const zone6BasePos = playerCoords['pos6'] || { x: 50, y: 74 };
+          ball.style.left = `50%`;
+          ball.style.top = `-10%`;
+          ball.style.display = "block";
+
+          const bStartTime = performance.now();
+          const bDuration = 600;
+
+          function ballInFrame(curTime) {
+            const bElapsed = curTime - bStartTime;
+            const bProg = Math.min(bElapsed / bDuration, 1);
+            const curBx = 50 + (zone6BasePos.x - 50) * bProg;
+            const curBy = -10 + (zone6BasePos.y - (-10)) * bProg;
+            ball.style.left = `${curBx}%`;
+            ball.style.top = `${curBy}%`;
+
+            if (bProg < 1) {
+              requestAnimationFrame(ballInFrame);
+            } else {
+              // 2. Transition to Attack while flashing "Transition to Attack" for 1.5s
+              flashBanner.innerText = "Transition to Attack";
+              flashBanner.style.display = "block";
+              setTimeout(() => { flashBanner.style.display = "none"; }, 1500);
+
+              const baseCoordsNow = JSON.parse(JSON.stringify(playerCoords));
+              const moveStart = performance.now();
+              const moveDuration = 1000;
+
+              function moveFrame(mTime) {
+                const mElapsed = mTime - moveStart;
+                const mProg = Math.min(mElapsed / moveDuration, 1);
+                const ease = mProg * (2 - mProg);
+
+                ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+                  const start = baseCoordsNow[posKey];
+                  const end = attackCoords[posKey];
+                  if (start && end) {
+                    const curX = start.x + (end.x - start.x) * ease;
+                    const curY = start.y + (end.y - start.y) * ease;
+                    playerCoords[posKey] = { x: curX, y: curY };
+                    const wrapper = document.getElementById(`wrapper-${posKey}`);
+                    if (wrapper) {
+                      wrapper.style.left = `${curX}%`;
+                      wrapper.style.top = `${curY}%`;
+                    }
+                    
+                    // Attach ball to pos6 dynamically during transition so it naturally carries it
+                    if (posKey === 'pos6') {
+                      ball.style.left = `${curX}%`;
+                      ball.style.top = `${curY}%`;
+                    }
+                  }
+                });
+                drawOverlapLines();
+
+                if (mProg < 1) {
+                  requestAnimationFrame(moveFrame);
+                } else {
+                  playerCoords = JSON.parse(JSON.stringify(attackCoords));
+                  renderCourtTokens();
+
+                  const z6Cur = playerCoords['pos6'] || { x: 50, y: 74 };
+                  ball.style.left = `${z6Cur.x}%`;
+                  ball.style.top = `${z6Cur.y}%`;
+
+                  // 3. Touch 2: Ball goes from Zone 6 to the setter in the front row
+                  const currentState = calculateStateForRotation(currentRotation);
+                  const setterKey = ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].find(pk => shouldHighlightSetter(currentState[pk], pk, currentState)) || 'pos3';
+                  const setterCur = playerCoords[setterKey] || { x: 50, y: 20 };
+
+                  const pass1Start = performance.now();
+                  function pass1Frame(pTime) {
+                    const pElapsed = pTime - pass1Start;
+                    const pProg = Math.min(pElapsed / 500, 1);
+                    ball.style.left = `${z6Cur.x + (setterCur.x - z6Cur.x) * pProg}%`;
+                    ball.style.top = `${z6Cur.y + (setterCur.y - z6Cur.y) * pProg}%`;
+
+                    if (pProg < 1) {
+                      requestAnimationFrame(pass1Frame);
+                    } else {
+                      // 4. Touch 3: Ball goes from setter directly to the outside hitter (pos4), who hits it over the net
+                      const outsideHitterKey = 'pos4';
+                      const ohCur = playerCoords[outsideHitterKey] || { x: 18, y: 20 };
+
+                      const pass2Start = performance.now();
+                      function pass2Frame(p2Time) {
+                        const p2Elapsed = p2Time - pass2Start;
+                        const p2Prog = Math.min(p2Elapsed / 500, 1);
+                        ball.style.left = `${setterCur.x + (ohCur.x - setterCur.x) * p2Prog}%`;
+                        ball.style.top = `${setterCur.y + (ohCur.y - setterCur.y) * p2Prog}%`;
+
+                        if (p2Prog < 1) {
+                          requestAnimationFrame(pass2Frame);
+                        } else {
+                          // Hit over net (Strictly only the OH jumps for the hit)
+                          const hitStart = performance.now();
+                          const hitterOriginalY = playerCoords[outsideHitterKey].y;
+
+                          function hitFrame(hTime) {
+                            const hElapsed = hTime - hitStart;
+                            const hProg = Math.min(hElapsed / 600, 1);
+
+                            const jumpOffset = Math.sin(hProg * Math.PI) * -6;
+                            playerCoords[outsideHitterKey].y = hitterOriginalY + jumpOffset;
+
+                            const w = document.getElementById(`wrapper-${outsideHitterKey}`);
+                            if (w) w.style.top = `${playerCoords[outsideHitterKey].y}%`;
+
+                            ball.style.left = `${ohCur.x + (50 - ohCur.x) * hProg}%`;
+                            ball.style.top = `${ohCur.y + (-10 - ohCur.y) * hProg}%`;
+
+                            if (hProg < 1) {
+                              requestAnimationFrame(hitFrame);
+                            } else {
+                              ball.style.display = "none";
+                              playerCoords[outsideHitterKey].y = hitterOriginalY;
+                              renderCourtTokens();
+
+                              // 5. Transition back to Base while flashing "Transition to Base" for 1.5s
+                              flashBanner.innerText = "Transition to Base";
+                              flashBanner.style.display = "block";
+                              setTimeout(() => { flashBanner.style.display = "none"; }, 1500);
+
+                              const attackCoordsNow = JSON.parse(JSON.stringify(playerCoords));
+                              const returnStart = performance.now();
+                              const returnDuration = 1000;
+
+                              function returnFrame(rTime) {
+                                const rElapsed = rTime - returnStart;
+                                const rProg = Math.min(rElapsed / returnDuration, 1);
+                                const easeR = rProg * (2 - rProg);
+
+                                ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+                                  const start = attackCoordsNow[posKey];
+                                  const end = targetCoords[posKey];
+                                  if (start && end) {
+                                    const curX = start.x + (end.x - start.x) * easeR;
+                                    const curY = start.y + (end.y - start.y) * easeR;
+                                    playerCoords[posKey] = { x: curX, y: curY };
+                                    const wrapper = document.getElementById(`wrapper-${posKey}`);
+                                    if (wrapper) {
+                                      wrapper.style.left = `${curX}%`;
+                                      wrapper.style.top = `${curY}%`;
+                                    }
+                                  }
+                                });
+                                drawOverlapLines();
+
+                                if (rProg < 1) {
+                                  requestAnimationFrame(returnFrame);
+                                } else {
+                                  playerCoords = JSON.parse(JSON.stringify(targetCoords));
+                                  renderCourtTokens();
+                                  checkPositionalFaults();
+
+                                  isAnimating = false;
+                                  btn.innerText = "▶ Animate";
+                                  btn.disabled = false;
+                                }
+                              }
+                              requestAnimationFrame(returnFrame);
+                            }
+                          }
+                          requestAnimationFrame(hitFrame);
+                        }
+                      }
+                      requestAnimationFrame(pass2Frame);
+                    }
+                  }
+                  requestAnimationFrame(pass1Frame);
+                }
+              }
+              requestAnimationFrame(moveFrame);
+            }
+          }
+          requestAnimationFrame(ballInFrame);
+        }, 500);
+      } else if (currentScenario === 'serve') {
+        let baseKey = getStorageKey(currentRotation, 'base');
+        let baseCoords = scenarioCoordsStore[baseKey] || JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS.base));
+
+        playerCoords = JSON.parse(JSON.stringify(homeCoords));
+        renderCourtTokens();
+
+        setTimeout(() => {
+          flashBanner.innerText = "Transition to Serve";
+          flashBanner.style.display = "block";
+
+          const startTime1 = performance.now();
+          const duration1 = 1200;
+
+          function frame1(currentTime) {
+            const elapsed = currentTime - startTime1;
+            const progress = Math.min(elapsed / duration1, 1);
+            const easeProgress = progress * (2 - progress);
+
+            ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+              const start = homeCoords[posKey];
+              const end = targetCoords[posKey];
+              if (start && end) {
+                const curX = start.x + (end.x - start.x) * easeProgress;
+                const curY = start.y + (end.y - start.y) * easeProgress;
+                playerCoords[posKey] = { x: curX, y: curY };
+
+                const wrapper = document.getElementById(`wrapper-${posKey}`);
+                if (wrapper) {
+                  wrapper.style.left = `${curX}%`;
+                  wrapper.style.top = `${curY}%`;
+                }
+              }
+            });
+            drawOverlapLines();
+
+            if (progress < 1) {
+              requestAnimationFrame(frame1);
+            } else {
+              playerCoords = JSON.parse(JSON.stringify(targetCoords));
+              renderCourtTokens();
+              checkPositionalFaults();
+
+              setTimeout(() => { flashBanner.style.display = "none"; }, 300);
+
+              setTimeout(() => {
+                const serverPos = playerCoords['pos1'] || { x: 82, y: 93 };
+                ball.style.left = `${serverPos.x}%`;
+                ball.style.top = `${serverPos.y}%`;
+                ball.style.display = "block";
+
+                const ballStart = { x: serverPos.x, y: serverPos.y };
+                const ballEnd = { x: 50, y: -10 };
+                const ballStartTime = performance.now();
+                const ballDuration = 700;
+
+                function ballFrame(curTime) {
+                  const bElapsed = curTime - ballStartTime;
+                  const bProg = Math.min(bElapsed / ballDuration, 1);
+
+                  const curBx = ballStart.x + (ballEnd.x - ballStart.x) * bProg;
+                  const curBy = ballStart.y + (ballEnd.y - ballStart.y) * bProg;
+                  ball.style.left = `${curBx}%`;
+                  ball.style.top = `${curBy}%`;
+
+                  if (bProg < 1) {
+                    requestAnimationFrame(ballFrame);
+                  } else {
+                    ball.style.display = "none";
+
+                    setTimeout(() => {
+                      flashBanner.innerText = "Transition to Base";
+                      flashBanner.style.display = "block";
+
+                      const serveCoordsNow = JSON.parse(JSON.stringify(playerCoords));
+                      const startTime2 = performance.now();
+                      const duration2 = 1200;
+
+                      function frame2(currentTime2) {
+                        const elapsed2 = currentTime2 - startTime2;
+                        const progress2 = Math.min(elapsed2 / duration2, 1);
+                        const easeProgress2 = progress2 * (2 - progress2);
+
+                        ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+                          const start = serveCoordsNow[posKey];
+                          const end = baseCoords[posKey];
+                          if (start && end) {
+                            const curX = start.x + (end.x - start.x) * easeProgress2;
+                            const curY = start.y + (end.y - start.y) * easeProgress2;
+                            playerCoords[posKey] = { x: curX, y: curY };
+
+                            const wrapper = document.getElementById(`wrapper-${posKey}`);
+                            if (wrapper) {
+                              wrapper.style.left = `${curX}%`;
+                              wrapper.style.top = `${curY}%`;
+                            }
+                          }
+                        });
+                        drawOverlapLines();
+
+                        if (progress2 < 1) {
+                          requestAnimationFrame(frame2);
+                        } else {
+                          playerCoords = JSON.parse(JSON.stringify(baseCoords));
+                          renderCourtTokens();
+                          checkPositionalFaults();
+
+                          setTimeout(() => { flashBanner.style.display = "none"; }, 300);
+
+                          isAnimating = false;
+                          btn.innerText = "▶ Animate";
+                          btn.disabled = false;
+                        }
+                      }
+                      requestAnimationFrame(frame2);
+                    }, 500);
+                  }
+                }
+                requestAnimationFrame(ballFrame);
+              }, 750);
+            }
+          }
+          requestAnimationFrame(frame1);
+        }, 750);
+      } else {
+        playerCoords = JSON.parse(JSON.stringify(homeCoords));
+        renderCourtTokens();
+
+        setTimeout(() => {
+          const startTime = performance.now();
+          const duration = 1200;
+
+          function frame(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = progress * (2 - progress);
+
+            ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+              const start = homeCoords[posKey];
+              const end = targetCoords[posKey];
+              if (start && end) {
+                const curX = start.x + (end.x - start.x) * easeProgress;
+                const curY = start.y + (end.y - start.y) * easeProgress;
+                playerCoords[posKey] = { x: curX, y: curY };
+
+                const wrapper = document.getElementById(`wrapper-${posKey}`);
+                if (wrapper) {
+                  wrapper.style.left = `${curX}%`;
+                  wrapper.style.top = `${curY}%`;
+                }
+              }
+            });
+
+            drawOverlapLines();
+
+            if (progress < 1) {
+              requestAnimationFrame(frame);
+            } else {
+              playerCoords = JSON.parse(JSON.stringify(targetCoords));
+              renderCourtTokens();
+              checkPositionalFaults();
+              isAnimating = false;
+              btn.innerText = "▶ Animate";
+              btn.disabled = false;
+            }
+          }
+
+          requestAnimationFrame(frame);
+        }, 500);
+      }
     }
 
     function renderRosterList() {
@@ -2023,16 +2367,19 @@
       document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
       if (scen === 'home') document.getElementById('btnScenarioHome').classList.add('active');
       if (scen === 'serve') document.getElementById('btnScenarioServe').classList.add('active');
+      if (scen === 'attack') document.getElementById('btnScenarioAttack').classList.add('active');
       if (scen === 'base') document.getElementById('btnScenarioBase').classList.add('active');
       if (scen === 'receive') document.getElementById('btnScenarioReceive').classList.add('active');
 
       loadActiveScenarioCoords();
       renderCourtTokens();
       checkPositionalFaults();
+      updateAnimateButtonVisibility();
 
       const labels = {
         home: 'Home (Starting Rotational Slots)',
         serve: 'On Serve (Position 1 Serving Outside Court)',
+        attack: 'Attack Formation',
         base: 'Base (Defensive Transition — Ball on Opponent Side)',
         receive: 'Serve Receive Formation'
       };
@@ -2081,6 +2428,20 @@
         renderCourtTokens();
         checkPositionalFaults();
         document.getElementById('logBox').innerText = `Reset layout for all scenarios across all rotations in ${offensiveSystem} system.`;
+      }
+    }
+
+    function resetAllLayoutsToDefault() {
+      if (confirm("Reset all layouts to default (Home layout)?")) {
+        recordHistoryState();
+        scenarioCoordsStore = {};
+        if (systemScenarioStores[offensiveSystem]) {
+          systemScenarioStores[offensiveSystem] = {};
+        }
+        loadActiveScenarioCoords();
+        renderCourtTokens();
+        checkPositionalFaults();
+        document.getElementById('logBox').innerText = "✓ Reset all layouts to default (Home layout).";
       }
     }
 
@@ -2172,7 +2533,7 @@
     }
 
     function checkPositionalFaults() {
-      if (currentScenario === 'base') {
+      if (currentScenario === 'base' || currentScenario === 'attack') {
         activeFaults = [];
         updateFaultUI();
         drawOverlapLines();
@@ -2225,7 +2586,7 @@
     function drawOverlapLines() {
       const canvas = document.getElementById('overlapCanvas');
       const court = document.getElementById('courtSurface');
-      if (!canvas || !court) return;
+      if (!canvas || !court || currentScenario === 'attack') return;
 
       canvas.width = court.clientWidth;
       canvas.height = court.clientHeight;
@@ -2415,6 +2776,7 @@
       renderBenchTokens(state);
       updateButtonsUI();
       checkPositionalFaults();
+      updateAnimateButtonVisibility();
 
       let logText = `Active: Rotation ${currentRotation} of ${teamSize} [${offensiveSystem} System - HOME]. Server: [${state.pos1.name}].`;
       document.getElementById('logBox').innerText = logText;
@@ -2537,27 +2899,23 @@
     }
 
     function onOffensiveSystemChange() {
-      // 1. Save active scenario coords for previous system
       saveActiveScenarioCoords();
-
-      // 2. Switch to new system
       offensiveSystem = document.getElementById('offensiveSystemSelect').value;
 
-      // 3. Load or restore layout cache for the newly selected system
       if (!systemScenarioStores[offensiveSystem]) {
         systemScenarioStores[offensiveSystem] = {};
       }
       scenarioCoordsStore = systemScenarioStores[offensiveSystem];
 
-      // 4. Update scene
       loadActiveScenarioCoords();
       renderCourtTokens();
       checkPositionalFaults();
+      updateAnimateButtonVisibility();
 
       let msg = "";
-      if (offensiveSystem === "4-2") msg = "4-2 selected: Restored 4-2 layout. Front-row setter is yellow.";
-      if (offensiveSystem === "6-2") msg = "6-2 selected: Restored 6-2 layout. Back-row setter is yellow.";
-      if (offensiveSystem === "5-1") msg = "5-1 selected: Restored 5-1 layout. If both S and S2 are in front row, only S2 turns yellow and S stays green.";
+      if (offensiveSystem === "4-2") msg = "4-2 selected: Restored 4-2 layout.";
+      if (offensiveSystem === "6-2") msg = "6-2 selected: Restored 6-2 layout.";
+      if (offensiveSystem === "5-1") msg = "5-1 selected: Restored 5-1 layout.";
       document.getElementById('logBox').innerText = msg;
     }
 
@@ -2917,6 +3275,7 @@
     function setAllPrintCheckboxes(checked) {
       document.getElementById('chkPrintHome').checked = checked;
       document.getElementById('chkPrintServe').checked = checked;
+      document.getElementById('chkPrintAttack').checked = checked;
       document.getElementById('chkPrintBase').checked = checked;
       document.getElementById('chkPrintReceive').checked = checked;
     }
@@ -2925,6 +3284,7 @@
       const scenariosToInclude = [];
       if (document.getElementById('chkPrintHome').checked) scenariosToInclude.push({ key: 'home', title: 'Home (Slots)' });
       if (document.getElementById('chkPrintServe').checked) scenariosToInclude.push({ key: 'serve', title: 'On Serve' });
+      if (document.getElementById('chkPrintAttack').checked) scenariosToInclude.push({ key: 'attack', title: 'Attack' });
       if (document.getElementById('chkPrintBase').checked) scenariosToInclude.push({ key: 'base', title: 'Base (Defense)' });
       if (document.getElementById('chkPrintReceive').checked) scenariosToInclude.push({ key: 'receive', title: 'Serve Receive' });
 
@@ -2951,7 +3311,7 @@
         }
       `;
 
-      // Rule 2: 1 scenario -> Fit all rotations on 1 landscape page
+      // Rule 2: Exactly 1 scenario -> Fit all rotations on 1 landscape page
       if (count === 1) {
         document.body.classList.remove('print-mode-multi');
         document.body.classList.add('print-mode-single');
@@ -3001,7 +3361,7 @@
         } else if (scenObj.key === 'receive') {
           coords = DEFAULT_SCENARIO_COORDS.receive[rot] || DEFAULT_SCENARIO_COORDS.receive[1];
         } else {
-          coords = DEFAULT_SCENARIO_COORDS[scenObj.key];
+          coords = DEFAULT_SCENARIO_COORDS[scenObj.key] || DEFAULT_SCENARIO_COORDS.home;
         }
 
         let courtTokensHTML = '';
