@@ -664,6 +664,58 @@
       margin-top: 16px;
       flex-wrap: wrap;
       justify-content: center;
+      position: relative;
+    }
+
+    /* Dropdown wrapper for Reset Scenario Layout */
+    .dropdown-btn-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .reset-dropdown-menu {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      border: 2px solid #334e68;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 100;
+      min-width: 190px;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .reset-dropdown-menu.show {
+      display: flex;
+    }
+
+    .reset-dropdown-item {
+      background: transparent;
+      border: none;
+      color: #ecf0f1;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: none;
+      border-radius: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .reset-dropdown-item:hover {
+      background: #1f4068;
+      color: #f1c40f;
+    }
+
+    .reset-dropdown-item:not(:last-child) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     button {
@@ -1386,7 +1438,16 @@
         <button class="nav-btn" onclick="goToRotation(currentRotation - 1)">&larr; Prev Rotation</button>
         <button class="nav-btn" onclick="goToRotation(currentRotation + 1)">Next Rotation &rarr;</button>
         <button class="undo-btn" onclick="undoPosition()">↩️ Undo</button>
-        <button class="reset-pos-btn" onclick="resetScenarioFormation()">Reset Scenario Layout</button>
+
+        <!-- Dropdown menu for Reset Scenario Layout -->
+        <div class="dropdown-btn-wrapper">
+          <button class="reset-pos-btn" id="resetScenarioBtn" onclick="toggleResetDropdown(event)">Reset Scenario Layout ▾</button>
+          <div class="reset-dropdown-menu" id="resetDropdownMenu">
+            <button class="reset-dropdown-item" onclick="executeResetCurrentScenario()">↺ Reset Current Scenario</button>
+            <button class="reset-dropdown-item" onclick="executeResetAllScenarios()">↺ Reset All Scenarios</button>
+          </div>
+        </div>
+
         <button class="del-btn" onclick="resetToDefaults()">Reset Lineup</button>
       </div>
 
@@ -1481,10 +1542,6 @@
       return `rot_${rot}_${scen}`;
     }
 
-    // Default Scenario Coordinates:
-    // 1. Home: pos1 (Zone 1) is in exact horizontal row alignment with pos5 (Zone 5) at y: 74%
-    // 2. Serve: pos1 placed outside court behind endline (y: 93%)
-    // 3. Receive: pos6 placed closer to the 10-ft attack line (y: 52%-55%) than pos5 and pos1 (y: 74%-76%)
     const DEFAULT_SCENARIO_COORDS = {
       home: {
         pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 20 },
@@ -1791,14 +1848,46 @@
       document.getElementById('logBox').innerText = `Displaying [${labels[scen]}] for Rotation ${currentRotation} in ${offensiveSystem} system.`;
     }
 
-    function resetScenarioFormation() {
+    /* Reset Dropdown Handlers */
+    function toggleResetDropdown(e) {
+      e.stopPropagation();
+      const menu = document.getElementById('resetDropdownMenu');
+      menu.classList.toggle('show');
+    }
+
+    function closeResetDropdown() {
+      const menu = document.getElementById('resetDropdownMenu');
+      if (menu) menu.classList.remove('show');
+    }
+
+    document.addEventListener('click', (e) => {
+      const wrapper = document.querySelector('.dropdown-btn-wrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        closeResetDropdown();
+      }
+    });
+
+    function executeResetCurrentScenario() {
+      closeResetDropdown();
       recordHistoryState();
       const key = getStorageKey(currentRotation, currentScenario);
       delete scenarioCoordsStore[key];
       loadActiveScenarioCoords();
       renderCourtTokens();
       checkPositionalFaults();
-      document.getElementById('logBox').innerText = `Reset layout for current scenario in Rotation ${currentRotation}.`;
+      document.getElementById('logBox').innerText = `Reset layout for current scenario [${currentScenario.toUpperCase()}] in Rotation ${currentRotation}.`;
+    }
+
+    function executeResetAllScenarios() {
+      closeResetDropdown();
+      if (confirm("Reset ALL scenarios across all rotations back to default layouts?")) {
+        recordHistoryState();
+        scenarioCoordsStore = {};
+        loadActiveScenarioCoords();
+        renderCourtTokens();
+        checkPositionalFaults();
+        document.getElementById('logBox').innerText = `Reset layout for all scenarios across all rotations.`;
+      }
     }
 
     function getSetterType(player) {
@@ -1954,7 +2043,7 @@
 
       if (draggedPosKey && playerCoords[draggedPosKey] && currentScenario !== 'base') {
         if (isServe && draggedPosKey === 'pos1') {
-          // Exempt: Server has no neighbor guide lines on serve
+          // Exempt
         } else {
           const NEIGHBORS = {
             pos4: ['pos5', 'pos3'],
