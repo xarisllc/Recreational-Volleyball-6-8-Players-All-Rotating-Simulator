@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All-Rotating Recreational Volleyball Simulator</title>
+  <style id="dynamicPrintStyle">
+    @page {
+      margin: 0.25in;
+      size: landscape;
+    }
+  </style>
   <style>
     :root {
       --court-wood: #e59866;
@@ -45,7 +51,6 @@
       font-size: 0.88rem;
     }
 
-    /* Outer Wrapper to Support Left Roster Sidebar */
     .app-main-layout {
       display: flex;
       flex-direction: row;
@@ -57,7 +62,6 @@
       box-sizing: border-box;
     }
 
-    /* Roster Sidebar (Room for 30 Players with Editable Jersey Numbers) */
     .roster-card {
       background: var(--panel-bg);
       border: 2px solid var(--panel-border);
@@ -167,7 +171,6 @@
     }
     .roster-btn:hover { background: #2563eb; }
 
-    /* Main Content Area */
     .simulator-workspace {
       flex: 1;
       display: flex;
@@ -178,7 +181,6 @@
       box-sizing: border-box;
     }
 
-    /* Configuration Panel */
     .config-card {
       background: var(--panel-bg);
       border: 2px solid var(--panel-border);
@@ -225,7 +227,6 @@
       outline: none;
     }
 
-    /* Rotation Selector Toolbar */
     .rotation-toolbar {
       background: var(--panel-bg);
       border: 2px solid var(--panel-border);
@@ -278,7 +279,6 @@
       box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
     }
 
-    /* Scenario Bar */
     .scenario-toolbar {
       background: #0f172a;
       border: 1px solid #1f4068;
@@ -315,7 +315,6 @@
       box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
     }
 
-    /* Fault Banner */
     .fault-indicator-bar {
       width: 100%;
       background: rgba(231, 76, 60, 0.15);
@@ -341,7 +340,6 @@
       50% { opacity: 0.7; }
     }
 
-    /* Arena Stage */
     .arena-container {
       display: flex;
       flex-direction: row;
@@ -352,7 +350,6 @@
       box-sizing: border-box;
     }
 
-    /* Bench Wings */
     .bench-wing {
       background: var(--panel-bg);
       border: 2px solid var(--panel-border);
@@ -403,7 +400,6 @@
       line-height: 1.2;
     }
 
-    /* Court */
     .court-container {
       display: flex;
       flex-direction: column;
@@ -487,7 +483,6 @@
     .zm-6 { bottom: 4px; left: 50%; transform: translateX(-50%); }
     .zm-1 { bottom: 4px; right: 5px; }
 
-    /* Player Token Anchor Wrapper */
     .player-token-wrapper {
       position: absolute;
       transform: translate(-50%, -50%);
@@ -499,7 +494,6 @@
       touch-action: none;
     }
 
-    /* Player Token Circle */
     .player-token {
       width: 72px;
       height: 72px;
@@ -527,7 +521,6 @@
       z-index: 20;
     }
 
-    /* Halo around server in on-serve scenario */
     .player-token.serving-halo {
       box-shadow: 0 0 0 4px #ffd700, 0 0 16px rgba(255, 215, 0, 0.85) !important;
       animation: serveHaloPulse 1.8s infinite ease-in-out;
@@ -542,7 +535,6 @@
       }
     }
 
-    /* Active Setter turns Yellow */
     .player-token.setter-active {
       background: var(--player-setter-active) !important;
       color: #1e293b !important;
@@ -578,7 +570,6 @@
       gap: 2px;
     }
 
-    /* Name Dropdown inside Circle */
     .player-name-select {
       width: 100%;
       background: rgba(0, 0, 0, 0.45);
@@ -601,7 +592,6 @@
       font-weight: 600;
     }
 
-    /* Position Dropdown inside Circle */
     .player-role-select {
       width: 82%;
       background: rgba(0, 0, 0, 0.45);
@@ -628,7 +618,6 @@
       border-color: #ffd700 !important;
     }
 
-    /* Mobile Thumb Handle */
     .token-drag-handle {
       display: none;
       width: 24px;
@@ -657,7 +646,6 @@
       z-index: 5;
     }
 
-    /* Controls */
     .controls {
       display: flex;
       gap: 10px;
@@ -667,7 +655,6 @@
       position: relative;
     }
 
-    /* Dropdown wrapper for Reset Scenario Layout */
     .dropdown-btn-wrapper {
       position: relative;
       display: inline-block;
@@ -756,7 +743,6 @@
     .del-btn { background: #d63031; }
     .del-btn:hover { background: #ff7675; }
 
-    /* Darker Import File Button with Same Theme */
     .import-btn { background: #22303c; border: 1px solid #334e68; }
     .import-btn:hover { background: #1b2631; }
 
@@ -775,7 +761,6 @@
       text-align: center;
     }
 
-    /* Public Comments Section */
     .comments-card {
       background: var(--panel-bg);
       border: 2px solid var(--panel-border);
@@ -913,6 +898,98 @@
       padding: 14px;
       font-style: italic;
     }
+
+    /* Print Setup Modal */
+    .print-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .print-modal-overlay.show {
+      display: flex;
+    }
+
+    .print-modal-box {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      width: 320px;
+      max-width: 90vw;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .print-modal-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #00d2d3;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 6px;
+      margin: 0;
+      text-align: center;
+    }
+
+    .print-modal-subtext {
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      margin: 0;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .print-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .print-option-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    .print-option-item input[type="checkbox"] {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: #3b82f6;
+    }
+
+    .print-modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .print-modal-btn-cancel {
+      background: #64748b;
+    }
+    .print-modal-btn-cancel:hover { background: #475569; }
+
+    .print-modal-btn-confirm {
+      background: #6366f1;
+    }
+    .print-modal-btn-confirm:hover { background: #818cf8; }
 
     #printContainer {
       display: none;
@@ -1055,38 +1132,54 @@
     }
 
     /* =======================================================
-       PROPORTIONAL 1-PAGE PRINT ENGINE
+       EXACT STRICT PRINT MEDIA ISOLATION ENGINE
        ======================================================= */
     @media print {
-      @page {
-        margin: 0.2in;
-        size: landscape;
+      /* Force hide EVERYTHING in the normal app layout */
+      body > h1,
+      body > p.subtitle,
+      body > .fault-indicator-bar,
+      body > .app-main-layout,
+      body > .print-modal-overlay,
+      .controls,
+      .log-panel,
+      .comments-card,
+      .roster-card,
+      .config-card,
+      .rotation-toolbar,
+      .scenario-toolbar {
+        display: none !important;
       }
 
       html, body {
-        background: #fff !important;
-        color: #000 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
         margin: 0 !important;
         padding: 0 !important;
         width: 100% !important;
-        height: 100% !important;
-        overflow: hidden !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
 
-      h1, p.subtitle, .config-card, .rotation-toolbar, .scenario-toolbar,
-      .fault-indicator-bar, .arena-container, .controls, .log-panel, .comments-card, .token-drag-handle, .roster-card {
-        display: none !important;
-      }
-
+      /* Make #printContainer the exclusive print surface */
       #printContainer {
         display: flex !important;
         flex-direction: column !important;
         width: 100% !important;
-        height: 98vh !important;
         box-sizing: border-box !important;
-        page-break-inside: avoid !important;
+      }
+
+      /* 1 SCENARIO: Fit everything into 1 landscape sheet */
+      body.print-mode-single,
+      body.print-mode-single html {
+        height: 100% !important;
+        overflow: hidden !important;
+      }
+
+      body.print-mode-single #printContainer {
+        height: 98vh !important;
+        max-height: 98vh !important;
+        overflow: hidden !important;
       }
 
       .print-header {
@@ -1094,40 +1187,67 @@
         justify-content: space-between !important;
         align-items: center !important;
         border-bottom: 2px solid #162447 !important;
-        padding-bottom: 3px !important;
+        padding-bottom: 2px !important;
         margin-bottom: 4px !important;
       }
 
       .print-title {
-        font-size: 11pt !important;
+        font-size: 10pt !important;
         font-weight: 900 !important;
         color: #162447 !important;
       }
 
       .print-meta {
-        font-size: 7.5pt !important;
+        font-size: 7pt !important;
         font-weight: bold !important;
         color: #475569 !important;
       }
 
-      .print-grid {
+      /* Grid for single-scenario 1-page fit */
+      .print-grid-fit {
         flex: 1 !important;
         display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        grid-template-rows: repeat(2, 1fr) !important;
         gap: 6px !important;
         box-sizing: border-box !important;
+        width: 100% !important;
+        height: 100% !important;
       }
 
-      .print-grid.size-6 {
+      .print-grid-fit.rot-8,
+      .print-grid-fit.rot-7 {
+        grid-template-columns: repeat(4, 1fr) !important;
+        grid-template-rows: repeat(2, 1fr) !important;
+      }
+
+      .print-grid-fit.rot-6 {
         grid-template-columns: repeat(3, 1fr) !important;
         grid-template-rows: repeat(2, 1fr) !important;
       }
 
-      .print-card {
-        border: 1px solid #94a3b8 !important;
+      /* Multi-page portrait page blocks (3 rotations per page) */
+      .print-page-block {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        height: 96vh !important;
+        max-height: 96vh !important;
+        break-after: page !important;
+        page-break-after: always !important;
+        justify-content: space-between !important;
+        overflow: hidden !important;
+      }
+
+      .print-page-block:last-child {
+        break-after: auto !important;
+        page-break-after: auto !important;
+      }
+
+      .print-rot-block {
+        border: 1.5px solid #94a3b8 !important;
         border-radius: 6px !important;
-        padding: 2px 4px 4px 4px !important;
+        padding: 3px 4px 4px 4px !important;
         display: flex !important;
         flex-direction: column !important;
         box-sizing: border-box !important;
@@ -1135,17 +1255,57 @@
         overflow: hidden !important;
       }
 
+      body.print-mode-multi .print-rot-block {
+        flex: 1 !important;
+        margin-bottom: 0 !important;
+      }
+
+      .print-rot-header {
+        font-size: 7.5pt !important;
+        font-weight: 900 !important;
+        background: #162447 !important;
+        color: #ffffff !important;
+        padding: 2px 6px !important;
+        border-radius: 3px !important;
+        margin-bottom: 3px !important;
+        text-align: center !important;
+      }
+
+      .print-scenarios-row {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 6px !important;
+        width: 100% !important;
+        height: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+
+      .print-card {
+        flex: 1 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 4px !important;
+        padding: 2px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        box-sizing: border-box !important;
+        background: #ffffff !important;
+        overflow: hidden !important;
+      }
+
       .print-card-title {
-        font-size: 7pt !important;
+        font-size: 6.5pt !important;
         font-weight: 800 !important;
         text-align: center !important;
-        background: #162447 !important;
-        color: #fff !important;
-        border-radius: 3px !important;
+        background: #1f4068 !important;
+        color: #ffffff !important;
+        border-radius: 2px !important;
         padding: 1.5px 0 !important;
         margin-bottom: 2px !important;
       }
 
+      /* Strictly bounded court arena prevents horizontal or vertical court overlapping */
       .print-arena {
         flex: 1 !important;
         display: flex !important;
@@ -1154,12 +1314,14 @@
         justify-content: center !important;
         gap: 4px !important;
         box-sizing: border-box !important;
-        height: 90% !important;
+        width: 100% !important;
+        overflow: hidden !important;
       }
 
       .print-court-box {
         height: 100% !important;
         aspect-ratio: 3 / 4 !important;
+        max-width: 70% !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
@@ -1178,11 +1340,11 @@
         width: 100% !important;
         flex: 1 !important;
         background-color: var(--court-wood) !important;
-        border: 3px solid var(--court-border) !important;
-        border-radius: 3px !important;
+        border: 2px solid var(--court-border) !important;
+        border-radius: 2px !important;
         position: relative !important;
         box-sizing: border-box !important;
-        overflow: hidden !important;
+        overflow: visible !important;
       }
 
       .print-attack-line {
@@ -1190,18 +1352,18 @@
         top: 33.33% !important;
         left: 0 !important;
         width: 100% !important;
-        height: 2px !important;
+        height: 1.5px !important;
         background-color: #ffffff !important;
         opacity: 0.9 !important;
       }
 
       .print-token {
-        width: 20% !important;
+        width: 22% !important;
         aspect-ratio: 1 / 1 !important;
         border-radius: 50% !important;
         background: var(--player-court) !important;
         color: #ffffff !important;
-        border: 1.5px solid #ffffff !important;
+        border: 1px solid #ffffff !important;
         position: absolute !important;
         transform: translate(-50%, -50%) !important;
         display: flex !important;
@@ -1210,8 +1372,8 @@
         align-items: center !important;
         box-sizing: border-box !important;
         z-index: 5 !important;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.35) !important;
-        padding: 1px !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.35) !important;
+        padding: 0.5px !important;
       }
 
       .print-token.is-setter {
@@ -1220,8 +1382,12 @@
         border-color: #ffffff !important;
       }
 
+      .print-token.is-server-halo {
+        box-shadow: 0 0 0 2px #f39c12 !important;
+      }
+
       .print-token-name {
-        font-size: 6.2pt !important;
+        font-size: 5.5pt !important;
         font-weight: 800 !important;
         line-height: 1 !important;
         width: 96% !important;
@@ -1232,10 +1398,10 @@
       }
 
       .print-token-role {
-        font-size: 5pt !important;
+        font-size: 4.5pt !important;
         font-weight: 900 !important;
         line-height: 1 !important;
-        margin-top: 1px !important;
+        margin-top: 0.5px !important;
         color: #ffeaa7 !important;
       }
 
@@ -1245,17 +1411,17 @@
 
       .print-wing {
         height: 100% !important;
-        width: 22% !important;
+        width: 18% !important;
         background: #162447 !important;
-        border: 1.5px solid #1f4068 !important;
-        border-radius: 4px !important;
+        border: 1px solid #1f4068 !important;
+        border-radius: 3px !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        padding: 2px !important;
+        padding: 1px !important;
         box-sizing: border-box !important;
-        gap: 3px !important;
+        gap: 2px !important;
       }
 
       .print-wing.hidden {
@@ -1264,7 +1430,7 @@
       }
 
       .print-wing-title {
-        font-size: 5pt !important;
+        font-size: 4.5pt !important;
         font-weight: 800 !important;
         color: #00d2d3 !important;
         text-transform: uppercase !important;
@@ -1275,7 +1441,7 @@
         position: relative !important;
         transform: none !important;
         background: var(--player-bench) !important;
-        width: 90% !important;
+        width: 82% !important;
       }
     }
   </style>
@@ -1363,7 +1529,7 @@
           <div class="config-group">
             <span class="config-label">Share & Export:</span>
             <button class="share-btn" onclick="copyShareLink()">🔗 Share Link</button>
-            <button class="print-btn" onclick="triggerPrintOnePage()">🖨️ Print Lineup (1-Page)</button>
+            <button class="print-btn" onclick="openPrintModal()">🖨️ Print Lineup</button>
             <button class="save-btn" onclick="exportToFile()">⬇️ Export File (.json)</button>
             <button class="import-btn" onclick="document.getElementById('fileInput').click()">⬆️ Import File</button>
             <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importFromFile(event)">
@@ -1474,13 +1640,50 @@
     </div>
   </div>
 
-  <!-- Dedicated 1-Page Printout Canvas -->
+  <!-- Print Setup Modal -->
+  <div class="print-modal-overlay" id="printModalOverlay" onclick="closePrintModalOnBackdrop(event)">
+    <div class="print-modal-box">
+      <h4 class="print-modal-title">🖨️ Print Lineup</h4>
+      <p class="print-modal-subtext">Select which scenarios to include for each rotation:</p>
+
+      <div class="print-options-list">
+        <label class="print-option-item">
+          <input type="checkbox" id="chkPrintHome" checked>
+          <span>🏠 Home (Slots)</span>
+        </label>
+        <label class="print-option-item">
+          <input type="checkbox" id="chkPrintServe">
+          <span>🏐 On Serve</span>
+        </label>
+        <label class="print-option-item">
+          <input type="checkbox" id="chkPrintBase">
+          <span>🛡️ Base (Defense)</span>
+        </label>
+        <label class="print-option-item">
+          <input type="checkbox" id="chkPrintReceive">
+          <span>📥 Serve Receive</span>
+        </label>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding: 0 2px;">
+        <span style="color:#00d2d3; cursor:pointer; font-weight:bold;" onclick="setAllPrintCheckboxes(true)">Select All</span>
+        <span style="color:#94a3b8; cursor:pointer; font-weight:bold;" onclick="setAllPrintCheckboxes(false)">Deselect All</span>
+      </div>
+
+      <div class="print-modal-actions">
+        <button class="print-modal-btn-cancel" onclick="closePrintModal()">Cancel</button>
+        <button class="print-modal-btn-confirm" onclick="triggerCustomPrint()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dedicated Printout Surface -->
   <div id="printContainer">
     <div class="print-header">
       <span class="print-title">All-Rotating Volleyball Lineup Card</span>
       <span class="print-meta" id="printMetaText"></span>
     </div>
-    <div class="print-grid" id="printGridContainer"></div>
+    <div id="printRotationsContainer"></div>
   </div>
 
   <script>
@@ -1848,7 +2051,6 @@
       document.getElementById('logBox').innerText = `Displaying [${labels[scen]}] for Rotation ${currentRotation} in ${offensiveSystem} system.`;
     }
 
-    /* Reset Dropdown Handlers */
     function toggleResetDropdown(e) {
       e.stopPropagation();
       const menu = document.getElementById('resetDropdownMenu');
@@ -1987,7 +2189,6 @@
 
       const p = playerCoords;
       const faults = [];
-
       const isServe = (currentScenario === 'serve');
 
       if (p.pos4.y >= p.pos5.y) faults.push({ posA: 'pos4', posB: 'pos5', msg: 'Pos 4 (LF) must be closer to net than Pos 5 (LB)' });
@@ -2105,7 +2306,6 @@
       }
     }
 
-    /* Dragging Logic */
     let draggedWrapper = null;
     let draggedPosKey = null;
 
@@ -2360,7 +2560,6 @@
       goToRotation(1);
     }
 
-    /* Public Comments System */
     function getStoredComments() {
       try {
         return JSON.parse(localStorage.getItem('vb_public_comments')) || [];
@@ -2443,7 +2642,6 @@
         .replace(/'/g, '&#039;');
     }
 
-    /* Storage & Presets */
     function getRotationsFromStorage() {
       try {
         return JSON.parse(localStorage.getItem('vb_scenarios_presets')) || {};
@@ -2680,36 +2878,124 @@
       return false;
     }
 
-    /* Proportional 1-Page Print Engine */
-    function triggerPrintOnePage() {
+    /* Print Modal & Dynamic Multi-Page Engine */
+    function openPrintModal() {
+      document.getElementById('printModalOverlay').classList.add('show');
+    }
+
+    function closePrintModal() {
+      document.getElementById('printModalOverlay').classList.remove('show');
+    }
+
+    function closePrintModalOnBackdrop(e) {
+      if (e.target === document.getElementById('printModalOverlay')) {
+        closePrintModal();
+      }
+    }
+
+    function setAllPrintCheckboxes(checked) {
+      document.getElementById('chkPrintHome').checked = checked;
+      document.getElementById('chkPrintServe').checked = checked;
+      document.getElementById('chkPrintBase').checked = checked;
+      document.getElementById('chkPrintReceive').checked = checked;
+    }
+
+    function triggerCustomPrint() {
+      const scenariosToInclude = [];
+      if (document.getElementById('chkPrintHome').checked) scenariosToInclude.push({ key: 'home', title: 'Home (Slots)' });
+      if (document.getElementById('chkPrintServe').checked) scenariosToInclude.push({ key: 'serve', title: 'On Serve' });
+      if (document.getElementById('chkPrintBase').checked) scenariosToInclude.push({ key: 'base', title: 'Base (Defense)' });
+      if (document.getElementById('chkPrintReceive').checked) scenariosToInclude.push({ key: 'receive', title: 'Serve Receive' });
+
+      if (scenariosToInclude.length === 0) {
+        alert("Please select at least one scenario to print.");
+        return;
+      }
+
+      closePrintModal();
+
+      const dynamicStyle = document.getElementById('dynamicPrintStyle');
+      const rotContainer = document.getElementById('printRotationsContainer');
       const meta = document.getElementById('printMetaText');
-      const grid = document.getElementById('printGridContainer');
+      meta.innerText = `Team Size: ${teamSize} | System: ${offensiveSystem} | Scenarios: ${scenariosToInclude.map(s => s.title).join(', ')} | ${new Date().toLocaleDateString()}`;
+      rotContainer.innerHTML = '';
 
-      meta.innerText = `Team Size: ${teamSize} | System: ${offensiveSystem} | ${new Date().toLocaleDateString()}`;
-      grid.className = `print-grid ${teamSize === 6 ? 'size-6' : ''}`;
-      grid.innerHTML = '';
+      const count = scenariosToInclude.length;
 
-      const defaultPositions = {
-        pos4: { x: 20, y: 22 },
-        pos3: { x: 50, y: 20 },
-        pos2: { x: 80, y: 22 },
-        pos5: { x: 20, y: 74 },
-        pos6: { x: 50, y: 74 },
-        pos1: { x: 80, y: 74 }
-      };
+      // Rule 1: Exactly 1 scenario -> Landscape, 1-page fit
+      if (count === 1) {
+        dynamicStyle.innerHTML = `
+          @page {
+            size: landscape;
+            margin: 0.25in;
+          }
+        `;
+        document.body.classList.remove('print-mode-multi');
+        document.body.classList.add('print-mode-single');
+        rotContainer.className = `print-grid-fit rot-${teamSize}`;
 
-      for (let rot = 1; rot <= teamSize; rot++) {
-        const state = calculateStateForRotation(rot);
-        const card = document.createElement('div');
-        card.className = 'print-card';
+        for (let rot = 1; rot <= teamSize; rot++) {
+          rotContainer.appendChild(createRotationPrintBlock(rot, scenariosToInclude));
+        }
+      } 
+      // Rule 2: 2 or more scenarios -> Portrait, exactly 3 rotations per page
+      else {
+        dynamicStyle.innerHTML = `
+          @page {
+            size: portrait;
+            margin: 0.3in 0.25in;
+          }
+        `;
+        document.body.classList.remove('print-mode-single');
+        document.body.classList.add('print-mode-multi');
+        rotContainer.className = '';
+
+        const rotationsPerPage = 3;
+        let currentPageDiv = null;
+
+        for (let rot = 1; rot <= teamSize; rot++) {
+          const indexOnPage = (rot - 1) % rotationsPerPage;
+          if (indexOnPage === 0) {
+            currentPageDiv = document.createElement('div');
+            currentPageDiv.className = 'print-page-block';
+            rotContainer.appendChild(currentPageDiv);
+          }
+
+          const rotBlock = createRotationPrintBlock(rot, scenariosToInclude);
+          currentPageDiv.appendChild(rotBlock);
+        }
+      }
+
+      window.print();
+    }
+
+    function createRotationPrintBlock(rot, scenariosToInclude) {
+      const state = calculateStateForRotation(rot);
+      const rotBlock = document.createElement('div');
+      rotBlock.className = 'print-rot-block';
+
+      let scenariosRowHTML = '';
+      scenariosToInclude.forEach(scenObj => {
+        let coords = {};
+        const key = getStorageKey(rot, scenObj.key);
+
+        if (scenarioCoordsStore[key]) {
+          coords = scenarioCoordsStore[key];
+        } else if (scenObj.key === 'receive') {
+          coords = DEFAULT_SCENARIO_COORDS.receive[rot] || DEFAULT_SCENARIO_COORDS.receive[1];
+        } else {
+          coords = DEFAULT_SCENARIO_COORDS[scenObj.key];
+        }
 
         let courtTokensHTML = '';
         ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
           const pl = state[posKey];
-          const coords = defaultPositions[posKey];
+          const pt = coords[posKey] || { x: 50, y: 50 };
+          const isSetter = shouldHighlightSetter(pl, posKey, state);
+          const isServingHalo = (scenObj.key === 'serve' && posKey === 'pos1');
 
           courtTokensHTML += `
-            <div class="print-token ${shouldHighlightSetter(pl, posKey, state) ? 'is-setter' : ''}" style="left:${coords.x}%; top:${coords.y}%;">
+            <div class="print-token ${isSetter ? 'is-setter' : ''} ${isServingHalo ? 'is-server-halo' : ''}" style="left:${pt.x}%; top:${pt.y}%;">
               <span class="print-token-name">${escapeHTML(pl.name)}</span>
               <span class="print-token-role">${escapeHTML(pl.position || '')}</span>
             </div>
@@ -2748,24 +3034,32 @@
           rightWingHTML = `<div class="print-wing hidden"></div>`;
         }
 
-        card.innerHTML = `
-          <div class="print-card-title">Rotation ${rot} (Server: ${escapeHTML(state.pos1.name)})</div>
-          <div class="print-arena">
-            ${leftWingHTML}
-            <div class="print-court-box">
-              <div class="print-net"></div>
-              <div class="print-court-surface">
-                <div class="print-attack-line"></div>
-                ${courtTokensHTML}
+        scenariosRowHTML += `
+          <div class="print-card">
+            <div class="print-card-title">${scenObj.title}</div>
+            <div class="print-arena">
+              ${leftWingHTML}
+              <div class="print-court-box">
+                <div class="print-net"></div>
+                <div class="print-court-surface">
+                  <div class="print-attack-line"></div>
+                  ${courtTokensHTML}
+                </div>
               </div>
+              ${rightWingHTML}
             </div>
-            ${rightWingHTML}
           </div>
         `;
-        grid.appendChild(card);
-      }
+      });
 
-      window.print();
+      rotBlock.innerHTML = `
+        <div class="print-rot-header">Rotation ${rot} (Server: ${escapeHTML(state.pos1.name || 'Pos 1')})</div>
+        <div class="print-scenarios-row">
+          ${scenariosRowHTML}
+        </div>
+      `;
+
+      return rotBlock;
     }
 
     window.addEventListener('resize', () => {
