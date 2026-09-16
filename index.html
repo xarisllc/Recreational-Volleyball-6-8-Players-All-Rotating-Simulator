@@ -1135,7 +1135,6 @@
        EXACT STRICT PRINT MEDIA ISOLATION ENGINE
        ======================================================= */
     @media print {
-      /* Force hide EVERYTHING in the normal app layout */
       body > h1,
       body > p.subtitle,
       body > .fault-indicator-bar,
@@ -1161,7 +1160,6 @@
         print-color-adjust: exact !important;
       }
 
-      /* Make #printContainer the exclusive print surface */
       #printContainer {
         display: flex !important;
         flex-direction: column !important;
@@ -1169,7 +1167,7 @@
         box-sizing: border-box !important;
       }
 
-      /* 1 SCENARIO: Fit everything into 1 landscape sheet */
+      /* 1 SCENARIO: Fit all rotations onto 1 landscape sheet */
       body.print-mode-single,
       body.print-mode-single html {
         height: 100% !important;
@@ -1203,7 +1201,7 @@
         color: #475569 !important;
       }
 
-      /* Grid for single-scenario 1-page fit */
+      /* 1-page grid fit for 1 scenario */
       .print-grid-fit {
         flex: 1 !important;
         display: grid !important;
@@ -1224,15 +1222,15 @@
         grid-template-rows: repeat(2, 1fr) !important;
       }
 
-      /* Multi-page portrait page blocks (3 rotations per page) */
+      /* Multi-scenario landscape page blocks: strictly 2 rotations per page */
       .print-page-block {
         display: flex !important;
         flex-direction: column !important;
         gap: 8px !important;
         box-sizing: border-box !important;
         width: 100% !important;
-        height: 96vh !important;
-        max-height: 96vh !important;
+        height: 94vh !important;
+        max-height: 94vh !important;
         break-after: page !important;
         page-break-after: always !important;
         justify-content: space-between !important;
@@ -1247,7 +1245,7 @@
       .print-rot-block {
         border: 1.5px solid #94a3b8 !important;
         border-radius: 6px !important;
-        padding: 3px 4px 4px 4px !important;
+        padding: 4px 6px 6px 6px !important;
         display: flex !important;
         flex-direction: column !important;
         box-sizing: border-box !important;
@@ -1258,16 +1256,17 @@
       body.print-mode-multi .print-rot-block {
         flex: 1 !important;
         margin-bottom: 0 !important;
+        max-height: 45vh !important;
       }
 
       .print-rot-header {
-        font-size: 7.5pt !important;
+        font-size: 8pt !important;
         font-weight: 900 !important;
         background: #162447 !important;
         color: #ffffff !important;
-        padding: 2px 6px !important;
+        padding: 2.5px 8px !important;
         border-radius: 3px !important;
-        margin-bottom: 3px !important;
+        margin-bottom: 4px !important;
         text-align: center !important;
       }
 
@@ -1295,17 +1294,16 @@
       }
 
       .print-card-title {
-        font-size: 6.5pt !important;
+        font-size: 7pt !important;
         font-weight: 800 !important;
         text-align: center !important;
         background: #1f4068 !important;
         color: #ffffff !important;
         border-radius: 2px !important;
-        padding: 1.5px 0 !important;
-        margin-bottom: 2px !important;
+        padding: 2px 0 !important;
+        margin-bottom: 3px !important;
       }
 
-      /* Strictly bounded court arena prevents horizontal or vertical court overlapping */
       .print-arena {
         flex: 1 !important;
         display: flex !important;
@@ -1448,18 +1446,15 @@
 </head>
 <body>
 
-  <!-- Main Application Header -->
   <h1>All-Rotating Recreational Volleyball Simulator</h1>
   <p class="subtitle">
     Compare <b>Home</b>, <b>On Serve</b>, <b>Base</b>, and <b>Receive</b>. Manage up to 30 roster players on the left with custom jersey numbers and select them directly from circle dropdowns!
   </p>
 
-  <!-- Out-of-rotation fault banner -->
   <div class="fault-indicator-bar" id="faultBanner">⚠️ ROTATION FAULT DETECTED!</div>
 
   <div class="app-main-layout">
 
-    <!-- Left Side: 30-Player Roster Panel with Editable Numbers -->
     <div class="roster-card">
       <div class="roster-header">
         <span class="roster-title">📋 Team Roster</span>
@@ -1475,10 +1470,8 @@
       </div>
     </div>
 
-    <!-- Right Side: Simulator Area -->
     <div class="simulator-workspace">
 
-      <!-- Team Configuration, Presets & File Sharing -->
       <div class="config-card">
         <div class="config-row">
           <div class="config-group">
@@ -1512,7 +1505,6 @@
           </div>
         </div>
 
-        <!-- Row 2: Saved Rotations Dropdown & Update Changes -->
         <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
           <div class="config-group">
             <span class="config-label">Saved Rotations:</span>
@@ -1524,7 +1516,6 @@
           </div>
         </div>
 
-        <!-- Row 3: Online GitHub Sharing, File Export/Import & Print -->
         <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
           <div class="config-group">
             <span class="config-label">Share & Export:</span>
@@ -1537,13 +1528,11 @@
         </div>
       </div>
 
-      <!-- Rotation Buttons Toolbar -->
       <div class="rotation-toolbar">
         <div class="rotation-toolbar-title" id="rotToolbarTitle">Select Rotation</div>
         <div class="rot-buttons-row" id="rotButtonsContainer"></div>
       </div>
 
-      <!-- Scenario Toolbar in sequence: Home, On Serve, Base, Serve Receive -->
       <div class="scenario-toolbar">
         <span class="config-label">Scenario:</span>
         <button class="scenario-btn active" id="btnScenarioHome" onclick="setScenario('home')">🏠 Home (Slots)</button>
@@ -1552,10 +1541,8 @@
         <button class="scenario-btn" id="btnScenarioReceive" onclick="setScenario('receive')">📥 Serve Receive</button>
       </div>
 
-      <!-- Arena Container -->
       <div class="arena-container">
 
-        <!-- Left Bench -->
         <div class="bench-wing" id="leftBenchWing">
           <div class="bench-wing-title" id="leftBenchTitle">Left Bench</div>
           <div class="bench-sub-indicator" id="leftSubIndicator">&rarr; Subs to LF (Pos 4) &rarr;</div>
@@ -1565,7 +1552,6 @@
           <div class="bench-flow-note" id="leftFlowNote">&larr; Receives player exiting Pos 5</div>
         </div>
 
-        <!-- Center Interactive Court -->
         <div class="court-container">
           <div class="court-header">NET / OPPONENT SIDE</div>
           <div class="net-indicator"></div>
@@ -1582,12 +1568,10 @@
               <div class="grid-zone"><span class="zone-marker zm-1">Zone 1 (RB)</span></div>
             </div>
 
-            <!-- 6 Interactive Player Tokens -->
             <div id="courtTokensContainer"></div>
           </div>
         </div>
 
-        <!-- Right Bench -->
         <div class="bench-wing" id="rightBenchWing">
           <div class="bench-wing-title" id="rightBenchTitle">Right Bench</div>
           <div class="bench-sub-indicator" id="rightSubIndicator">&larr; Subs to Serve (Pos 1) &larr;</div>
@@ -1599,13 +1583,11 @@
 
       </div>
 
-      <!-- Controls -->
       <div class="controls">
         <button class="nav-btn" onclick="goToRotation(currentRotation - 1)">&larr; Prev Rotation</button>
         <button class="nav-btn" onclick="goToRotation(currentRotation + 1)">Next Rotation &rarr;</button>
         <button class="undo-btn" onclick="undoPosition()">↩️ Undo</button>
 
-        <!-- Dropdown menu for Reset Scenario Layout -->
         <div class="dropdown-btn-wrapper">
           <button class="reset-pos-btn" id="resetScenarioBtn" onclick="toggleResetDropdown(event)">Reset Scenario Layout ▾</button>
           <div class="reset-dropdown-menu" id="resetDropdownMenu">
@@ -1619,7 +1601,6 @@
 
       <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
 
-      <!-- Public Comments Section -->
       <div class="comments-card">
         <div class="comments-header">
           <h3>💬 Public Comments</h3>
@@ -1640,7 +1621,6 @@
     </div>
   </div>
 
-  <!-- Print Setup Modal -->
   <div class="print-modal-overlay" id="printModalOverlay" onclick="closePrintModalOnBackdrop(event)">
     <div class="print-modal-box">
       <h4 class="print-modal-title">🖨️ Print Lineup</h4>
@@ -1652,7 +1632,7 @@
           <span>🏠 Home (Slots)</span>
         </label>
         <label class="print-option-item">
-          <input type="checkbox" id="chkPrintServe">
+          <input type="checkbox" id="chkPrintServe" checked>
           <span>🏐 On Serve</span>
         </label>
         <label class="print-option-item">
@@ -1677,7 +1657,6 @@
     </div>
   </div>
 
-  <!-- Dedicated Printout Surface -->
   <div id="printContainer">
     <div class="print-header">
       <span class="print-title">All-Rotating Volleyball Lineup Card</span>
@@ -1738,6 +1717,13 @@
       { id: 7, name: "", position: "" },
       { id: 8, name: "", position: "" }
     ];
+
+    // Multi-system layout cache so switching offensive systems restores distinct coordinates
+    let systemScenarioStores = {
+      "4-2": {},
+      "6-2": {},
+      "5-1": {}
+    };
 
     let scenarioCoordsStore = {};
 
@@ -1804,6 +1790,8 @@
     function saveActiveScenarioCoords() {
       const key = getStorageKey(currentRotation, currentScenario);
       scenarioCoordsStore[key] = JSON.parse(JSON.stringify(playerCoords));
+      if (!systemScenarioStores[offensiveSystem]) systemScenarioStores[offensiveSystem] = {};
+      systemScenarioStores[offensiveSystem][key] = JSON.parse(JSON.stringify(playerCoords));
     }
 
     function renderRosterList() {
@@ -2074,6 +2062,9 @@
       recordHistoryState();
       const key = getStorageKey(currentRotation, currentScenario);
       delete scenarioCoordsStore[key];
+      if (systemScenarioStores[offensiveSystem]) {
+        delete systemScenarioStores[offensiveSystem][key];
+      }
       loadActiveScenarioCoords();
       renderCourtTokens();
       checkPositionalFaults();
@@ -2082,13 +2073,14 @@
 
     function executeResetAllScenarios() {
       closeResetDropdown();
-      if (confirm("Reset ALL scenarios across all rotations back to default layouts?")) {
+      if (confirm("Reset ALL scenarios across all rotations back to default layouts for this system?")) {
         recordHistoryState();
         scenarioCoordsStore = {};
+        systemScenarioStores[offensiveSystem] = {};
         loadActiveScenarioCoords();
         renderCourtTokens();
         checkPositionalFaults();
-        document.getElementById('logBox').innerText = `Reset layout for all scenarios across all rotations.`;
+        document.getElementById('logBox').innerText = `Reset layout for all scenarios across all rotations in ${offensiveSystem} system.`;
       }
     }
 
@@ -2545,12 +2537,27 @@
     }
 
     function onOffensiveSystemChange() {
+      // 1. Save active scenario coords for previous system
+      saveActiveScenarioCoords();
+
+      // 2. Switch to new system
       offensiveSystem = document.getElementById('offensiveSystemSelect').value;
+
+      // 3. Load or restore layout cache for the newly selected system
+      if (!systemScenarioStores[offensiveSystem]) {
+        systemScenarioStores[offensiveSystem] = {};
+      }
+      scenarioCoordsStore = systemScenarioStores[offensiveSystem];
+
+      // 4. Update scene
+      loadActiveScenarioCoords();
       renderCourtTokens();
+      checkPositionalFaults();
+
       let msg = "";
-      if (offensiveSystem === "4-2") msg = "4-2 selected: Front-row setter is yellow.";
-      if (offensiveSystem === "6-2") msg = "6-2 selected: Back-row setter is yellow (if S & S2 are back together, only S is yellow).";
-      if (offensiveSystem === "5-1") msg = "5-1 selected: If both S and S2 are in the front row, only S2 turns yellow and S stays green. Any S2 in the back row turns yellow unless S is in the front row (where S2 stays green).";
+      if (offensiveSystem === "4-2") msg = "4-2 selected: Restored 4-2 layout. Front-row setter is yellow.";
+      if (offensiveSystem === "6-2") msg = "6-2 selected: Restored 6-2 layout. Back-row setter is yellow.";
+      if (offensiveSystem === "5-1") msg = "5-1 selected: Restored 5-1 layout. If both S and S2 are in front row, only S2 turns yellow and S stays green.";
       document.getElementById('logBox').innerText = msg;
     }
 
@@ -2666,6 +2673,7 @@
         sevenPlayerSubSide,
         currentScenario,
         scenarioCoordsStore: JSON.parse(JSON.stringify(scenarioCoordsStore)),
+        systemScenarioStores: JSON.parse(JSON.stringify(systemScenarioStores)),
         squad: JSON.parse(JSON.stringify(squad)),
         rosterEntries: JSON.parse(JSON.stringify(rosterEntries))
       };
@@ -2698,6 +2706,7 @@
         sevenPlayerSubSide,
         currentScenario,
         scenarioCoordsStore: JSON.parse(JSON.stringify(scenarioCoordsStore)),
+        systemScenarioStores: JSON.parse(JSON.stringify(systemScenarioStores)),
         squad: JSON.parse(JSON.stringify(squad)),
         rosterEntries: JSON.parse(JSON.stringify(rosterEntries))
       };
@@ -2760,6 +2769,7 @@
         offensiveSystem = "5-1";
         document.getElementById('offensiveSystemSelect').value = "5-1";
         scenarioCoordsStore = {};
+        systemScenarioStores = { "4-2": {}, "6-2": {}, "5-1": {} };
         setScenario('home');
         goToRotation(1);
         document.getElementById('logBox').innerText = "Lineup restored to defaults.";
@@ -2775,6 +2785,7 @@
         currentRotation,
         currentScenario,
         scenarioCoordsStore,
+        systemScenarioStores,
         squad,
         rosterEntries,
         comments: publicComments,
@@ -2797,11 +2808,21 @@
         renderRosterList();
       }
       if (data.squad) squad = JSON.parse(JSON.stringify(data.squad));
+      
+      if (data.systemScenarioStores) {
+        systemScenarioStores = JSON.parse(JSON.stringify(data.systemScenarioStores));
+      }
       if (data.scenarioCoordsStore) {
         scenarioCoordsStore = JSON.parse(JSON.stringify(data.scenarioCoordsStore));
+        if (systemScenarioStores[offensiveSystem]) {
+          systemScenarioStores[offensiveSystem] = scenarioCoordsStore;
+        }
+      } else if (systemScenarioStores[offensiveSystem]) {
+        scenarioCoordsStore = systemScenarioStores[offensiveSystem];
       } else {
         scenarioCoordsStore = {};
       }
+
       if (data.comments && Array.isArray(data.comments)) {
         publicComments = data.comments;
         saveCommentsToStorage(publicComments);
@@ -2922,14 +2943,16 @@
 
       const count = scenariosToInclude.length;
 
-      // Rule 1: Exactly 1 scenario -> Landscape, 1-page fit
+      // Rule 1: All printouts default to Landscape
+      dynamicStyle.innerHTML = `
+        @page {
+          size: landscape;
+          margin: 0.25in;
+        }
+      `;
+
+      // Rule 2: 1 scenario -> Fit all rotations on 1 landscape page
       if (count === 1) {
-        dynamicStyle.innerHTML = `
-          @page {
-            size: landscape;
-            margin: 0.25in;
-          }
-        `;
         document.body.classList.remove('print-mode-multi');
         document.body.classList.add('print-mode-single');
         rotContainer.className = `print-grid-fit rot-${teamSize}`;
@@ -2938,19 +2961,13 @@
           rotContainer.appendChild(createRotationPrintBlock(rot, scenariosToInclude));
         }
       } 
-      // Rule 2: 2 or more scenarios -> Portrait, exactly 3 rotations per page
+      // Rule 3 & 4: 2 or more scenarios -> Fit strictly 2 rotations per page
       else {
-        dynamicStyle.innerHTML = `
-          @page {
-            size: portrait;
-            margin: 0.3in 0.25in;
-          }
-        `;
         document.body.classList.remove('print-mode-single');
         document.body.classList.add('print-mode-multi');
         rotContainer.className = '';
 
-        const rotationsPerPage = 3;
+        const rotationsPerPage = 2;
         let currentPageDiv = null;
 
         for (let rot = 1; rot <= teamSize; rot++) {
@@ -3066,7 +3083,6 @@
       drawOverlapLines();
     });
 
-    // Startup Initialization
     initDefaultSquad();
     renderRosterList();
     publicComments = getStoredComments();
