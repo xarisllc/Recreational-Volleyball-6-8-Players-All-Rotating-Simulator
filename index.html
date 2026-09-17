@@ -1,0 +1,3773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All-Rotating Recreational Volleyball Simulator</title>
+  <style id="dynamicPrintStyle">
+    @page {
+      margin: 0.25in;
+      size: landscape;
+    }
+  </style>
+  <style>
+    :root {
+      --court-wood: #e59866;
+      --court-border: #2980b9;
+      --court-line: #ffffff;
+      --player-court: #27ae60;
+      --player-setter-active: #f1c40f;
+      --player-bench: #8e44ad;
+      --player-fault: #e74c3c;
+      --panel-bg: #162447;
+      --panel-border: #1f4068;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a1a2e;
+      color: #ecf0f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 14px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    h1 {
+      margin-bottom: 2px;
+      font-size: 1.55rem;
+      text-align: center;
+    }
+
+    p.subtitle {
+      color: #bdc3c7;
+      margin-top: 0;
+      margin-bottom: 12px;
+      text-align: center;
+      max-width: 860px;
+      font-size: 0.88rem;
+    }
+
+    .app-main-layout {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+      max-width: 1180px;
+      box-sizing: border-box;
+    }
+
+    .roster-card {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 12px;
+      width: 250px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-shrink: 0;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .roster-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 6px;
+    }
+
+    .roster-title {
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: #00d2d3;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .roster-badge {
+      background: #1f4068;
+      color: #ffeaa7;
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    .roster-list-container {
+      max-height: 480px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 4px;
+    }
+
+    .roster-entry-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 3px 6px;
+    }
+
+    .roster-num-input {
+      background: #0f172a;
+      border: 1px solid #334e68;
+      color: #94a3b8;
+      font-size: 0.72rem;
+      font-weight: bold;
+      width: 32px;
+      text-align: center;
+      border-radius: 4px;
+      padding: 2px 0;
+      outline: none;
+    }
+
+    .roster-num-input:focus {
+      color: #f1c40f;
+      border-color: #f1c40f;
+    }
+
+    .roster-name-input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      width: 100%;
+      outline: none;
+    }
+
+    .roster-name-input:focus {
+      color: #f1c40f;
+    }
+
+    .roster-row-del-btn {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 0.88rem;
+      cursor: pointer;
+      padding: 0 4px;
+      box-shadow: none;
+      border-radius: 3px;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .roster-row-del-btn:hover {
+      color: #ff7675;
+      background: rgba(231, 76, 60, 0.15);
+    }
+
+    .roster-actions-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .roster-btn {
+      flex: 1;
+      padding: 4px 6px;
+      font-size: 0.72rem;
+      border-radius: 4px;
+      background: #1f4068;
+      border: 1px solid #334e68;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .roster-btn:hover { background: #2563eb; }
+
+    .simulator-workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 860px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .config-card {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-bottom: 12px;
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .config-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .config-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .config-label {
+      font-size: 0.8rem;
+      color: #00d2d3;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    select, input[type="text"].rotation-name-input {
+      background: #0f172a;
+      border: 1px solid #334e68;
+      color: #fff;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    .rotation-toolbar {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rotation-toolbar-title {
+      font-size: 0.82rem;
+      color: #00d2d3;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .rot-buttons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .rot-btn {
+      background: #1f4068;
+      color: #fff;
+      border: 1px solid #32527b;
+      padding: 5px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .rot-btn:hover { background: #2980b9; }
+
+    .rot-btn.active {
+      background: #f39c12;
+      color: #1a1a2e;
+      border-color: #f1c40f;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+    }
+
+    .scenario-toolbar {
+      background: #0f172a;
+      border: 1px solid #1f4068;
+      border-radius: 8px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .scenario-btn {
+      background: #1f4068;
+      color: #cbd5e1;
+      border: 1px solid #334e68;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scenario-btn:hover { background: #2563eb; color: #fff; }
+
+    .scenario-btn.active {
+      background: #3b82f6;
+      color: #fff;
+      border-color: #60a5fa;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+    }
+
+    .fault-indicator-bar {
+      width: 100%;
+      background: rgba(231, 76, 60, 0.15);
+      border: 1px solid #e74c3c;
+      color: #ff7675;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: bold;
+      text-align: center;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .fault-indicator-bar.show {
+      display: block;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .arena-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .bench-wing {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 12px;
+      width: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      min-height: 420px;
+      justify-content: space-between;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .bench-wing.hidden { display: none !important; }
+
+    .bench-wing-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #00d2d3;
+      text-transform: uppercase;
+      text-align: center;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 4px;
+      width: 100%;
+    }
+
+    .bench-sub-indicator {
+      font-size: 0.7rem;
+      color: #f1c40f;
+      text-align: center;
+      font-weight: 600;
+      line-height: 1.2;
+      background: rgba(241, 196, 15, 0.1);
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px dashed rgba(241, 196, 15, 0.4);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .bench-flow-note {
+      font-size: 0.68rem;
+      color: #95a5a6;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .court-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .animate-btn-container {
+      display: none;
+    }
+
+    .animate-btn-container.show {
+      display: inline-block;
+    }
+
+    .animate-btn {
+      background: #8b5cf6;
+      color: white;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      cursor: pointer;
+      border: 1px solid #a78bfa;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .animate-btn:hover {
+      background: #7c3aed;
+      box-shadow: 0 6px 16px rgba(139, 92, 246, 0.6);
+    }
+
+    .court-header {
+      font-weight: bold;
+      margin-bottom: 4px;
+      letter-spacing: 2px;
+      color: #f39c12;
+      font-size: 0.8rem;
+    }
+
+    .net-indicator {
+      width: 100%;
+      height: 8px;
+      background: repeating-linear-gradient(90deg, #fff, #fff 5px, #555 5px, #555 10px);
+      margin-bottom: 2px;
+      border-radius: 2px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+
+    .court {
+      width: 360px;
+      height: 480px;
+      background-color: var(--court-wood);
+      border: 7px solid var(--court-border);
+      position: relative;
+      border-radius: 4px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-sizing: border-box;
+      overflow: visible;
+      touch-action: pan-y;
+    }
+
+    .attack-line {
+      position: absolute;
+      top: 33.33%;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--court-line);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    /* Explanation Banner overlay just beneath the 10-foot line */
+    .animation-flash-banner {
+      position: absolute;
+      top: 36%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      border: 2px solid #38bdf8;
+      color: #38bdf8;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      z-index: 30;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+      pointer-events: none;
+      display: none;
+      text-align: center;
+      white-space: nowrap;
+      animation: bannerPulse 1.5s infinite;
+    }
+
+    @keyframes bannerPulse {
+      0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.85; transform: translateX(-50%) scale(1.02); }
+    }
+
+    /* Animated volleyball style */
+    .animated-ball {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #f1c40f;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(241, 196, 15, 0.9);
+      z-index: 25;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      display: none;
+    }
+
+    .court-grid-guides {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 2fr;
+      pointer-events: none;
+    }
+
+    .grid-zone {
+      border: 1px dashed rgba(255,255,255,0.18);
+      position: relative;
+    }
+
+    .zone-marker {
+      position: absolute;
+      font-size: 0.58rem;
+      color: #ffffff;
+      background: transparent !important;
+      font-weight: 700;
+      pointer-events: none;
+      letter-spacing: 0.2px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.85);
+      white-space: nowrap;
+    }
+    .zm-4 { top: 3px; left: 5px; }
+    .zm-3 { top: 3px; left: 50%; transform: translateX(-50%); }
+    .zm-2 { top: 3px; right: 5px; }
+    .zm-5 { bottom: 4px; left: 5px; }
+    .zm-6 { bottom: 4px; left: 50%; transform: translateX(-50%); }
+    .zm-1 { bottom: 4px; right: 5px; }
+
+    .player-token-wrapper {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      touch-action: none;
+      transition: left 0.05s linear, top 0.05s linear;
+    }
+
+    .player-token {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--player-court);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+      border: 2px solid white;
+      text-align: center;
+      box-sizing: border-box;
+      cursor: grab;
+      overflow: visible;
+      touch-action: none;
+      transition: box-shadow 0.15s, border-color 0.15s, background-color 0.15s;
+      position: relative;
+    }
+
+    .player-token-wrapper.dragging .player-token {
+      cursor: grabbing;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+      z-index: 20;
+    }
+
+    .player-token.serving-halo {
+      box-shadow: 0 0 0 4px #ffd700, 0 0 16px rgba(255, 215, 0, 0.85) !important;
+      animation: serveHaloPulse 1.8s infinite ease-in-out;
+    }
+
+    @keyframes serveHaloPulse {
+      0%, 100% {
+        box-shadow: 0 0 0 4px #ffd700, 0 0 14px rgba(255, 215, 0, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 0 7px #f39c12, 0 0 24px rgba(243, 156, 18, 0.95);
+      }
+    }
+
+    .player-token.color-green {
+      background: #27ae60 !important;
+      color: #fff !important;
+    }
+    .player-token.color-green select {
+      color: #fff !important;
+      background: rgba(0, 0, 0, 0.45) !important;
+    }
+
+    .player-token.color-yellow {
+      background: #f1c40f !important;
+      color: #1e293b !important;
+      border-color: #ffffff !important;
+    }
+    .player-token.color-yellow select {
+      color: #1e293b !important;
+      background: rgba(255, 255, 255, 0.7) !important;
+      border-color: rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .player-token.color-blue {
+      background: #2980b9 !important;
+      color: #fff !important;
+    }
+    .player-token.color-blue select {
+      color: #fff !important;
+      background: rgba(0, 0, 0, 0.45) !important;
+    }
+
+    .player-token.color-red {
+      background: #e74c3c !important;
+      color: #fff !important;
+    }
+    .player-token.color-red select {
+      color: #fff !important;
+      background: rgba(0, 0, 0, 0.45) !important;
+    }
+
+    /* Color Palette Popup Menu */
+    .token-color-palette {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      border: 2px solid #334e68;
+      border-radius: 8px;
+      padding: 6px;
+      gap: 6px;
+      z-index: 100;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+    }
+
+    .token-color-palette.show {
+      display: flex;
+    }
+
+    .color-swatch {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.2);
+    }
+
+    .player-token.fault {
+      background: var(--player-fault) !important;
+      color: #ffffff !important;
+      border-color: #ffeaa7 !important;
+      box-shadow: 0 0 15px #e74c3c !important;
+    }
+
+    .bench-wing .player-token {
+      cursor: default;
+      background: var(--player-bench);
+      width: 68px;
+      height: 68px;
+    }
+
+    .token-inner {
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .player-name-select, .player-role-select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 4px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 0.65rem;
+      text-align: center;
+      padding: 1px 0;
+      outline: none;
+      box-sizing: border-box;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .player-role-select {
+      width: 82%;
+      font-size: 0.58rem;
+      font-weight: 800;
+      color: #ffeaa7;
+    }
+
+    .player-name-select option, .player-role-select option {
+      background: #0f172a;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .player-name-select:focus, .player-role-select:focus {
+      border-color: #ffd700 !important;
+    }
+
+    .token-drag-handle {
+      display: none;
+      width: 24px;
+      height: 17px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 9px;
+      font-size: 0.62rem;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      touch-action: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      pointer-events: auto;
+      margin-top: 2px;
+      user-select: none;
+    }
+
+    #overlapCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+      align-items: center;
+    }
+
+    .dropdown-btn-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .reset-dropdown-menu {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      border: 2px solid #334e68;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 100;
+      min-width: 190px;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .reset-dropdown-menu.show {
+      display: flex;
+    }
+
+    .reset-dropdown-item {
+      background: transparent;
+      border: none;
+      color: #ecf0f1;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: none;
+      border-radius: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .reset-dropdown-item:hover {
+      background: #1f4068;
+      color: #f1c40f;
+    }
+
+    .reset-dropdown-item:not(:last-child) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    button {
+      color: white;
+      border: none;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    button:active { transform: translateY(2px); }
+
+    .nav-btn { background: #0984e3; }
+    .nav-btn:hover { background: #74b9ff; }
+
+    .undo-btn { background: #64748b; }
+    .undo-btn:hover { background: #475569; }
+
+    .reset-pos-btn { background: #e67e22; }
+    .reset-pos-btn:hover { background: #f39c12; }
+
+    .save-btn { background: #27ae60; }
+    .save-btn:hover { background: #2ecc71; }
+
+    .update-btn { background: #f59e0b; color: #1e293b; font-weight: 700; }
+    .update-btn:hover { background: #fbbf24; }
+
+    .share-btn { background: #10b981; }
+    .share-btn:hover { background: #34d399; }
+
+    .print-btn { background: #6366f1; }
+    .print-btn:hover { background: #818cf8; }
+
+    .del-btn { background: #d63031; }
+    .del-btn:hover { background: #ff7675; }
+
+    .import-btn { background: #22303c; border: 1px solid #334e68; }
+    .import-btn:hover { background: #1b2631; }
+
+    .log-panel {
+      margin-top: 14px;
+      background: #111;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #00ffcc;
+      max-width: 860px;
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 40px;
+      text-align: center;
+    }
+
+    .comments-card {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 860px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    .comments-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 8px;
+    }
+
+    .comments-header h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: #00d2d3;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .comments-count-badge {
+      background: #1f4068;
+      color: #ffeaa7;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .comment-form-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .comment-name-input {
+      background: #0f172a;
+      border: 1px solid #334e68;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      min-width: 160px;
+      box-sizing: border-box;
+    }
+
+    .comment-text-input {
+      width: 100%;
+      height: 65px;
+      background: #0f172a;
+      border: 1px solid #334e68;
+      border-radius: 6px;
+      color: #fff;
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    .comment-text-input:focus, .comment-name-input:focus {
+      border-color: #00d2d3;
+    }
+
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .comment-item {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .comment-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+    }
+
+    .comment-item-author {
+      font-weight: 700;
+      color: #f1c40f;
+    }
+
+    .comment-item-date {
+      color: #718096;
+      font-size: 0.72rem;
+    }
+
+    .comment-item-body {
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+
+    .no-comments-msg {
+      font-size: 0.8rem;
+      color: #a0aec0;
+      text-align: center;
+      padding: 14px;
+      font-style: italic;
+    }
+
+    /* Print Setup Modal */
+    .print-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .print-modal-overlay.show {
+      display: flex;
+    }
+
+    .print-modal-box {
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      width: 320px;
+      max-width: 90vw;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .print-modal-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #00d2d3;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 6px;
+      margin: 0;
+      text-align: center;
+    }
+
+    .print-modal-subtext {
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      margin: 0;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .print-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .print-option-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    .print-option-item input[type="checkbox"] {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: #3b82f6;
+    }
+
+    .print-modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .print-modal-btn-cancel {
+      background: #64748b;
+    }
+    .print-modal-btn-cancel:hover { background: #475569; }
+
+    .print-modal-btn-confirm {
+      background: #6366f1;
+    }
+    .print-modal-btn-confirm:hover { background: #818cf8; }
+
+    #printContainer {
+      display: none;
+    }
+
+    /* =======================================================
+       EXACT STRICT PRINT MEDIA ISOLATION ENGINE
+       ======================================================= */
+    @media print {
+      body > h1,
+      body > p.subtitle,
+      body > .fault-indicator-bar,
+      body > .app-main-layout,
+      body > .print-modal-overlay,
+      .controls,
+      .log-panel,
+      .comments-card,
+      .roster-card,
+      .config-card,
+      .rotation-toolbar,
+      .scenario-toolbar {
+        display: none !important;
+      }
+
+      html, body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      #printContainer {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* 1 SCENARIO: Fit all rotations onto 1 landscape sheet */
+      body.print-mode-single,
+      body.print-mode-single html {
+        height: 100% !important;
+        overflow: hidden !important;
+      }
+
+      body.print-mode-single #printContainer {
+        height: 98vh !important;
+        max-height: 98vh !important;
+        overflow: hidden !important;
+      }
+
+      .print-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        border-bottom: 2px solid #162447 !important;
+        padding-bottom: 2px !important;
+        margin-bottom: 4px !important;
+      }
+
+      .print-title {
+        font-size: 10pt !important;
+        font-weight: 900 !important;
+        color: #162447 !important;
+      }
+
+      .print-meta {
+        font-size: 7pt !important;
+        font-weight: bold !important;
+        color: #475569 !important;
+      }
+
+      .print-grid-fit {
+        flex: 1 !important;
+        display: grid !important;
+        gap: 6px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      .print-grid-fit.rot-8,
+      .print-grid-fit.rot-7 {
+        grid-template-columns: repeat(4, 1fr) !important;
+        grid-template-rows: repeat(2, 1fr) !important;
+      }
+
+      .print-grid-fit.rot-6 {
+        grid-template-columns: repeat(3, 1fr) !important;
+        grid-template-rows: repeat(2, 1fr) !important;
+      }
+
+      .print-page-block {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        height: 94vh !important;
+        max-height: 94vh !important;
+        break-after: page !important;
+        page-break-after: always !important;
+        justify-content: space-between !important;
+        overflow: hidden !important;
+      }
+
+      .print-page-block:last-child {
+        break-after: auto !important;
+        page-break-after: auto !important;
+      }
+
+      .print-rot-block {
+        border: 1.5px solid #94a3b8 !important;
+        border-radius: 6px !important;
+        padding: 4px 6px 6px 6px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        box-sizing: border-box !important;
+        background: #f8fafc !important;
+        overflow: hidden !important;
+      }
+
+      body.print-mode-multi .print-rot-block {
+        flex: 1 !important;
+        margin-bottom: 0 !important;
+        max-height: 45vh !important;
+      }
+
+      .print-rot-header {
+        font-size: 8pt !important;
+        font-weight: 900 !important;
+        background: #162447 !important;
+        color: #ffffff !important;
+        padding: 2.5px 8px !important;
+        border-radius: 3px !important;
+        margin-bottom: 4px !important;
+        text-align: center !important;
+      }
+
+      .print-scenarios-row {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 6px !important;
+        width: 100% !important;
+        height: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+      }
+
+      .print-card {
+        flex: 1 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 4px !important;
+        padding: 2px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        box-sizing: border-box !important;
+        background: #ffffff !important;
+        overflow: hidden !important;
+      }
+
+      .print-card-title {
+        font-size: 7pt !important;
+        font-weight: 800 !important;
+        text-align: center !important;
+        background: #1f4068 !important;
+        color: #ffffff !important;
+        border-radius: 2px !important;
+        padding: 2px 0 !important;
+        margin-bottom: 3px !important;
+      }
+
+      .print-arena {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 4px !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        overflow: hidden !important;
+      }
+
+      .print-court-box {
+        height: 100% !important;
+        aspect-ratio: 3 / 4 !important;
+        max-width: 70% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
+      }
+
+      .print-net {
+        width: 100% !important;
+        height: 4px !important;
+        background: repeating-linear-gradient(90deg, #222, #222 5px, #fff 5px, #fff 10px) !important;
+        margin-bottom: 1.5px !important;
+        border-radius: 1px !important;
+      }
+
+      .print-court-surface {
+        width: 100% !important;
+        flex: 1 !important;
+        background-color: var(--court-wood) !important;
+        border: 2px solid var(--court-border) !important;
+        border-radius: 2px !important;
+        position: relative !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+      }
+
+      .print-attack-line {
+        position: absolute !important;
+        top: 33.33% !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 1.5px !important;
+        background-color: #ffffff !important;
+        opacity: 0.9 !important;
+      }
+
+      .print-token {
+        width: 22% !important;
+        aspect-ratio: 1 / 1 !important;
+        border-radius: 50% !important;
+        background: var(--player-court) !important;
+        color: #ffffff !important;
+        border: 1px solid #ffffff !important;
+        position: absolute !important;
+        transform: translate(-50%, -50%) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
+        z-index: 5 !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.35) !important;
+        padding: 0.5px !important;
+      }
+
+      .print-token.color-green { background: #27ae60 !important; color: #fff !important; }
+      .print-token.color-yellow { background: #f1c40f !important; color: #1e293b !important; border-color: #fff !important; }
+      .print-token.color-blue { background: #2980b9 !important; color: #fff !important; }
+      .print-token.color-red { background: #e74c3c !important; color: #fff !important; }
+
+      .print-token.is-server-halo {
+        box-shadow: 0 0 0 2px #f39c12 !important;
+      }
+
+      .print-token-name {
+        font-size: 5.5pt !important;
+        font-weight: 800 !important;
+        line-height: 1 !important;
+        width: 96% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+      }
+
+      .print-token-role {
+        font-size: 4.5pt !important;
+        font-weight: 900 !important;
+        line-height: 1 !important;
+        margin-top: 0.5px !important;
+        color: #ffeaa7 !important;
+      }
+
+      .print-wing {
+        height: 100% !important;
+        width: 18% !important;
+        background: #162447 !important;
+        border: 1px solid #1f4068 !important;
+        border-radius: 3px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 1px !important;
+        box-sizing: border-box !important;
+        gap: 2px !important;
+      }
+
+      .print-wing.hidden {
+        visibility: hidden !important;
+        display: flex !important;
+      }
+
+      .print-wing-title {
+        font-size: 4.5pt !important;
+        font-weight: 800 !important;
+        color: #00d2d3 !important;
+        text-transform: uppercase !important;
+        text-align: center !important;
+      }
+
+      .print-wing .print-token {
+        position: relative !important;
+        transform: none !important;
+        width: 82% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>All-Rotating Recreational Volleyball Simulator</h1>
+  <p class="subtitle">
+    Compare <b>Home</b>, <b>On Serve</b>, <b>Base</b>, <b>Attack</b>, and <b>Receive</b>. Manage up to 30 roster players on the left with custom jersey numbers and select them directly from circle dropdowns!
+  </p>
+
+  <div class="fault-indicator-bar" id="faultBanner">⚠️ ROTATION FAULT DETECTED!</div>
+
+  <div class="app-main-layout">
+
+    <div class="roster-card">
+      <div class="roster-header">
+        <span class="roster-title">📋 Team Roster</span>
+        <span class="roster-badge" id="rosterCountBadge">8 / 30</span>
+      </div>
+
+      <div class="roster-list-container" id="rosterListContainer"></div>
+
+      <div class="roster-actions-row">
+        <button class="roster-btn" onclick="addNewRosterPlayer()">+ Add</button>
+        <button class="roster-btn" onclick="removeLastRosterPlayer()">- Remove</button>
+        <button class="roster-btn" onclick="resetRosterToDefault()">Reset</button>
+      </div>
+    </div>
+
+    <div class="simulator-workspace">
+
+      <div class="config-card">
+        <div class="config-row">
+          <div class="config-group">
+            <span class="config-label">Team Size:</span>
+            <select id="teamSizeSelect" onchange="onTeamSizeChange()">
+              <option value="6">6 Players (No Bench)</option>
+              <option value="7">7 Players (1 Bench)</option>
+              <option value="8" selected>8 Players (2 Benches)</option>
+            </select>
+
+            <span class="config-label" style="margin-left: 6px;">System:</span>
+            <select id="offensiveSystemSelect" onchange="onOffensiveSystemChange()">
+              <option value="4-2">4-2</option>
+              <option value="6-2">6-2</option>
+              <option value="5-1" selected>5-1</option>
+            </select>
+
+            <span id="subSideContainer" style="display:none; align-items:center; gap:6px;">
+              <span class="config-label" style="font-size:0.75rem;">7-Player Bench:</span>
+              <select id="sevenPlayerSideSelect" onchange="onSevenPlayerSideChange()">
+                <option value="left" selected>Left Bench (LF / Pos 4)</option>
+                <option value="right">Right Bench (Serve / Pos 1)</option>
+              </select>
+            </span>
+          </div>
+
+          <div class="config-group">
+            <span class="config-label">Save New:</span>
+            <input type="text" id="rotationNameInput" class="rotation-name-input" placeholder="e.g. Stacked P1" style="width: 120px;">
+            <button class="save-btn" onclick="saveNamedRotation()">💾 Save</button>
+          </div>
+        </div>
+
+        <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+          <div class="config-group">
+            <span class="config-label">Saved Rotations:</span>
+            <select id="savedRotationsSelect" style="min-width: 160px;" onchange="loadSelectedRotationFromDropdown(this.value)">
+              <option value="">-- Select Rotation Name --</option>
+            </select>
+            <button class="undo-btn" onclick="resetAllLayoutsToDefault()">✨ New Rotation</button>
+            <button class="update-btn" onclick="updateCurrentLoadedRotation()">💾 Save Changes</button>
+            <button class="del-btn" onclick="deleteCurrentRotation()">🗑️ Delete</button>
+          </div>
+        </div>
+
+        <div class="config-row" style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 8px;">
+          <div class="config-group">
+            <span class="config-label">Share & Export:</span>
+            <button class="share-btn" onclick="copyShareLink()">🔗 Share Link</button>
+            <button class="print-btn" onclick="openPrintModal()">🖨️ Print Lineup</button>
+            <button class="save-btn" onclick="exportToFile()">⬇️ Export File (.json)</button>
+            <button class="import-btn" onclick="document.getElementById('fileInput').click()">⬆️ Import File</button>
+            <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="importFromFile(event)">
+          </div>
+        </div>
+      </div>
+
+      <div class="rotation-toolbar">
+        <div class="rotation-toolbar-title" id="rotToolbarTitle">Select Rotation</div>
+        <div class="rot-buttons-row" id="rotButtonsContainer"></div>
+      </div>
+
+      <div class="scenario-toolbar">
+        <span class="config-label">Scenario:</span>
+        <button class="scenario-btn active" id="btnScenarioHome" onclick="setScenario('home')">🏠 Home (Slots)</button>
+        <button class="scenario-btn" id="btnScenarioServe" onclick="setScenario('serve')">🏐 On Serve</button>
+        <button class="scenario-btn" id="btnScenarioBase" onclick="setScenario('base')">🛡️ Base (Defense)</button>
+        <button class="scenario-btn" id="btnScenarioAttack" onclick="setScenario('attack')">⚔️ Attack</button>
+        <button class="scenario-btn" id="btnScenarioReceive" onclick="setScenario('receive')">📥 Serve Receive</button>
+      </div>
+
+      <div class="arena-container">
+
+        <div class="bench-wing" id="leftBenchWing">
+          <div class="bench-wing-title" id="leftBenchTitle">Left Bench</div>
+          <div class="bench-sub-indicator" id="leftSubIndicator">&rarr; Subs to LF (Pos 4) &rarr;</div>
+          <div class="bench-slot-area">
+            <div id="leftBench"></div>
+          </div>
+          <div class="bench-flow-note" id="leftFlowNote">&larr; Receives player exiting Pos 5</div>
+        </div>
+
+        <div class="court-container">
+          <div class="court-header">NET / OPPONENT SIDE</div>
+          <div class="net-indicator"></div>
+          <div class="court" id="courtSurface">
+            <div class="attack-line"></div>
+            <div class="animation-flash-banner" id="animFlashBanner">Transition to Attack</div>
+            <div class="animated-ball" id="animatedBall"></div>
+            <canvas id="overlapCanvas"></canvas>
+
+            <div class="court-grid-guides">
+              <div class="grid-zone"><span class="zone-marker zm-4">Zone 4 (LF)</span></div>
+              <div class="grid-zone"><span class="zone-marker zm-3">Zone 3 (MF)</span></div>
+              <div class="grid-zone"><span class="zone-marker zm-2">Zone 2 (RF)</span></div>
+              <div class="grid-zone"><span class="zone-marker zm-5">Zone 5 (LB)</span></div>
+              <div class="grid-zone"><span class="zone-marker zm-6">Zone 6 (MB)</span></div>
+              <div class="grid-zone"><span class="zone-marker zm-1">Zone 1 (RB)</span></div>
+            </div>
+
+            <div id="courtTokensContainer"></div>
+          </div>
+        </div>
+
+        <div class="bench-wing" id="rightBenchWing">
+          <div class="bench-wing-title" id="rightBenchTitle">Right Bench</div>
+          <div class="bench-sub-indicator" id="rightSubIndicator">&larr; Subs to Serve (Pos 1) &larr;</div>
+          <div class="bench-slot-area">
+            <div id="rightBench"></div>
+          </div>
+          <div class="bench-flow-note" id="rightFlowNote">&rarr; Receives player exiting Pos 2</div>
+        </div>
+
+      </div>
+
+      <div class="controls">
+        <button class="nav-btn" onclick="goToRotation(currentRotation - 1)">&larr; Prev Rotation</button>
+        <button class="nav-btn" onclick="goToRotation(currentRotation + 1)">Next Rotation &rarr;</button>
+        <button class="nav-btn" onclick="shiftCourtPositions(-1)" title="Shift all players one zone backward">← Shift Back</button>
+        <button class="nav-btn" onclick="shiftCourtPositions(1)" title="Shift all players one zone forward">Shift Fwd →</button>
+        <label style="font-size: 0.78rem; display:inline-flex; align-items:center; gap:4px; color:#cbd5e1; cursor:pointer; margin-left: 4px;">
+          <input type="checkbox" id="includeBenchInShiftCheckbox" style="cursor:pointer; accent-color:#3b82f6;"> Include Bench
+        </label>
+        <button class="undo-btn" onclick="undoPosition()">↩️ Undo</button>
+
+        <div class="dropdown-btn-wrapper">
+          <button class="reset-pos-btn" id="resetScenarioBtn" onclick="toggleResetDropdown(event)">Reset Scenario Layout ▾</button>
+          <div class="reset-dropdown-menu" id="resetDropdownMenu">
+            <button class="reset-dropdown-item" onclick="executeResetCurrentScenario()">↺ Reset Current Scenario</button>
+            <button class="reset-dropdown-item" onclick="executeResetAllScenarios()">↺ Reset All Scenarios</button>
+          </div>
+        </div>
+
+        <button class="del-btn" onclick="resetToDefaults()">Reset Lineup</button>
+
+        <div class="animate-btn-container" id="animateBtnContainer">
+          <button class="animate-btn" id="animateBtn" onclick="toggleAnimation()">▶ Animate</button>
+        </div>
+      </div>
+
+      <div class="log-panel" id="logBox">Select a scenario or drag player circles to test formations.</div>
+
+      <div class="comments-card">
+        <div class="comments-header">
+          <h3>💬 Public Comments</h3>
+          <span class="comments-count-badge" id="commentsCountBadge">0 Comments</span>
+        </div>
+
+        <div class="comment-form">
+          <div class="comment-form-row">
+            <input type="text" id="commentAuthorInput" class="comment-name-input" placeholder="Your Name (e.g. Coach Lester)">
+            <button class="save-btn" onclick="postComment()">Post Comment</button>
+          </div>
+          <textarea id="commentTextInput" class="comment-text-input" placeholder="Add a note or feedback on this lineup..."></textarea>
+        </div>
+
+        <div class="comments-list" id="commentsListContainer"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="print-modal-overlay" id="printModalOverlay" onclick="closePrintModalOnBackdrop(event)">
+    <div class="print-modal-box">
+      <h4 class="print-modal-title">🖨️ Print Lineup</h4>
+      <p class="print-modal-subtext">Select which scenarios to include for each rotation:</p>
+
+      <div class="print-options-list">
+        <label class="print-option-item">
+          <input type="checkbox" id="chkPrintHome" checked>
+          <span>🏠 Home (Slots)</span>
+        </label>
+        <label class="print-option-item">
+          <input type="checkbox" id="chkPrintServe" checked>
+          <span>🏐 On Serve</span>
+        </label>
+        <label class="print-option-item">
+          <input type="checkbox" id="chkPrintAttack">
+          <span>⚔️ Attack</span>
+        </label>
+        <label class="print-option-item">
+          <input type="checkbox" id="chkPrintBase">
+          <span>🛡️ Base (Defense)</span>
+        </label>
+        <label class="print-option-item">
+          <input type="checkbox" id="chkPrintReceive">
+          <span>📥 Serve Receive</span>
+        </label>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding: 0 2px;">
+        <span style="color:#00d2d3; cursor:pointer; font-weight:bold;" onclick="setAllPrintCheckboxes(true)">Select All</span>
+        <span style="color:#94a3b8; cursor:pointer; font-weight:bold;" onclick="setAllPrintCheckboxes(false)">Deselect All</span>
+      </div>
+
+      <div class="print-modal-actions">
+        <button class="print-modal-btn-cancel" onclick="closePrintModal()">Cancel</button>
+        <button class="print-modal-btn-confirm" onclick="triggerCustomPrint()">Print</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="printContainer">
+    <div class="print-header">
+      <span class="print-title">All-Rotating Volleyball Lineup Card</span>
+      <span class="print-meta" id="printMetaText"></span>
+    </div>
+    <div id="printRotationsContainer"></div>
+  </div>
+
+  <script>
+    const POSITION_OPTIONS = ["", "OH", "OH2", "MB", "MB2", "S", "S2", "RS", "RS2", "DS", "DS2", "L", "L2"];
+
+    const DEFAULT_ROSTER = [
+      { number: "1", name: "Alex" },
+      { number: "2", name: "Jordan" },
+      { number: "3", name: "Taylor" },
+      { number: "4", name: "Sam" },
+      { number: "5", name: "Morgan" },
+      { number: "6", name: "Casey" },
+      { number: "7", name: "Riley" },
+      { number: "8", name: "Jamie" },
+      { number: "9", name: "Chris" },
+      { number: "10", name: "Pat" },
+      { number: "11", name: "Avery" },
+      { number: "12", name: "Dakota" },
+      { number: "13", name: "Reese" },
+      { number: "14", name: "Quinn" },
+      { number: "15", name: "Skyler" },
+      { number: "16", name: "Cameron" },
+      { number: "17", name: "Logan" },
+      { number: "18", name: "Kendall" },
+      { number: "19", name: "Hayden" },
+      { number: "20", name: "Rowan" },
+      { number: "21", name: "Finley" },
+      { number: "22", name: "Emerson" },
+      { number: "23", name: "Harper" },
+      { number: "24", name: "Peyton" },
+      { number: "25", name: "Dallas" },
+      { number: "26", name: "Micah" },
+      { number: "27", name: "Sawyer" },
+      { number: "28", name: "Elliot" },
+      { number: "29", name: "Parker" },
+      { number: "30", name: "Eden" }
+    ];
+
+    let rosterEntries = DEFAULT_ROSTER.slice(0, 12);
+
+    function getActiveRosterNames() {
+      return rosterEntries.map(r => r.name);
+    }
+
+    const DEFAULT_LINEUP = [
+      { id: 1, name: "", position: "" },
+      { id: 2, name: "", position: "" },
+      { id: 3, name: "", position: "" },
+      { id: 4, name: "", position: "" },
+      { id: 5, name: "", position: "" },
+      { id: 6, name: "", position: "" },
+      { id: 7, name: "", position: "" },
+      { id: 8, name: "", position: "" }
+    ];
+
+    let systemScenarioStores = {
+      "4-2": {},
+      "6-2": {},
+      "5-1": {}
+    };
+
+    let scenarioCoordsStore = {};
+    let playerColorChanges = {}; // playerId -> { color, fromRotation, toRotation }
+
+    function getStorageKey(rot, scen) {
+      return `rot_${rot}_${scen}`;
+    }
+
+    const DEFAULT_SCENARIO_COORDS = {
+      home: {
+        pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 20 },
+        pos5: { x: 18, y: 74 }, pos6: { x: 50, y: 74 }, pos1: { x: 82, y: 74 }
+      },
+      attack: {
+        pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 20 },
+        pos5: { x: 18, y: 74 }, pos6: { x: 50, y: 74 }, pos1: { x: 82, y: 74 }
+      },
+      base: {
+        pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 20 },
+        pos5: { x: 18, y: 74 }, pos6: { x: 50, y: 74 }, pos1: { x: 82, y: 74 }
+      },
+      serve: {
+        pos4: { x: 18, y: 20 }, pos3: { x: 50, y: 20 }, pos2: { x: 82, y: 20 },
+        pos5: { x: 18, y: 74 }, pos6: { x: 50, y: 74 }, pos1: { x: 82, y: 74 }
+      },
+      receive: {
+        1: { pos4: { x: 18, y: 24 }, pos3: { x: 52, y: 22 }, pos2: { x: 82, y: 24 }, pos5: { x: 20, y: 74 }, pos6: { x: 50, y: 54 }, pos1: { x: 80, y: 74 } },
+        2: { pos4: { x: 16, y: 22 }, pos3: { x: 48, y: 24 }, pos2: { x: 84, y: 26 }, pos5: { x: 22, y: 75 }, pos6: { x: 50, y: 53 }, pos1: { x: 78, y: 75 } },
+        3: { pos4: { x: 20, y: 26 }, pos3: { x: 50, y: 24 }, pos2: { x: 80, y: 22 }, pos5: { x: 22, y: 75 }, pos6: { x: 50, y: 54 }, pos1: { x: 82, y: 75 } },
+        4: { pos4: { x: 22, y: 26 }, pos3: { x: 50, y: 24 }, pos2: { x: 82, y: 24 }, pos5: { x: 20, y: 74 }, pos6: { x: 50, y: 52 }, pos1: { x: 80, y: 74 } },
+        5: { pos4: { x: 18, y: 24 }, pos3: { x: 48, y: 24 }, pos2: { x: 82, y: 26 }, pos5: { x: 22, y: 74 }, pos6: { x: 50, y: 54 }, pos1: { x: 82, y: 76 } },
+        6: { pos4: { x: 18, y: 22 }, pos3: { x: 50, y: 22 }, pos2: { x: 82, y: 24 }, pos5: { x: 22, y: 75 }, pos6: { x: 50, y: 53 }, pos1: { x: 78, y: 75 } },
+        7: { pos4: { x: 18, y: 24 }, pos3: { x: 50, y: 24 }, pos2: { x: 82, y: 24 }, pos5: { x: 22, y: 75 }, pos6: { x: 50, y: 54 }, pos1: { x: 80, y: 75 } },
+        8: { pos4: { x: 18, y: 24 }, pos3: { x: 50, y: 24 }, pos2: { x: 82, y: 24 }, pos5: { x: 22, y: 75 }, pos6: { x: 50, y: 54 }, pos1: { x: 80, y: 75 } }
+      }
+    };
+
+    let teamSize = 8;
+    let offensiveSystem = "5-1";
+    let sevenPlayerSubSide = "left";
+    let currentRotation = 1;
+    let currentScenario = 'home';
+    let currentlyLoadedRotationName = null;
+    let squad = [];
+    let publicComments = [];
+
+    let playerCoords = {};
+    let activeFaults = [];
+    let positionHistory = [];
+    let isAnimating = false;
+
+    function initDefaultSquad() {
+      squad = JSON.parse(JSON.stringify(DEFAULT_LINEUP));
+    }
+
+    function loadActiveScenarioCoords() {
+      const key = getStorageKey(currentRotation, currentScenario);
+      if (scenarioCoordsStore[key]) {
+        playerCoords = JSON.parse(JSON.stringify(scenarioCoordsStore[key]));
+      } else {
+        if (currentScenario === 'receive') {
+          const rPreset = DEFAULT_SCENARIO_COORDS.receive[currentRotation] || DEFAULT_SCENARIO_COORDS.receive[1];
+          playerCoords = JSON.parse(JSON.stringify(rPreset));
+        } else {
+          playerCoords = JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS[currentScenario] || DEFAULT_SCENARIO_COORDS.home));
+        }
+      }
+    }
+
+    function saveActiveScenarioCoords() {
+      const key = getStorageKey(currentRotation, currentScenario);
+      scenarioCoordsStore[key] = JSON.parse(JSON.stringify(playerCoords));
+      if (!systemScenarioStores[offensiveSystem]) systemScenarioStores[offensiveSystem] = {};
+      systemScenarioStores[offensiveSystem][key] = JSON.parse(JSON.stringify(playerCoords));
+    }
+
+    function updateAnimateButtonVisibility() {
+      const container = document.getElementById('animateBtnContainer');
+      if (currentScenario === 'home') {
+        container.classList.remove('show');
+      } else {
+        container.classList.add('show');
+      }
+    }
+
+    function shiftCourtPositions(dir) {
+      recordHistoryState();
+      const state = calculateStateForRotation(currentRotation);
+      const includeBench = teamSize > 6 && document.getElementById('includeBenchInShiftCheckbox')?.checked;
+
+      let cycle = ['pos2', 'pos1', 'pos6', 'pos5', 'pos4', 'pos3'];
+      if (includeBench) {
+        if (teamSize === 8) {
+          cycle = ['leftBench', 'pos4', 'pos3', 'pos2', 'rightBench', 'pos1', 'pos6', 'pos5'];
+        } else if (teamSize === 7) {
+          if (sevenPlayerSubSide === 'left') {
+            cycle = ['leftBench', 'pos4', 'pos3', 'pos2', 'pos1', 'pos6', 'pos5'];
+          } else {
+            cycle = ['pos2', 'rightBench', 'pos1', 'pos6', 'pos5', 'pos4', 'pos3'];
+          }
+        }
+      }
+
+      let currentPlayers = cycle.map(k => {
+        const p = state[k];
+        return p ? { id: p.id, name: p.name, position: p.position } : null;
+      });
+      let colorOverrides = cycle.map(k => {
+        const p = state[k];
+        return p ? getPlayerColor(p, currentRotation) : 'green';
+      });
+      
+      if (dir === 1) {
+        const lastP = currentPlayers.pop();
+        currentPlayers.unshift(lastP);
+        const lastC = colorOverrides.pop();
+        colorOverrides.unshift(lastC);
+      } else {
+        const firstP = currentPlayers.shift();
+        currentPlayers.push(firstP);
+        const firstC = colorOverrides.shift();
+        colorOverrides.push(firstC);
+      }
+      
+      cycle.forEach((k, idx) => {
+        const originalPlayerOnCourt = state[k];
+        const newPlayer = currentPlayers[idx];
+        const newColor = colorOverrides[idx];
+        
+        if (originalPlayerOnCourt && newPlayer) {
+          const sqEntry = squad.find(s => s.id === originalPlayerOnCourt.id);
+          if (sqEntry) {
+            sqEntry.name = newPlayer.name;
+            sqEntry.position = newPlayer.position;
+          }
+          playerColorChanges[originalPlayerOnCourt.id] = {
+            color: newColor,
+            fromRotation: currentRotation,
+            toRotation: currentRotation
+          };
+        }
+      });
+
+      goToRotation(currentRotation);
+      document.getElementById('logBox').innerText = dir === 1 ? "🔄 Shifted all players one zone forward." : "🔄 Shifted all players one zone backward.";
+    }
+
+    function toggleAnimation() {
+      if (isAnimating || currentScenario === 'home') return;
+      isAnimating = true;
+      const btn = document.getElementById('animateBtn');
+      btn.innerText = "⏸ Animating...";
+      btn.disabled = true;
+
+      const flashBanner = document.getElementById('animFlashBanner');
+      const ball = document.getElementById('animatedBall');
+
+      let homeKey = getStorageKey(currentRotation, 'home');
+      let homeCoords = scenarioCoordsStore[homeKey] || JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS.home));
+
+      let targetKey = getStorageKey(currentRotation, currentScenario);
+      let targetCoords = scenarioCoordsStore[targetKey];
+      if (!targetCoords) {
+        if (currentScenario === 'receive') {
+          targetCoords = JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS.receive[currentRotation] || DEFAULT_SCENARIO_COORDS.receive[1]));
+        } else {
+          targetCoords = JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS[currentScenario]));
+        }
+      }
+
+      if (currentScenario === 'base' || currentScenario === 'attack') {
+        let baseKey = getStorageKey(currentRotation, 'base');
+        let baseCoords = scenarioCoordsStore[baseKey] || JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS.base));
+
+        let attackKey = getStorageKey(currentRotation, 'attack');
+        let attackCoords = scenarioCoordsStore[attackKey] || JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS.attack));
+
+        if (currentScenario === 'base') {
+          playerCoords = JSON.parse(JSON.stringify(targetCoords));
+          renderCourtTokens();
+
+          setTimeout(() => {
+            const zone5Pos = playerCoords['pos5'] || { x: 18, y: 74 };
+            ball.style.left = `50%`;
+            ball.style.top = `-10%`;
+            ball.style.display = "block";
+
+            const bStartTime = performance.now();
+            const bDuration = 600;
+
+            function ballInFrame(curTime) {
+              const bElapsed = curTime - bStartTime;
+              const bProg = Math.min(bElapsed / bDuration, 1);
+              const curBx = 50 + (zone5Pos.x - 50) * bProg;
+              const curBy = -10 + (zone5Pos.y - (-10)) * bProg;
+              ball.style.left = `${curBx}%`;
+              ball.style.top = `${curBy}%`;
+
+              if (bProg < 1) {
+                requestAnimationFrame(ballInFrame);
+              } else {
+                flashBanner.innerText = "Transition from Base to Attack";
+                flashBanner.style.display = "block";
+                setTimeout(() => { flashBanner.style.display = "none"; }, 1500);
+
+                const baseCoordsNow = JSON.parse(JSON.stringify(playerCoords));
+                const moveStart = performance.now();
+                const moveDuration = 1000;
+
+                function moveFrame(mTime) {
+                  const mElapsed = mTime - moveStart;
+                  const mProg = Math.min(mElapsed / moveDuration, 1);
+                  const ease = mProg * (2 - mProg);
+
+                  ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+                    const start = baseCoordsNow[posKey];
+                    const end = attackCoords[posKey];
+                    if (start && end) {
+                      const curX = start.x + (end.x - start.x) * ease;
+                      const curY = start.y + (end.y - start.y) * ease;
+                      playerCoords[posKey] = { x: curX, y: curY };
+                      const wrapper = document.getElementById(`wrapper-${posKey}`);
+                      if (wrapper) {
+                        wrapper.style.left = `${curX}%`;
+                        wrapper.style.top = `${curY}%`;
+                      }
+                      if (posKey === 'pos5') {
+                        ball.style.left = `${curX}%`;
+                        ball.style.top = `${curY}%`;
+                      }
+                    }
+                  });
+                  drawOverlapLines();
+
+                  if (mProg < 1) {
+                    requestAnimationFrame(moveFrame);
+                  } else {
+                    playerCoords = JSON.parse(JSON.stringify(attackCoords));
+                    renderCourtTokens();
+
+                    const z5Cur = playerCoords['pos5'] || { x: 18, y: 74 };
+                    ball.style.left = `${z5Cur.x}%`;
+                    ball.style.top = `${z5Cur.y}%`;
+
+                    const currentState = calculateStateForRotation(currentRotation);
+                    const setterKey = ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].find(pk => isPlayerSetter(currentState[pk])) || 'pos3';
+                    const setterCur = playerCoords[setterKey] || { x: 50, y: 20 };
+
+                    const pass1Start = performance.now();
+                    function pass1Frame(pTime) {
+                      const pElapsed = pTime - pass1Start;
+                      const pProg = Math.min(pElapsed / 500, 1);
+                      ball.style.left = `${z5Cur.x + (setterCur.x - z5Cur.x) * pProg}%`;
+                      ball.style.top = `${z5Cur.y + (setterCur.y - z5Cur.y) * pProg}%`;
+
+                      if (pProg < 1) {
+                        requestAnimationFrame(pass1Frame);
+                      } else {
+                        const outsideHitterKey = 'pos4';
+                        const ohCur = playerCoords[outsideHitterKey] || { x: 18, y: 20 };
+
+                        const pass2Start = performance.now();
+                        function pass2Frame(p2Time) {
+                          const p2Elapsed = p2Time - pass2Start;
+                          const p2Prog = Math.min(p2Elapsed / 500, 1);
+                          ball.style.left = `${setterCur.x + (ohCur.x - setterCur.x) * p2Prog}%`;
+                          ball.style.top = `${setterCur.y + (ohCur.y - setterCur.y) * p2Prog}%`;
+
+                          if (p2Prog < 1) {
+                            requestAnimationFrame(pass2Frame);
+                          } else {
+                            const hitStart = performance.now();
+                            const hitterOriginalY = playerCoords[outsideHitterKey].y;
+
+                            function hitFrame(hTime) {
+                              const hElapsed = hTime - hitStart;
+                              const hProg = Math.min(hElapsed / 600, 1);
+
+                              const jumpOffset = Math.sin(hProg * Math.PI) * -6;
+                              playerCoords[outsideHitterKey].y = hitterOriginalY + jumpOffset;
+
+                              const w = document.getElementById(`wrapper-${outsideHitterKey}`);
+                              if (w) w.style.top = `${playerCoords[outsideHitterKey].y}%`;
+
+                              ball.style.left = `${ohCur.x + (50 - ohCur.x) * hProg}%`;
+                              ball.style.top = `${ohCur.y + (-10 - ohCur.y) * hProg}%`;
+
+                              if (hProg < 1) {
+                                requestAnimationFrame(hitFrame);
+                              } else {
+                                ball.style.display = "none";
+                                playerCoords[outsideHitterKey].y = hitterOriginalY;
+                                renderCourtTokens();
+
+                                flashBanner.innerText = "Transition from Attack to Base";
+                                flashBanner.style.display = "block";
+                                setTimeout(() => { flashBanner.style.display = "none"; }, 1500);
+
+                                const attackCoordsNow = JSON.parse(JSON.stringify(playerCoords));
+                                const returnStart = performance.now();
+                                const returnDuration = 1000;
+
+                                function returnFrame(rTime) {
+                                  const rElapsed = rTime - returnStart;
+                                  const rProg = Math.min(rElapsed / returnDuration, 1);
+                                  const easeR = rProg * (2 - rProg);
+
+                                  ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+                                    const start = attackCoordsNow[posKey];
+                                    const end = targetCoords[posKey];
+                                    if (start && end) {
+                                      const curX = start.x + (end.x - start.x) * easeR;
+                                      const curY = start.y + (end.y - start.y) * easeR;
+                                      playerCoords[posKey] = { x: curX, y: curY };
+                                      const wrapper = document.getElementById(`wrapper-${posKey}`);
+                                      if (wrapper) {
+                                        wrapper.style.left = `${curX}%`;
+                                        wrapper.style.top = `${curY}%`;
+                                      }
+                                    }
+                                  });
+                                  drawOverlapLines();
+
+                                  if (rProg < 1) {
+                                    requestAnimationFrame(returnFrame);
+                                  } else {
+                                    playerCoords = JSON.parse(JSON.stringify(targetCoords));
+                                    renderCourtTokens();
+                                    checkPositionalFaults();
+
+                                    isAnimating = false;
+                                    btn.innerText = "▶ Animate";
+                                    btn.disabled = false;
+                                  }
+                                }
+                                requestAnimationFrame(returnFrame);
+                              }
+                            }
+                            requestAnimationFrame(hitFrame);
+                          }
+                        }
+                        requestAnimationFrame(pass2Frame);
+                      }
+                    }
+                    requestAnimationFrame(pass1Frame);
+                  }
+                }
+                requestAnimationFrame(moveFrame);
+              }
+            }
+            requestAnimationFrame(ballInFrame);
+          }, 500);
+        } else if (currentScenario === 'attack') {
+          playerCoords = JSON.parse(JSON.stringify(baseCoords));
+          renderCourtTokens();
+
+          setTimeout(() => {
+            const zone5Pos = playerCoords['pos5'] || { x: 18, y: 74 };
+            ball.style.left = `50%`;
+            ball.style.top = `-10%`;
+            ball.style.display = "block";
+
+            const bStartTime = performance.now();
+            const bDuration = 600;
+
+            function ballInFrameAttack(curTime) {
+              const bElapsed = curTime - bStartTime;
+              const bProg = Math.min(bElapsed / bDuration, 1);
+              const curBx = 50 + (zone5Pos.x - 50) * bProg;
+              const curBy = -10 + (zone5Pos.y - (-10)) * bProg;
+              ball.style.left = `${curBx}%`;
+              ball.style.top = `${curBy}%`;
+
+              if (bProg < 1) {
+                requestAnimationFrame(ballInFrameAttack);
+              } else {
+                flashBanner.innerText = "Transition from Base to Attack";
+                flashBanner.style.display = "block";
+                setTimeout(() => { flashBanner.style.display = "none"; }, 1500);
+
+                const baseCoordsNow = JSON.parse(JSON.stringify(playerCoords));
+                const moveStart = performance.now();
+                const moveDuration = 1500;
+
+                function moveFrameAttack(mTime) {
+                  const mElapsed = mTime - moveStart;
+                  const mProg = Math.min(mElapsed / moveDuration, 1);
+                  const ease = mProg * (2 - mProg);
+
+                  ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+                    const start = baseCoordsNow[posKey];
+                    const end = attackCoords[posKey];
+                    if (start && end) {
+                      const curX = start.x + (end.x - start.x) * ease;
+                      const curY = start.y + (end.y - start.y) * ease;
+                      playerCoords[posKey] = { x: curX, y: curY };
+                      const wrapper = document.getElementById(`wrapper-${posKey}`);
+                      if (wrapper) {
+                        wrapper.style.left = `${curX}%`;
+                        wrapper.style.top = `${curY}%`;
+                      }
+                      if (posKey === 'pos5') {
+                        ball.style.left = `${curX}%`;
+                        ball.style.top = `${curY}%`;
+                      }
+                    }
+                  });
+                  drawOverlapLines();
+
+                  if (mProg < 1) {
+                    requestAnimationFrame(moveFrameAttack);
+                  } else {
+                    playerCoords = JSON.parse(JSON.stringify(attackCoords));
+                    renderCourtTokens();
+
+                    const z5Cur = playerCoords['pos5'] || { x: 18, y: 74 };
+                    ball.style.left = `${z5Cur.x}%`;
+                    ball.style.top = `${z5Cur.y}%`;
+
+                    const currentState = calculateStateForRotation(currentRotation);
+                    const setterKey = ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].find(pk => isPlayerSetter(currentState[pk])) || 'pos3';
+                    const setterCur = playerCoords[setterKey] || { x: 50, y: 20 };
+
+                    const pass1Start = performance.now();
+                    function pass1FrameAttack(pTime) {
+                      const pElapsed = pTime - pass1Start;
+                      const pProg = Math.min(pElapsed / 500, 1);
+                      ball.style.left = `${z5Cur.x + (setterCur.x - z5Cur.x) * pProg}%`;
+                      ball.style.top = `${z5Cur.y + (setterCur.y - z5Cur.y) * pProg}%`;
+
+                      if (pProg < 1) {
+                        requestAnimationFrame(pass1FrameAttack);
+                      } else {
+                        const outsideHitterKey = 'pos4';
+                        const ohCur = playerCoords[outsideHitterKey] || { x: 18, y: 20 };
+
+                        const pass2Start = performance.now();
+                        function pass2FrameAttack(p2Time) {
+                          const p2Elapsed = p2Time - pass2Start;
+                          const p2Prog = Math.min(p2Elapsed / 500, 1);
+                          ball.style.left = `${setterCur.x + (ohCur.x - setterCur.x) * p2Prog}%`;
+                          ball.style.top = `${setterCur.y + (ohCur.y - setterCur.y) * p2Prog}%`;
+
+                          if (p2Prog < 1) {
+                            requestAnimationFrame(pass2FrameAttack);
+                          } else {
+                            const hitStart = performance.now();
+                            const hitterOriginalY = playerCoords[outsideHitterKey].y;
+
+                            function hitFrameAttack(hTime) {
+                              const hElapsed = hTime - hitStart;
+                              const hProg = Math.min(hElapsed / 600, 1);
+
+                              const jumpOffset = Math.sin(hProg * Math.PI) * -6;
+                              playerCoords[outsideHitterKey].y = hitterOriginalY + jumpOffset;
+
+                              const w = document.getElementById(`wrapper-${outsideHitterKey}`);
+                              if (w) w.style.top = `${playerCoords[outsideHitterKey].y}%`;
+
+                              ball.style.left = `${ohCur.x + (50 - ohCur.x) * hProg}%`;
+                              ball.style.top = `${ohCur.y + (-10 - ohCur.y) * hProg}%`;
+
+                              if (hProg < 1) {
+                                requestAnimationFrame(hitFrameAttack);
+                              } else {
+                                ball.style.display = "none";
+                                playerCoords[outsideHitterKey].y = hitterOriginalY;
+                                renderCourtTokens();
+                                checkPositionalFaults();
+
+                                isAnimating = false;
+                                btn.innerText = "▶ Animate";
+                                btn.disabled = false;
+                              }
+                            }
+                            requestAnimationFrame(hitFrameAttack);
+                          }
+                        }
+                        requestAnimationFrame(pass2FrameAttack);
+                      }
+                    }
+                    requestAnimationFrame(pass1FrameAttack);
+                  }
+                }
+                requestAnimationFrame(moveFrameAttack);
+              }
+            }
+            requestAnimationFrame(ballInFrameAttack);
+          }, 750);
+        }
+      } else if (currentScenario === 'serve') {
+        let baseKey = getStorageKey(currentRotation, 'base');
+        let baseCoords = scenarioCoordsStore[baseKey] || JSON.parse(JSON.stringify(DEFAULT_SCENARIO_COORDS.base));
+
+        playerCoords = JSON.parse(JSON.stringify(homeCoords));
+        renderCourtTokens();
+
+        setTimeout(() => {
+          flashBanner.innerText = "Transition to Serve";
+          flashBanner.style.display = "block";
+
+          const startTime1 = performance.now();
+          const duration1 = 1200;
+
+          function frame1(currentTime) {
+            const elapsed = currentTime - startTime1;
+            const progress = Math.min(elapsed / duration1, 1);
+            const easeProgress = progress * (2 - progress);
+
+            ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+              const start = homeCoords[posKey];
+              const end = targetCoords[posKey];
+              if (start && end) {
+                const curX = start.x + (end.x - start.x) * easeProgress;
+                const curY = start.y + (end.y - start.y) * easeProgress;
+                playerCoords[posKey] = { x: curX, y: curY };
+
+                const wrapper = document.getElementById(`wrapper-${posKey}`);
+                if (wrapper) {
+                  wrapper.style.left = `${curX}%`;
+                  wrapper.style.top = `${curY}%`;
+                }
+              }
+            });
+            drawOverlapLines();
+
+            if (progress < 1) {
+              requestAnimationFrame(frame1);
+            } else {
+              playerCoords = JSON.parse(JSON.stringify(targetCoords));
+              renderCourtTokens();
+              checkPositionalFaults();
+
+              setTimeout(() => { flashBanner.style.display = "none"; }, 300);
+
+              setTimeout(() => {
+                const serverPos = playerCoords['pos1'] || { x: 82, y: 93 };
+                ball.style.left = `${serverPos.x}%`;
+                ball.style.top = `${serverPos.y}%`;
+                ball.style.display = "block";
+
+                const ballStart = { x: serverPos.x, y: serverPos.y };
+                const ballEnd = { x: 50, y: -10 };
+                const ballStartTime = performance.now();
+                const ballDuration = 700;
+
+                function ballFrame(curTime) {
+                  const bElapsed = curTime - ballStartTime;
+                  const bProg = Math.min(bElapsed / ballDuration, 1);
+
+                  const curBx = ballStart.x + (ballEnd.x - ballStart.x) * bProg;
+                  const curBy = ballStart.y + (ballEnd.y - ballStart.y) * bProg;
+                  ball.style.left = `${curBx}%`;
+                  ball.style.top = `${curBy}%`;
+
+                  if (bProg < 1) {
+                    requestAnimationFrame(ballFrame);
+                  } else {
+                    ball.style.display = "none";
+
+                    setTimeout(() => {
+                      flashBanner.innerText = "Transition to Base";
+                      flashBanner.style.display = "block";
+
+                      const serveCoordsNow = JSON.parse(JSON.stringify(playerCoords));
+                      const startTime2 = performance.now();
+                      const duration2 = 1200;
+
+                      function frame2(currentTime2) {
+                        const elapsed2 = currentTime2 - startTime2;
+                        const progress2 = Math.min(elapsed2 / duration2, 1);
+                        const easeProgress2 = progress2 * (2 - progress2);
+
+                        ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+                          const start = serveCoordsNow[posKey];
+                          const end = baseCoords[posKey];
+                          if (start && end) {
+                            const curX = start.x + (end.x - start.x) * easeProgress2;
+                            const curY = start.y + (end.y - start.y) * easeProgress2;
+                            playerCoords[posKey] = { x: curX, y: curY };
+
+                            const wrapper = document.getElementById(`wrapper-${posKey}`);
+                            if (wrapper) {
+                              wrapper.style.left = `${curX}%`;
+                              wrapper.style.top = `${curY}%`;
+                            }
+                          }
+                        });
+                        drawOverlapLines();
+
+                        if (progress2 < 1) {
+                          requestAnimationFrame(frame2);
+                        } else {
+                          playerCoords = JSON.parse(JSON.stringify(baseCoords));
+                          renderCourtTokens();
+                          checkPositionalFaults();
+
+                          setTimeout(() => { flashBanner.style.display = "none"; }, 300);
+
+                          isAnimating = false;
+                          btn.innerText = "▶ Animate";
+                          btn.disabled = false;
+                        }
+                      }
+                      requestAnimationFrame(frame2);
+                    }, 500);
+                  }
+                }
+                requestAnimationFrame(ballFrame);
+              }, 750);
+            }
+          }
+          requestAnimationFrame(frame1);
+        }, 750);
+      } else {
+        playerCoords = JSON.parse(JSON.stringify(homeCoords));
+        renderCourtTokens();
+
+        setTimeout(() => {
+          const startTime = performance.now();
+          const duration = 1200;
+
+          function frame(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = progress * (2 - progress);
+
+            ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+              const start = homeCoords[posKey];
+              const end = targetCoords[posKey];
+              if (start && end) {
+                const curX = start.x + (end.x - start.x) * easeProgress;
+                const curY = start.y + (end.y - start.y) * easeProgress;
+                playerCoords[posKey] = { x: curX, y: curY };
+
+                const wrapper = document.getElementById(`wrapper-${posKey}`);
+                if (wrapper) {
+                  wrapper.style.left = `${curX}%`;
+                  wrapper.style.top = `${curY}%`;
+                }
+              }
+            });
+
+            drawOverlapLines();
+
+            if (progress < 1) {
+              requestAnimationFrame(frame);
+            } else {
+              playerCoords = JSON.parse(JSON.stringify(targetCoords));
+              renderCourtTokens();
+              checkPositionalFaults();
+              isAnimating = false;
+              btn.innerText = "▶ Animate";
+              btn.disabled = false;
+            }
+          }
+
+          requestAnimationFrame(frame);
+        }, 500);
+      }
+    }
+
+    function renderRosterList() {
+      const container = document.getElementById('rosterListContainer');
+      const badge = document.getElementById('rosterCountBadge');
+      container.innerHTML = '';
+      badge.innerText = `${rosterEntries.length} / 30`;
+
+      rosterEntries.forEach((entry, idx) => {
+        const row = document.createElement('div');
+        row.className = 'roster-entry-row';
+        row.innerHTML = `
+          <input 
+            type="text" 
+            class="roster-num-input" 
+            value="${escapeHTML(entry.number)}" 
+            title="Edit Jersey Number"
+            onchange="onRosterNumberEdited(${idx}, this.value)"
+          />
+          <input 
+            type="text" 
+            class="roster-name-input" 
+            value="${escapeHTML(entry.name)}" 
+            title="Edit Player Name"
+            onchange="onRosterNameEdited(${idx}, this.value)"
+          />
+          <button 
+            class="roster-row-del-btn" 
+            title="Delete this player from roster" 
+            onclick="deleteRosterPlayer(${idx})"
+          >&times;</button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function onRosterNumberEdited(index, newNumRaw) {
+      rosterEntries[index].number = newNumRaw.trim();
+    }
+
+    function onRosterNameEdited(index, newNameRaw) {
+      const trimmed = newNameRaw.trim();
+      const oldName = rosterEntries[index].name;
+
+      if (!trimmed) {
+        alert("Player name cannot be blank.");
+        renderRosterList();
+        return;
+      }
+
+      const duplicateIndex = rosterEntries.findIndex((e, idx) => idx !== index && e.name.toLowerCase() === trimmed.toLowerCase());
+      if (duplicateIndex !== -1) {
+        alert(`⚠️ DUPLICATE NAME WARNING:\n\nThe name "${trimmed}" is already used by another player in the roster.\n\nPlayer names must be unique.`);
+        renderRosterList();
+        return;
+      }
+
+      recordHistoryState();
+      rosterEntries[index].name = trimmed;
+      squad.forEach(player => {
+        if (player.name === oldName) player.name = trimmed;
+      });
+
+      renderRosterList();
+      renderCourtTokens();
+      renderBenchTokens(calculateStateForRotation(currentRotation));
+    }
+
+    function addNewRosterPlayer() {
+      if (rosterEntries.length >= 30) {
+        alert("Roster limit reached! Maximum capacity is 30 players.");
+        return;
+      }
+
+      let nextNum = String(rosterEntries.length + 1);
+      let nextName = `Player ${nextNum}`;
+      let counter = rosterEntries.length + 1;
+      while (rosterEntries.some(e => e.name.toLowerCase() === nextName.toLowerCase())) {
+        counter++;
+        nextName = `Player ${counter}`;
+      }
+
+      recordHistoryState();
+      rosterEntries.push({ number: nextNum, name: nextName });
+      renderRosterList();
+      renderCourtTokens();
+      renderBenchTokens(calculateStateForRotation(currentRotation));
+    }
+
+    function deleteRosterPlayer(index) {
+      if (rosterEntries.length <= 6) {
+        alert("Roster must maintain at least 6 players for volleyball rotations.");
+        return;
+      }
+      recordHistoryState();
+      const removed = rosterEntries.splice(index, 1)[0];
+      if (removed && removed.name) {
+        squad.forEach(player => {
+          if (player.name && player.name.trim().toLowerCase() === removed.name.trim().toLowerCase()) {
+            player.name = "";
+          }
+        });
+      }
+      renderRosterList();
+      renderCourtTokens();
+      renderBenchTokens(calculateStateForRotation(currentRotation));
+      document.getElementById('logBox').innerText = `Removed "${removed.name}" from roster and lineup.`;
+    }
+
+    function removeLastRosterPlayer() {
+      if (rosterEntries.length <= 6) {
+        alert("Roster must maintain at least 6 players for volleyball rotations.");
+        return;
+      }
+      deleteRosterPlayer(rosterEntries.length - 1);
+    }
+
+    function resetRosterToDefault() {
+      if (confirm("Reset roster to default list of players?")) {
+        recordHistoryState();
+        rosterEntries = DEFAULT_ROSTER.slice(0, 12);
+        initDefaultSquad();
+        renderRosterList();
+        goToRotation(1);
+      }
+    }
+
+    function createPlayerNameSelectHTML(playerId, selectedName) {
+      const current = (selectedName || '').trim();
+      const rosterNames = getActiveRosterNames();
+
+      const currentState = calculateStateForRotation(currentRotation);
+      const assignedNames = new Set();
+      ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6', 'leftBench', 'rightBench'].forEach(k => {
+        if (currentState[k] && currentState[k].id !== playerId) {
+          assignedNames.add(currentState[k].name.toLowerCase());
+        }
+      });
+
+      let hasMatch = false;
+      const optionsHTML = rosterNames
+        .filter(name => {
+          const isSelectedElsewhere = assignedNames.has(name.toLowerCase());
+          const isCurrent = (name.toLowerCase() === current.toLowerCase());
+          return !isSelectedElsewhere || isCurrent;
+        })
+        .map(name => {
+          const isCurrent = (name.toLowerCase() === current.toLowerCase());
+          if (isCurrent) hasMatch = true;
+          const isSel = isCurrent ? 'selected' : '';
+          return `<option value="${escapeHTML(name)}" ${isSel}>${escapeHTML(name)}</option>`;
+        }).join('');
+
+      const fallback = (!hasMatch && current) ? `<option value="${escapeHTML(current)}" selected>${escapeHTML(current)}</option>` : '';
+      const isBlankSelected = (!current || current === "") ? 'selected' : '';
+
+      return `
+        <select 
+          class="player-name-select" 
+          title="Select Player"
+          onchange="onPlayerSelectedFromDropdown(${playerId}, this.value)"
+          onpointerdown="event.stopPropagation()"
+          onclick="event.stopPropagation()"
+        >
+          <option value="" ${isBlankSelected}>-- Select --</option>
+          ${fallback}
+          ${optionsHTML}
+        </select>
+      `;
+    }
+
+    function onPlayerSelectedFromDropdown(playerId, chosenName) {
+      recordHistoryState();
+      const player = squad.find(p => p.id === playerId);
+      if (player) {
+        player.name = chosenName;
+        goToRotation(currentRotation);
+      }
+    }
+
+    function recordHistoryState() {
+      positionHistory.push(JSON.stringify({
+        playerCoords: JSON.parse(JSON.stringify(playerCoords)),
+        playerColorChanges: JSON.parse(JSON.stringify(playerColorChanges)),
+        squad: JSON.parse(JSON.stringify(squad)),
+        rosterEntries: JSON.parse(JSON.stringify(rosterEntries))
+      }));
+      if (positionHistory.length > 25) positionHistory.shift();
+    }
+
+    function undoPosition() {
+      if (positionHistory.length > 0) {
+        const previousStateJSON = positionHistory.pop();
+        const prevState = JSON.parse(previousStateJSON);
+        playerCoords = prevState.playerCoords;
+        if (prevState.playerColorChanges) playerColorChanges = prevState.playerColorChanges;
+        if (prevState.squad) squad = prevState.squad;
+        if (prevState.rosterEntries) rosterEntries = prevState.rosterEntries;
+
+        saveActiveScenarioCoords();
+        renderRosterList();
+        renderCourtTokens();
+        renderBenchTokens(calculateStateForRotation(currentRotation));
+        checkPositionalFaults();
+        document.getElementById('logBox').innerText = "↩️ Undid last movement, color change, or lineup edit.";
+      } else {
+        document.getElementById('logBox').innerText = "No earlier actions to undo.";
+      }
+    }
+
+    function stepOneRotation(prev) {
+      if (teamSize === 6) {
+        return {
+          pos4: prev.pos5, pos3: prev.pos4, pos2: prev.pos3,
+          pos1: prev.pos2, pos6: prev.pos1, pos5: prev.pos6
+        };
+      }
+      if (teamSize === 7) {
+        if (sevenPlayerSubSide === "left") {
+          return {
+            pos4: prev.leftBench, pos3: prev.pos4, pos2: prev.pos3,
+            pos1: prev.pos2, pos6: prev.pos1, pos5: prev.pos6,
+            leftBench: prev.pos5
+          };
+        } else {
+          return {
+            pos4: prev.pos5, pos3: prev.pos4, pos2: prev.pos3,
+            pos1: prev.rightBench, pos6: prev.pos1, pos5: prev.pos6,
+            rightBench: prev.pos2
+          };
+        }
+      }
+      if (teamSize === 8) {
+        return {
+          pos4: prev.leftBench, pos3: prev.pos4, pos2: prev.pos3,
+          pos1: prev.rightBench, pos6: prev.pos1, pos5: prev.pos6,
+          leftBench: prev.pos5, rightBench: prev.pos2
+        };
+      }
+    }
+
+    function calculateStateForRotation(rotNum) {
+      let state = {
+        pos1: squad.find(p => p.id === 1) || { id: 1, name: "", position: "" },
+        pos6: squad.find(p => p.id === 2) || { id: 2, name: "", position: "" },
+        pos5: squad.find(p => p.id === 3) || { id: 3, name: "", position: "" },
+        pos4: squad.find(p => p.id === 4) || { id: 4, name: "", position: "" },
+        pos3: squad.find(p => p.id === 5) || { id: 5, name: "", position: "" },
+        pos2: squad.find(p => p.id === 6) || { id: 6, name: "", position: "" }
+      };
+
+      if (teamSize === 7) {
+        if (sevenPlayerSubSide === "left") state.leftBench = squad.find(p => p.id === 7) || { id: 7, name: "", position: "" };
+        else state.rightBench = squad.find(p => p.id === 7) || { id: 7, name: "", position: "" };
+      } else if (teamSize === 8) {
+        state.leftBench = squad.find(p => p.id === 7) || { id: 7, name: "", position: "" };
+        state.rightBench = squad.find(p => p.id === 8) || { id: 8, name: "", position: "" };
+      }
+
+      for (let i = 1; i < rotNum; i++) {
+        state = stepOneRotation(state);
+      }
+      return state;
+    }
+
+    function setScenario(scen) {
+      saveActiveScenarioCoords();
+      currentScenario = scen;
+      document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+      if (scen === 'home') document.getElementById('btnScenarioHome').classList.add('active');
+      if (scen === 'serve') document.getElementById('btnScenarioServe').classList.add('active');
+      if (scen === 'attack') document.getElementById('btnScenarioAttack').classList.add('active');
+      if (scen === 'base') document.getElementById('btnScenarioBase').classList.add('active');
+      if (scen === 'receive') document.getElementById('btnScenarioReceive').classList.add('active');
+
+      loadActiveScenarioCoords();
+      renderCourtTokens();
+      checkPositionalFaults();
+      updateAnimateButtonVisibility();
+
+      const labels = {
+        home: 'Home (Starting Rotational Slots)',
+        serve: 'On Serve (Position 1 Serving Outside Court)',
+        attack: 'Attack Formation',
+        base: 'Base (Defensive Transition — Ball on Opponent Side)',
+        receive: 'Serve Receive Formation'
+      };
+      document.getElementById('logBox').innerText = `Displaying [${labels[scen]}] for Rotation ${currentRotation} in ${offensiveSystem} system.`;
+    }
+
+    function toggleResetDropdown(e) {
+      e.stopPropagation();
+      const menu = document.getElementById('resetDropdownMenu');
+      menu.classList.toggle('show');
+    }
+
+    function closeResetDropdown() {
+      const menu = document.getElementById('resetDropdownMenu');
+      if (menu) menu.classList.remove('show');
+    }
+
+    document.addEventListener('click', (e) => {
+      const wrapper = document.querySelector('.dropdown-btn-wrapper');
+      if (wrapper && !wrapper.contains(e.target)) {
+        closeResetDropdown();
+      }
+      if (!e.target.closest('.player-token')) {
+        document.querySelectorAll('.token-color-palette').forEach(p => p.classList.remove('show'));
+      }
+    });
+
+    function executeResetCurrentScenario() {
+      closeResetDropdown();
+      recordHistoryState();
+      const key = getStorageKey(currentRotation, currentScenario);
+      delete scenarioCoordsStore[key];
+      if (systemScenarioStores[offensiveSystem]) {
+        delete systemScenarioStores[offensiveSystem][key];
+      }
+      loadActiveScenarioCoords();
+      renderCourtTokens();
+      checkPositionalFaults();
+      document.getElementById('logBox').innerText = `Reset layout for current scenario [${currentScenario.toUpperCase()}] in Rotation ${currentRotation}.`;
+    }
+
+    function executeResetAllScenarios() {
+      closeResetDropdown();
+      if (confirm("Reset ALL scenarios across all rotations back to default layouts for this system?")) {
+        recordHistoryState();
+        scenarioCoordsStore = {};
+        systemScenarioStores[offensiveSystem] = {};
+        loadActiveScenarioCoords();
+        renderCourtTokens();
+        checkPositionalFaults();
+        document.getElementById('logBox').innerText = `Reset layout for all scenarios across all rotations in ${offensiveSystem} system.`;
+      }
+    }
+
+    function resetAllLayoutsToDefault() {
+      if (confirm("Reset all layouts to default (Home layout)?")) {
+        recordHistoryState();
+        scenarioCoordsStore = {};
+        if (systemScenarioStores[offensiveSystem]) {
+          systemScenarioStores[offensiveSystem] = {};
+        }
+        loadActiveScenarioCoords();
+        renderCourtTokens();
+        checkPositionalFaults();
+        document.getElementById('logBox').innerText = "✓ Reset all layouts to default (Home layout).";
+      }
+    }
+
+    function getSetterType(player) {
+      if (!player) return null;
+      const posText = (player.position || '').trim().toUpperCase();
+      if (posText === 'S2') return 'S2';
+      if (posText === 'S') return 'S';
+      return null;
+    }
+
+    function isPlayerSetter(player) {
+      return getSetterType(player) !== null;
+    }
+
+    function getPlayerColor(player, rot) {
+      if (!player) return 'green';
+      const isSetter = isPlayerSetter(player);
+      const defaultColor = isSetter ? 'yellow' : 'green';
+
+      if (playerColorChanges[player.id]) {
+        const override = playerColorChanges[player.id];
+        const toRot = override.toRotation !== undefined ? override.toRotation : teamSize;
+        if (rot >= override.fromRotation && rot <= toRot) {
+          return override.color;
+        }
+      }
+      return defaultColor;
+    }
+
+    function onPlayerTokenClick(e, playerId, tokenEl) {
+      if (['select', 'option', 'input'].includes(e.target.tagName.toLowerCase())) return;
+      e.stopPropagation();
+      
+      document.querySelectorAll('.token-color-palette').forEach(p => {
+        if (p !== tokenEl.querySelector('.token-color-palette')) p.classList.remove('show');
+      });
+
+      const palette = tokenEl.querySelector('.token-color-palette');
+      if (palette) {
+        palette.classList.toggle('show');
+      }
+    }
+
+    function setPlayerColor(playerId, color, e) {
+      e.stopPropagation();
+      let endRotStr = prompt(`Enter ending rotation (R+X) for custom color persistence (from Rotation ${currentRotation} up to ${teamSize}):`, currentRotation);
+      if (endRotStr === null) return;
+      let endRot = parseInt(endRotStr, 10);
+      if (isNaN(endRot) || endRot < currentRotation || endRot > teamSize) {
+        alert(`Invalid rotation range. Must be between ${currentRotation} and ${teamSize}.`);
+        return;
+      }
+      
+      recordHistoryState();
+      playerColorChanges[playerId] = {
+        color: color,
+        fromRotation: currentRotation,
+        toRotation: endRot
+      };
+      renderCourtTokens();
+      renderBenchTokens(calculateStateForRotation(currentRotation));
+    }
+
+    function checkPositionalFaults() {
+      if (currentScenario === 'base' || currentScenario === 'attack') {
+        activeFaults = [];
+        updateFaultUI();
+        drawOverlapLines();
+        return;
+      }
+
+      const p = playerCoords;
+      const faults = [];
+      const isServe = (currentScenario === 'serve');
+
+      if (p.pos4.y >= p.pos5.y) faults.push({ posA: 'pos4', posB: 'pos5', msg: 'Pos 4 (LF) must be closer to net than Pos 5 (LB)' });
+      if (p.pos3.y >= p.pos6.y) faults.push({ posA: 'pos3', posB: 'pos6', msg: 'Pos 3 (MF) must be closer to net than Pos 6 (MB)' });
+      if (!isServe && p.pos2.y >= p.pos1.y) faults.push({ posA: 'pos2', posB: 'pos1', msg: 'Pos 2 (RF) must be closer to net than Pos 1 (RB)' });
+
+      if (p.pos4.x >= p.pos3.x) faults.push({ posA: 'pos4', posB: 'pos3', msg: 'Pos 4 (LF) must be left of Pos 3 (MF)' });
+      if (p.pos3.x >= p.pos2.x) faults.push({ posA: 'pos3', posB: 'pos2', msg: 'Pos 3 (MF) must be left of Pos 2 (RF)' });
+
+      if (p.pos5.x >= p.pos6.x) faults.push({ posA: 'pos5', posB: 'pos6', msg: 'Pos 5 (LB) must be left of Pos 6 (MB)' });
+      if (!isServe && p.pos6.x >= p.pos1.x) faults.push({ posA: 'pos6', posB: 'pos1', msg: 'Pos 6 (MB) must be left of Pos 1 (RB)' });
+
+      activeFaults = faults;
+      updateFaultUI();
+      drawOverlapLines();
+    }
+
+    function updateFaultUI() {
+      const banner = document.getElementById('faultBanner');
+      const positions = ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'];
+
+      positions.forEach(pos => {
+        const token = document.getElementById(`token-${pos}`);
+        if (token) token.classList.remove('fault');
+      });
+
+      if (activeFaults.length > 0) {
+        banner.classList.add('show');
+        banner.innerText = `⚠️ OUT OF ROTATION: ${activeFaults[0].msg}`;
+        activeFaults.forEach(f => {
+          const tA = document.getElementById(`token-${f.posA}`);
+          const tB = document.getElementById(`token-${f.posB}`);
+          if (tA) tA.classList.add('fault');
+          if (tB) tB.classList.add('fault');
+        });
+      } else {
+        banner.classList.remove('show');
+        banner.innerText = '';
+      }
+    }
+
+    function drawOverlapLines() {
+      const canvas = document.getElementById('overlapCanvas');
+      const court = document.getElementById('courtSurface');
+      if (!canvas || !court || currentScenario === 'attack') return;
+
+      canvas.width = court.clientWidth;
+      canvas.height = court.clientHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const isServe = (currentScenario === 'serve');
+
+      if (draggedPosKey && playerCoords[draggedPosKey] && currentScenario !== 'base') {
+        if (isServe && draggedPosKey === 'pos1') {
+          // Exempt
+        } else {
+          const NEIGHBORS = {
+            pos4: ['pos5', 'pos3'],
+            pos3: ['pos6', 'pos4', 'pos2'],
+            pos2: isServe ? ['pos3'] : ['pos1', 'pos3'],
+            pos5: ['pos4', 'pos6'],
+            pos6: isServe ? ['pos3', 'pos5'] : ['pos3', 'pos5', 'pos1'],
+            pos1: isServe ? [] : ['pos2', 'pos6']
+          };
+
+          const neighbors = NEIGHBORS[draggedPosKey] || [];
+          const ptA = playerCoords[draggedPosKey];
+          const xA = (ptA.x / 100) * canvas.width;
+          const yA = (ptA.y / 100) * canvas.height;
+
+          neighbors.forEach(nbKey => {
+            const ptB = playerCoords[nbKey];
+            if (!ptB) return;
+
+            const isFault = activeFaults.some(f => 
+              (f.posA === draggedPosKey && f.posB === nbKey) || 
+              (f.posA === nbKey && f.posB === draggedPosKey)
+            );
+
+            const xB = (ptB.x / 100) * canvas.width;
+            const yB = (ptB.y / 100) * canvas.height;
+
+            ctx.beginPath();
+            ctx.setLineDash([5, 5]);
+            ctx.strokeStyle = isFault ? '#e74c3c' : 'rgba(255, 255, 255, 0.75)';
+            ctx.lineWidth = isFault ? 2.5 : 2;
+            ctx.moveTo(xA, yA);
+            ctx.lineTo(xB, yB);
+            ctx.stroke();
+          });
+        }
+      }
+
+      if (activeFaults.length > 0) {
+        activeFaults.forEach(f => {
+          if (draggedPosKey && (f.posA === draggedPosKey || f.posB === draggedPosKey)) return;
+
+          const ptA = playerCoords[f.posA];
+          const ptB = playerCoords[f.posB];
+
+          const xA = (ptA.x / 100) * canvas.width;
+          const yA = (ptA.y / 100) * canvas.height;
+          const xB = (ptB.x / 100) * canvas.width;
+          const yB = (ptB.y / 100) * canvas.height;
+
+          ctx.beginPath();
+          ctx.setLineDash([5, 5]);
+          ctx.strokeStyle = '#e74c3c';
+          ctx.lineWidth = 2.5;
+          ctx.moveTo(xA, yA);
+          ctx.lineTo(xB, yB);
+          ctx.stroke();
+        });
+      }
+    }
+
+    let draggedWrapper = null;
+    let draggedPosKey = null;
+
+    function attachDragHandlers(wrapper, posKey) {
+      const onPointerDown = (e) => {
+        if (['input', 'select', 'option'].includes(e.target.tagName.toLowerCase())) return;
+        recordHistoryState();
+        draggedWrapper = wrapper;
+        draggedPosKey = posKey;
+        wrapper.classList.add('dragging');
+
+        drawOverlapLines();
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+        e.preventDefault();
+      };
+
+      wrapper.addEventListener('pointerdown', onPointerDown);
+
+      const handle = wrapper.querySelector('.token-drag-handle');
+      if (handle) {
+        handle.addEventListener('pointerdown', (e) => {
+          recordHistoryState();
+          draggedWrapper = wrapper;
+          draggedPosKey = posKey;
+          wrapper.classList.add('dragging');
+
+          drawOverlapLines();
+
+          window.addEventListener('pointermove', onPointerMove);
+          window.addEventListener('pointerup', onPointerUp);
+          e.preventDefault();
+          e.stopPropagation();
+        });
+      }
+    }
+
+    function onPointerMove(e) {
+      if (!draggedWrapper || !draggedPosKey) return;
+      const court = document.getElementById('courtSurface');
+      const rect = court.getBoundingClientRect();
+
+      let relX = e.clientX - rect.left;
+      let relY = e.clientY - rect.top;
+
+      const maxBottom = (currentScenario === 'serve' && draggedPosKey === 'pos1') ? rect.height + 40 : rect.height - 16;
+
+      relX = Math.max(16, Math.min(rect.width - 16, relX));
+      relY = Math.max(16, Math.min(maxBottom, relY));
+
+      const pctX = (relX / rect.width) * 100;
+      const pctY = (relY / rect.height) * 100;
+
+      playerCoords[draggedPosKey].x = pctX;
+      playerCoords[draggedPosKey].y = pctY;
+
+      draggedWrapper.style.left = `${pctX}%`;
+      draggedWrapper.style.top = `${pctY}%`;
+
+      saveActiveScenarioCoords();
+      checkPositionalFaults();
+    }
+
+    function onPointerUp() {
+      if (draggedWrapper) draggedWrapper.classList.remove('dragging');
+      draggedWrapper = null;
+      draggedPosKey = null;
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
+      drawOverlapLines();
+    }
+
+    function updateWingVisibility() {
+      const leftWing = document.getElementById('leftBenchWing');
+      const rightWing = document.getElementById('rightBenchWing');
+      const subSideBox = document.getElementById('subSideContainer');
+
+      if (teamSize === 6) {
+        leftWing.classList.add('hidden');
+        rightWing.classList.add('hidden');
+        subSideBox.style.display = 'none';
+      } else if (teamSize === 7) {
+        subSideBox.style.display = 'inline-flex';
+        if (sevenPlayerSubSide === 'left') {
+          leftWing.classList.remove('hidden');
+          rightWing.classList.add('hidden');
+        } else {
+          leftWing.classList.add('hidden');
+          rightWing.classList.remove('hidden');
+        }
+      } else if (teamSize === 8) {
+        leftWing.classList.remove('hidden');
+        rightWing.classList.remove('hidden');
+        subSideBox.style.display = 'none';
+      }
+    }
+
+    function goToRotation(targetRot) {
+      saveActiveScenarioCoords();
+      if (targetRot < 1) targetRot = teamSize;
+      if (targetRot > teamSize) targetRot = 1;
+
+      currentRotation = targetRot;
+      const state = calculateStateForRotation(currentRotation);
+
+      currentScenario = 'home';
+      document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+      const homeBtn = document.getElementById('btnScenarioHome');
+      if (homeBtn) homeBtn.classList.add('active');
+
+      positionHistory = [];
+      loadActiveScenarioCoords();
+      renderCourtTokens();
+      renderBenchTokens(state);
+      updateButtonsUI();
+      checkPositionalFaults();
+      updateAnimateButtonVisibility();
+
+      let logText = `Active: Rotation ${currentRotation} of ${teamSize} [${offensiveSystem} System - HOME]. Server: [${state.pos1.name}].`;
+      document.getElementById('logBox').innerText = logText;
+    }
+
+    function onPlayerPositionChange(playerId, newPosition) {
+      recordHistoryState();
+      const player = squad.find(p => p.id === playerId);
+      if (player) {
+        player.position = newPosition.trim().toUpperCase();
+        goToRotation(currentRotation);
+      }
+    }
+
+    function createPositionSelectHTML(playerId, selectedPos) {
+      const current = (selectedPos || '').trim().toUpperCase();
+      const optionsHTML = POSITION_OPTIONS.map(opt => {
+        const isSel = (opt === current) ? 'selected' : '';
+        const display = opt === "" ? "--" : opt;
+        return `<option value="${opt}" ${isSel}>${display}</option>`;
+      }).join('');
+
+      return `
+        <select 
+          class="player-role-select" 
+          title="Select Position"
+          onchange="onPlayerPositionChange(${playerId}, this.value)"
+          onpointerdown="event.stopPropagation()"
+          onclick="event.stopPropagation()"
+        >
+          ${optionsHTML}
+        </select>
+      `;
+    }
+
+    function renderCourtTokens() {
+      const container = document.getElementById('courtTokensContainer');
+      const state = calculateStateForRotation(currentRotation);
+      container.innerHTML = '';
+
+      ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+        const player = state[posKey];
+        const coords = playerCoords[posKey] || { x: 50, y: 50 };
+        const playerColor = getPlayerColor(player, currentRotation);
+        const isServingHalo = (currentScenario === 'serve' && posKey === 'pos1');
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'player-token-wrapper';
+        wrapper.id = `wrapper-${posKey}`;
+        wrapper.style.left = `${coords.x}%`;
+        wrapper.style.top = `${coords.y}%`;
+
+        wrapper.innerHTML = `
+          <div class="player-token color-${playerColor} ${isServingHalo ? 'serving-halo' : ''}" id="token-${posKey}" onclick="onPlayerTokenClick(event, ${player.id}, this)">
+            <div class="token-inner">
+              ${createPlayerNameSelectHTML(player.id, player.name)}
+              ${createPositionSelectHTML(player.id, player.position)}
+            </div>
+            <div class="token-color-palette" onpointerdown="event.stopPropagation()" onclick="event.stopPropagation()">
+              <div class="color-swatch" style="background:#27ae60;" onclick="setPlayerColor(${player.id}, 'green', event)" title="Green"></div>
+              <div class="color-swatch" style="background:#f1c40f;" onclick="setPlayerColor(${player.id}, 'yellow', event)" title="Yellow"></div>
+              <div class="color-swatch" style="background:#2980b9;" onclick="setPlayerColor(${player.id}, 'blue', event)" title="Blue"></div>
+              <div class="color-swatch" style="background:#e74c3c;" onclick="setPlayerColor(${player.id}, 'red', event)" title="Red"></div>
+            </div>
+          </div>
+          <div class="token-drag-handle" title="Touch & drag player">👍</div>
+        `;
+
+        attachDragHandlers(wrapper, posKey);
+        container.appendChild(wrapper);
+      });
+    }
+
+    function renderBenchTokens(state) {
+      const b1 = document.getElementById('leftBench');
+      const b2 = document.getElementById('rightBench');
+
+      if (state.leftBench && b1) {
+        const pColor = getPlayerColor(state.leftBench, currentRotation);
+        b1.innerHTML = `
+          <div class="player-token color-${pColor}" onclick="onPlayerTokenClick(event, ${state.leftBench.id}, this)">
+            <div class="token-inner">
+              ${createPlayerNameSelectHTML(state.leftBench.id, state.leftBench.name)}
+              ${createPositionSelectHTML(state.leftBench.id, state.leftBench.position)}
+            </div>
+            <div class="token-color-palette" onpointerdown="event.stopPropagation()" onclick="event.stopPropagation()">
+              <div class="color-swatch" style="background:#27ae60;" onclick="setPlayerColor(${state.leftBench.id}, 'green', event)"></div>
+              <div class="color-swatch" style="background:#f1c40f;" onclick="setPlayerColor(${state.leftBench.id}, 'yellow', event)"></div>
+              <div class="color-swatch" style="background:#2980b9;" onclick="setPlayerColor(${state.leftBench.id}, 'blue', event)"></div>
+              <div class="color-swatch" style="background:#e74c3c;" onclick="setPlayerColor(${state.leftBench.id}, 'red', event)"></div>
+            </div>
+          </div>
+        `;
+      }
+      if (state.rightBench && b2) {
+        const pColor = getPlayerColor(state.rightBench, currentRotation);
+        b2.innerHTML = `
+          <div class="player-token color-${pColor}" onclick="onPlayerTokenClick(event, ${state.rightBench.id}, this)">
+            <div class="token-inner">
+              ${createPlayerNameSelectHTML(state.rightBench.id, state.rightBench.name)}
+              ${createPositionSelectHTML(state.rightBench.id, state.rightBench.position)}
+            </div>
+            <div class="token-color-palette" onpointerdown="event.stopPropagation()" onclick="event.stopPropagation()">
+              <div class="color-swatch" style="background:#27ae60;" onclick="setPlayerColor(${state.rightBench.id}, 'green', event)"></div>
+              <div class="color-swatch" style="background:#f1c40f;" onclick="setPlayerColor(${state.rightBench.id}, 'yellow', event)"></div>
+              <div class="color-swatch" style="background:#2980b9;" onclick="setPlayerColor(${state.rightBench.id}, 'blue', event)"></div>
+              <div class="color-swatch" style="background:#e74c3c;" onclick="setPlayerColor(${state.rightBench.id}, 'red', event)"></div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function renderRotationButtons() {
+      const container = document.getElementById('rotButtonsContainer');
+      document.getElementById('rotToolbarTitle').innerText = `Select Rotation (1 - ${teamSize})`;
+      container.innerHTML = '';
+      for (let i = 1; i <= teamSize; i++) {
+        const btn = document.createElement('button');
+        btn.className = `rot-btn ${i === currentRotation ? 'active' : ''}`;
+        btn.id = `rot-btn-${i}`;
+        btn.innerText = `Rot ${i}`;
+        btn.onclick = () => goToRotation(i);
+        container.appendChild(btn);
+      }
+    }
+
+    function updateButtonsUI() {
+      for (let i = 1; i <= teamSize; i++) {
+        const btn = document.getElementById(`rot-btn-${i}`);
+        if (btn) {
+          if (i === currentRotation) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      }
+    }
+
+    function onTeamSizeChange() {
+      teamSize = parseInt(document.getElementById('teamSizeSelect').value, 10);
+      updateWingVisibility();
+      renderRotationButtons();
+      goToRotation(1);
+    }
+
+    function onOffensiveSystemChange() {
+      saveActiveScenarioCoords();
+      offensiveSystem = document.getElementById('offensiveSystemSelect').value;
+
+      if (!systemScenarioStores[offensiveSystem]) {
+        systemScenarioStores[offensiveSystem] = {};
+      }
+      scenarioCoordsStore = systemScenarioStores[offensiveSystem];
+
+      loadActiveScenarioCoords();
+      renderCourtTokens();
+      checkPositionalFaults();
+      updateAnimateButtonVisibility();
+
+      let msg = "";
+      if (offensiveSystem === "4-2") msg = "4-2 selected.";
+      if (offensiveSystem === "6-2") msg = "6-2 selected.";
+      if (offensiveSystem === "5-1") msg = "5-1 selected.";
+      document.getElementById('logBox').innerText = msg;
+    }
+
+    function onSevenPlayerSideChange() {
+      sevenPlayerSubSide = document.getElementById('sevenPlayerSideSelect').value;
+      updateWingVisibility();
+      goToRotation(1);
+    }
+
+    function getStoredComments() {
+      try {
+        return JSON.parse(localStorage.getItem('vb_public_comments')) || [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveCommentsToStorage(comments) {
+      localStorage.setItem('vb_public_comments', JSON.stringify(comments));
+    }
+
+    function postComment() {
+      const authorInput = document.getElementById('commentAuthorInput');
+      const textInput = document.getElementById('commentTextInput');
+
+      const author = authorInput.value.trim() || 'Anonymous Player';
+      const text = textInput.value.trim();
+
+      if (!text) {
+        alert("Please write a comment before posting.");
+        return;
+      }
+
+      const newComment = {
+        id: Date.now(),
+        author: author,
+        text: text,
+        date: new Date().toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit'
+        }),
+        rotationContext: `Rot ${currentRotation} (${offensiveSystem})`
+      };
+
+      publicComments.unshift(newComment);
+      saveCommentsToStorage(publicComments);
+      renderCommentsList();
+
+      textInput.value = '';
+      document.getElementById('logBox').innerText = `✓ Comment posted by ${author}!`;
+    }
+
+    function renderCommentsList() {
+      const container = document.getElementById('commentsListContainer');
+      const badge = document.getElementById('commentsCountBadge');
+      container.innerHTML = '';
+
+      badge.innerText = `${publicComments.length} ${publicComments.length === 1 ? 'Comment' : 'Comments'}`;
+
+      if (publicComments.length === 0) {
+        container.innerHTML = '<div class="no-comments-msg">No comments posted yet. Leave the first comment above!</div>';
+        return;
+      }
+
+      publicComments.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'comment-item';
+        item.innerHTML = `
+          <div class="comment-item-header">
+            <span class="comment-item-author">${escapeHTML(c.author)} <span style="font-size:0.68rem; color:#64748b; font-weight:normal;">[${escapeHTML(c.rotationContext || '')}]</span></span>
+            <span class="comment-item-date">${escapeHTML(c.date)}</span>
+          </div>
+          <div class="comment-item-body">${escapeHTML(c.text)}</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function getRotationsFromStorage() {
+      try {
+        return JSON.parse(localStorage.getItem('vb_scenarios_presets')) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveNamedRotation() {
+      saveActiveScenarioCoords();
+      const nameInput = document.getElementById('rotationNameInput');
+      const name = nameInput.value.trim();
+      if (!name) {
+        alert("Please enter a Rotation Name.");
+        return;
+      }
+
+      const savedRotations = getRotationsFromStorage();
+      savedRotations[name] = {
+        teamSize,
+        offensiveSystem,
+        sevenPlayerSubSide,
+        currentScenario,
+        scenarioCoordsStore: JSON.parse(JSON.stringify(scenarioCoordsStore)),
+        systemScenarioStores: JSON.parse(JSON.stringify(systemScenarioStores)),
+        squad: JSON.parse(JSON.stringify(squad)),
+        rosterEntries: JSON.parse(JSON.stringify(rosterEntries)),
+        playerColorChanges: JSON.parse(JSON.stringify(playerColorChanges)),
+        comments: publicComments
+      };
+
+      localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
+      currentlyLoadedRotationName = name;
+      nameInput.value = '';
+      populateRotationsDropdown(name);
+      document.getElementById('logBox').innerText = `✓ Lineup, roster and custom court locations saved under "${name}"!`;
+    }
+
+    function syncSelectedRotationName(val) {
+      if (val) currentlyLoadedRotationName = val;
+    }
+
+    function updateCurrentLoadedRotation() {
+      saveActiveScenarioCoords();
+      const select = document.getElementById('savedRotationsSelect');
+      const rotName = select.value || currentlyLoadedRotationName;
+
+      if (!rotName) {
+        alert("Please select or load a Rotation Name first, or type a new name and click 'Save'.");
+        return;
+      }
+
+      const savedRotations = getRotationsFromStorage();
+      savedRotations[rotName] = {
+        teamSize,
+        offensiveSystem,
+        sevenPlayerSubSide,
+        currentScenario,
+        scenarioCoordsStore: JSON.parse(JSON.stringify(scenarioCoordsStore)),
+        systemScenarioStores: JSON.parse(JSON.stringify(systemScenarioStores)),
+        squad: JSON.parse(JSON.stringify(squad)),
+        rosterEntries: JSON.parse(JSON.stringify(rosterEntries)),
+        playerColorChanges: JSON.parse(JSON.stringify(playerColorChanges)),
+        comments: publicComments
+      };
+
+      localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
+      currentlyLoadedRotationName = rotName;
+      populateRotationsDropdown(rotName);
+      document.getElementById('logBox').innerText = `✓ Saved changes and court positions to "${rotName}"!`;
+    }
+
+    function loadSelectedRotationFromDropdown(rotName) {
+      if (!rotName) return;
+      syncSelectedRotationName(rotName);
+      const savedRotations = getRotationsFromStorage();
+      const loaded = savedRotations[rotName];
+      if (!loaded) return;
+
+      currentlyLoadedRotationName = rotName;
+      loadPayloadData(loaded);
+      document.getElementById('logBox').innerText = `✓ Automatically loaded "${rotName}".`;
+    }
+
+    function deleteCurrentRotation() {
+      const select = document.getElementById('savedRotationsSelect');
+      const rotName = select.value;
+      if (!rotName) {
+        alert("Select a saved rotation name from the dropdown to delete.");
+        return;
+      }
+
+      if (confirm(`Delete Rotation Name "${rotName}"?`)) {
+        const savedRotations = getRotationsFromStorage();
+        delete savedRotations[rotName];
+        localStorage.setItem('vb_scenarios_presets', JSON.stringify(savedRotations));
+        if (currentlyLoadedRotationName === rotName) {
+          currentlyLoadedRotationName = null;
+        }
+        populateRotationsDropdown();
+        document.getElementById('logBox').innerText = `Deleted "${rotName}".`;
+      }
+    }
+
+    function populateRotationsDropdown(selectName = "") {
+      const savedRotations = getRotationsFromStorage();
+      const select = document.getElementById('savedRotationsSelect');
+      select.innerHTML = '<option value="">-- Select Rotation Name --</option>';
+
+      Object.keys(savedRotations).forEach(key => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.innerText = key;
+        if (key === selectName) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    function resetToDefaults() {
+      if (confirm("Reset current lineup to defaults?")) {
+        initDefaultSquad();
+        offensiveSystem = "5-1";
+        document.getElementById('offensiveSystemSelect').value = "5-1";
+        scenarioCoordsStore = {};
+        systemScenarioStores = { "4-2": {}, "6-2": {}, "5-1": {} };
+        playerColorChanges = {};
+        setScenario('home');
+        goToRotation(1);
+        document.getElementById('logBox').innerText = "Lineup restored to defaults.";
+      }
+    }
+
+    function buildCurrentPayload() {
+      saveActiveScenarioCoords();
+      return {
+        teamSize,
+        offensiveSystem,
+        sevenPlayerSubSide,
+        currentRotation,
+        currentScenario,
+        scenarioCoordsStore,
+        systemScenarioStores,
+        squad,
+        rosterEntries,
+        playerColorChanges,
+        comments: publicComments,
+        presets: getRotationsFromStorage()
+      };
+    }
+
+    function loadPayloadData(data) {
+      if (data.teamSize) teamSize = data.teamSize;
+      if (data.offensiveSystem) {
+        offensiveSystem = data.offensiveSystem;
+        document.getElementById('offensiveSystemSelect').value = offensiveSystem;
+      }
+      if (data.sevenPlayerSubSide) sevenPlayerSubSide = data.sevenPlayerSubSide;
+      if (data.rosterEntries && Array.isArray(data.rosterEntries)) {
+        rosterEntries = JSON.parse(JSON.stringify(data.rosterEntries));
+        renderRosterList();
+      } else if (data.rosterNames && Array.isArray(data.rosterNames)) {
+        rosterEntries = data.rosterNames.map((n, i) => ({ number: String(i + 1), name: n }));
+        renderRosterList();
+      }
+      if (data.squad) squad = JSON.parse(JSON.stringify(data.squad));
+      if (data.playerColorChanges) {
+        playerColorChanges = JSON.parse(JSON.stringify(data.playerColorChanges));
+      } else {
+        playerColorChanges = {};
+      }
+      
+      if (data.systemScenarioStores) {
+        systemScenarioStores = JSON.parse(JSON.stringify(data.systemScenarioStores));
+      }
+      if (data.scenarioCoordsStore) {
+        scenarioCoordsStore = JSON.parse(JSON.stringify(data.scenarioCoordsStore));
+        if (systemScenarioStores[offensiveSystem]) {
+          systemScenarioStores[offensiveSystem] = scenarioCoordsStore;
+        }
+      } else if (systemScenarioStores[offensiveSystem]) {
+        scenarioCoordsStore = systemScenarioStores[offensiveSystem];
+      } else {
+        scenarioCoordsStore = {};
+      }
+
+      if (data.comments && Array.isArray(data.comments)) {
+        publicComments = data.comments;
+        saveCommentsToStorage(publicComments);
+        renderCommentsList();
+      }
+      if (data.presets) {
+        localStorage.setItem('vb_scenarios_presets', JSON.stringify(data.presets));
+        populateRotationsDropdown();
+      }
+
+      document.getElementById('teamSizeSelect').value = teamSize;
+      document.getElementById('sevenPlayerSideSelect').value = sevenPlayerSubSide;
+
+      updateWingVisibility();
+      renderRotationButtons();
+      setScenario(data.currentScenario || 'home');
+      goToRotation(data.currentRotation || 1);
+    }
+
+    function copyShareLink() {
+      const shareUrl = `${window.location.origin}${window.location.pathname}`;
+
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert("Share Link Copied! Only the URL to the app has been copied to your clipboard.");
+        document.getElementById('logBox').innerText = "✓ Share link copied to clipboard!";
+      }).catch(() => {
+        prompt("Copy this URL:", shareUrl);
+      });
+    }
+
+    function exportToFile() {
+      const payload = buildCurrentPayload();
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `volleyball_rotation_${teamSize}players.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      document.getElementById('logBox').innerText = "✓ Lineup, roster, jersey numbers, court positions and comments file exported!";
+    }
+
+    function importFromFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target.result);
+          loadPayloadData(data);
+          document.getElementById('logBox').innerText = `✓ Imported lineup file: ${file.name}`;
+        } catch (err) {
+          alert("Invalid volleyball lineup file.");
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
+
+    function checkUrlForSharedData() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const dataParam = urlParams.get('data');
+      if (dataParam) {
+        try {
+          const decoded = atob(decodeURIComponent(dataParam));
+          const data = JSON.parse(decoded);
+          loadPayloadData(data);
+          document.getElementById('logBox').innerText = "✓ Shared lineup loaded successfully from URL link!";
+          return true;
+        } catch (e) {
+          console.error("Could not parse share data from URL", e);
+        }
+      }
+      return false;
+    }
+
+    /* Print Modal & Dynamic Multi-Page Engine */
+    function openPrintModal() {
+      document.getElementById('printModalOverlay').classList.add('show');
+    }
+
+    function closePrintModal() {
+      document.getElementById('printModalOverlay').classList.remove('show');
+    }
+
+    function closePrintModalOnBackdrop(e) {
+      if (e.target === document.getElementById('printModalOverlay')) {
+        closePrintModal();
+      }
+    }
+
+    function setAllPrintCheckboxes(checked) {
+      document.getElementById('chkPrintHome').checked = checked;
+      document.getElementById('chkPrintServe').checked = checked;
+      document.getElementById('chkPrintAttack').checked = checked;
+      document.getElementById('chkPrintBase').checked = checked;
+      document.getElementById('chkPrintReceive').checked = checked;
+    }
+
+    function triggerCustomPrint() {
+      const scenariosToInclude = [];
+      if (document.getElementById('chkPrintHome').checked) scenariosToInclude.push({ key: 'home', title: 'Home (Slots)' });
+      if (document.getElementById('chkPrintServe').checked) scenariosToInclude.push({ key: 'serve', title: 'On Serve' });
+      if (document.getElementById('chkPrintAttack').checked) scenariosToInclude.push({ key: 'attack', title: 'Attack' });
+      if (document.getElementById('chkPrintBase').checked) scenariosToInclude.push({ key: 'base', title: 'Base (Defense)' });
+      if (document.getElementById('chkPrintReceive').checked) scenariosToInclude.push({ key: 'receive', title: 'Serve Receive' });
+
+      if (scenariosToInclude.length === 0) {
+        alert("Please select at least one scenario to print.");
+        return;
+      }
+
+      closePrintModal();
+
+      const dynamicStyle = document.getElementById('dynamicPrintStyle');
+      const rotContainer = document.getElementById('printRotationsContainer');
+      const meta = document.getElementById('printMetaText');
+      meta.innerText = `Team Size: ${teamSize} | System: ${offensiveSystem} | Scenarios: ${scenariosToInclude.map(s => s.title).join(', ')} | ${new Date().toLocaleDateString()}`;
+      rotContainer.innerHTML = '';
+
+      const count = scenariosToInclude.length;
+
+      // Rule 1: All printouts default to Landscape
+      dynamicStyle.innerHTML = `
+        @page {
+          size: landscape;
+          margin: 0.25in;
+        }
+      `;
+
+      // Rule 2: Exactly 1 scenario -> Fit all rotations on 1 landscape page
+      if (count === 1) {
+        document.body.classList.remove('print-mode-multi');
+        document.body.classList.add('print-mode-single');
+        rotContainer.className = `print-grid-fit rot-${teamSize}`;
+
+        for (let rot = 1; rot <= teamSize; rot++) {
+          rotContainer.appendChild(createRotationPrintBlock(rot, scenariosToInclude));
+        }
+      } 
+      // Rule 3 & 4: 2 or more scenarios -> Fit strictly 2 rotations per page
+      else {
+        document.body.classList.remove('print-mode-single');
+        document.body.classList.add('print-mode-multi');
+        rotContainer.className = '';
+
+        const rotationsPerPage = 2;
+        let currentPageDiv = null;
+
+        for (let rot = 1; rot <= teamSize; rot++) {
+          const indexOnPage = (rot - 1) % rotationsPerPage;
+          if (indexOnPage === 0) {
+            currentPageDiv = document.createElement('div');
+            currentPageDiv.className = 'print-page-block';
+            rotContainer.appendChild(currentPageDiv);
+          }
+
+          const rotBlock = createRotationPrintBlock(rot, scenariosToInclude);
+          currentPageDiv.appendChild(rotBlock);
+        }
+      }
+
+      window.print();
+    }
+
+    function createRotationPrintBlock(rot, scenariosToInclude) {
+      const state = calculateStateForRotation(rot);
+      const rotBlock = document.createElement('div');
+      rotBlock.className = 'print-rot-block';
+
+      let scenariosRowHTML = '';
+      scenariosToInclude.forEach(scenObj => {
+        let coords = {};
+        const key = getStorageKey(rot, scenObj.key);
+
+        if (scenarioCoordsStore[key]) {
+          coords = scenarioCoordsStore[key];
+        } else if (scenObj.key === 'receive') {
+          coords = DEFAULT_SCENARIO_COORDS.receive[rot] || DEFAULT_SCENARIO_COORDS.receive[1];
+        } else {
+          coords = DEFAULT_SCENARIO_COORDS[scenObj.key] || DEFAULT_SCENARIO_COORDS.home;
+        }
+
+        let courtTokensHTML = '';
+        ['pos1', 'pos2', 'pos3', 'pos4', 'pos5', 'pos6'].forEach(posKey => {
+          const pl = state[posKey];
+          const pt = coords[posKey] || { x: 50, y: 50 };
+          const pColor = getPlayerColor(pl, rot);
+          const isServingHalo = (scenObj.key === 'serve' && posKey === 'pos1');
+
+          courtTokensHTML += `
+            <div class="print-token color-${pColor} ${isServingHalo ? 'is-server-halo' : ''}" style="left:${pt.x}%; top:${pt.y}%;">
+              <span class="print-token-name">${escapeHTML(pl.name)}</span>
+              <span class="print-token-role">${escapeHTML(pl.position || '')}</span>
+            </div>
+          `;
+        });
+
+        let leftWingHTML = '';
+        const showLeftWing = (teamSize === 8) || (teamSize === 7 && sevenPlayerSubSide === 'left');
+        if (showLeftWing && state.leftBench) {
+          const pColor = getPlayerColor(state.leftBench, rot);
+          leftWingHTML = `
+            <div class="print-wing">
+              <span class="print-wing-title">Bench</span>
+              <div class="print-token color-${pColor}">
+                <span class="print-token-name">${escapeHTML(state.leftBench.name)}</span>
+                <span class="print-token-role">${escapeHTML(state.leftBench.position || '')}</span>
+              </div>
+            </div>
+          `;
+        } else if (teamSize > 6) {
+          leftWingHTML = `<div class="print-wing hidden"></div>`;
+        }
+
+        let rightWingHTML = '';
+        const showRightWing = (teamSize === 8) || (teamSize === 7 && sevenPlayerSubSide === 'right');
+        if (showRightWing && state.rightBench) {
+          const pColor = getPlayerColor(state.rightBench, rot);
+          rightWingHTML = `
+            <div class="print-wing">
+              <span class="print-wing-title">Bench</span>
+              <div class="print-token color-${pColor}">
+                <span class="print-token-name">${escapeHTML(state.rightBench.name)}</span>
+                <span class="print-token-role">${escapeHTML(state.rightBench.position || '')}</span>
+              </div>
+            </div>
+          `;
+        } else if (teamSize > 6) {
+          rightWingHTML = `<div class="print-wing hidden"></div>`;
+        }
+
+        scenariosRowHTML += `
+          <div class="print-card">
+            <div class="print-card-title">${scenObj.title}</div>
+            <div class="print-arena">
+              ${leftWingHTML}
+              <div class="print-court-box">
+                <div class="print-net"></div>
+                <div class="print-court-surface">
+                  <div class="print-attack-line"></div>
+                  ${courtTokensHTML}
+                </div>
+              </div>
+              ${rightWingHTML}
+            </div>
+          </div>
+        `;
+      });
+
+      rotBlock.innerHTML = `
+        <div class="print-rot-header">Rotation ${rot} (Server: ${escapeHTML(state.pos1.name || 'Pos 1')})</div>
+        <div class="print-scenarios-row">
+          ${scenariosRowHTML}
+        </div>
+      `;
+
+      return rotBlock;
+    }
+
+    window.addEventListener('resize', () => {
+      drawOverlapLines();
+    });
+
+    initDefaultSquad();
+    renderRosterList();
+    publicComments = getStoredComments();
+    renderCommentsList();
+    updateWingVisibility();
+    populateRotationsDropdown();
+    renderRotationButtons();
+
+    if (!checkUrlForSharedData()) {
+      loadActiveScenarioCoords();
+      goToRotation(1);
+    }
+  </script>
+</body>
+</html>
