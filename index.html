@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lester Simeon's 50th Birthday Celebration | Hymn Sing, Filipino Feast &amp; Carol Sing</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            evergreen: {
+              50: '#f2f7f4',
+              100: '#dfece4',
+              200: '#c1dacb',
+              600: '#275c43',
+              700: '#1e4835',
+              800: '#163728',
+              900: '#0d241a',
+              950: '#07150f',
+            },
+            gold: {
+              50: '#fbf8eb',
+              100: '#f5eccb',
+              200: '#edd898',
+              300: '#e2be5f',
+              400: '#d8a637',
+              500: '#c58d24',
+              600: '#a66d1c',
+              700: '#85511a',
+            },
+            cranberry: {
+              50: '#fdf2f3',
+              100: '#fbe2e4',
+              600: '#9e232c',
+              700: '#821c24',
+              800: '#6d1b22',
+              900: '#5c1b20',
+            },
+            parchment: {
+              50: '#fdfbf7',
+              100: '#faf5eb',
+              200: '#f3e9d4',
+              300: '#e8d6b3',
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #091912;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(216, 166, 55, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(158, 35, 44, 0.08) 0%, transparent 50%),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.012) 0px, rgba(255, 255, 255, 0.012) 2px, transparent 2px, transparent 8px);
+      min-height: 100vh;
+    }
+
+    .gold-foil-text {
+      background: linear-gradient(135deg, #b58422 0%, #f7df94 30%, #a2741a 55%, #fbf0b8 80%, #b58422 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .parchment-card {
+      background-color: #fdfbf7;
+      background-image: 
+        radial-gradient(at 50% 0%, rgba(216, 166, 55, 0.1), transparent 70%),
+        radial-gradient(at 100% 100%, rgba(30, 72, 53, 0.06), transparent 60%);
+      box-shadow: 
+        0 25px 60px -15px rgba(0, 0, 0, 0.75),
+        0 0 0 1px rgba(216, 166, 55, 0.4),
+        inset 0 0 0 8px #fdfbf7,
+        inset 0 0 0 10px rgba(197, 141, 36, 0.5);
+    }
+
+    .envelope-stage {
+      perspective: 1600px;
+    }
+
+    .xmas-envelope-scene {
+      position: relative;
+      width: 100%;
+      max-width: 620px;
+      height: 395px;
+      margin: 0 auto;
+      transform-style: preserve-3d;
+      transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+    }
+
+    @media (max-width: 640px) {
+      .xmas-envelope-scene {
+        height: 330px;
+      }
+    }
+
+    .xmas-envelope-scene.card-pulling-out {
+      transform: translateY(85px);
+    }
+
+    .xmas-envelope-scene.envelope-transition-out {
+      transform: translateY(110px) scale(1.06);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .xmas-envelope-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      background: 
+        radial-gradient(circle at 50% 30%, rgba(245, 236, 203, 0.35), transparent 65%),
+        linear-gradient(145deg, #8f6414 0%, #dfc06c 35%, #b58422 65%, #f3df9b 100%);
+      border: 2px solid #e2be5f;
+      box-shadow: 0 35px 75px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(216, 166, 55, 0.2);
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .xmas-inner-card {
+      position: absolute;
+      left: 5%;
+      right: 5%;
+      top: 8%;
+      bottom: 8%;
+      border-radius: 14px;
+      background-color: #fcf9f2;
+      background-image: radial-gradient(at 50% 0%, rgba(216, 166, 55, 0.15), transparent 70%);
+      border: 2px solid #d8a637;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), inset 0 0 0 5px #fcf9f2, inset 0 0 0 7px rgba(197, 141, 36, 0.45);
+      z-index: 15;
+      transform: translateY(0) scale(0.98);
+      transition: transform 1.05s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1.05s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .xmas-envelope-scene.card-pulling-out .xmas-inner-card {
+      transform: translateY(-64%) scale(1.03);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.65), inset 0 0 0 5px #fcf9f2, inset 0 0 0 7px rgba(197, 141, 36, 0.55);
+    }
+
+    .xmas-envelope-front-pocket {
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      z-index: 25;
+      pointer-events: none;
+      overflow: hidden;
+      border: 2px solid rgba(226, 190, 95, 0.7);
+      box-shadow: inset 0 0 0 4px rgba(13, 36, 26, 0.35);
+    }
+
+    .xmas-pocket-sides {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #6d1b22 0%, #821c24 50%, #5c1b20 100%);
+      clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .xmas-pocket-bottom {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 50% 85%, rgba(216, 166, 55, 0.16), transparent 60%),
+        linear-gradient(to top, #4d1318 0%, #7c1c24 65%, #91212a 100%);
+      clip-path: polygon(0 100%, 50% 44%, 100% 100%);
+      border-top: 2px solid rgba(226, 190, 95, 0.5);
+    }
+
+    .xmas-envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 58%;
+      transform-origin: top center;
+      transform-style: preserve-3d;
+      transition: transform 0.85s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 35;
+      pointer-events: none;
+    }
+
+    .xmas-flap-outer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, #102e21 0%, #1a4430 70%, #143525 100%);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.45);
+    }
+
+    .xmas-envelope-scene.flap-opening .xmas-envelope-flap {
+      transform: rotateX(180deg);
+    }
+
+    .xmas-envelope-scene.flap-opened-behind .xmas-envelope-flap {
+      z-index: 10;
+    }
+
+    @keyframes sealPulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 10px 28px rgba(0,0,0,0.65), 0 0 0 0 rgba(216, 166, 55, 0.55); }
+      50% { transform: translate(-50%, -50%) scale(1.05); box-shadow: 0 14px 34px rgba(0,0,0,0.75), 0 0 0 14px rgba(216, 166, 55, 0); }
+    }
+
+    .wax-seal-btn {
+      animation: sealPulse 2.6s infinite ease-in-out;
+      transition: transform 0.38s ease, opacity 0.38s ease;
+    }
+
+    .wax-seal-btn.seal-unsealing {
+      animation: none;
+      transform: translate(-50%, -50%) scale(1.25) rotate(8deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @keyframes cardFullReveal {
+      0% { opacity: 0; transform: translateY(24px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .invitation-reveal-anim {
+      animation: cardFullReveal 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    #snowfallCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+
+<body class="text-stone-800 font-sans antialiased selection:bg-gold-300 selection:text-evergreen-950">
+
+  <canvas id="snowfallCanvas" aria-hidden="true"></canvas>
+
+  <!-- NAVIGATION -->
+  <header id="mainSiteHeader" class="hidden sticky top-0 z-40 bg-evergreen-950/95 backdrop-blur-md border-b border-gold-500/30 shadow-lg">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-gold-300 via-gold-500 to-gold-700 flex items-center justify-center text-evergreen-950 font-serif font-bold text-xs sm:text-sm shadow-md border border-gold-200">
+          LS50
+        </div>
+        <div>
+          <span class="text-gold-200 font-serif font-semibold text-sm sm:text-base tracking-wide block leading-tight">
+            Lester Simeon's 50th &bull; Hymn &amp; Carol Sing
+          </span>
+          <span class="text-evergreen-200 text-xs hidden sm:inline-block">
+            Dec 17, 2026 &bull; Filipino Feast &bull; The Lodge at Little Seneca Creek
+          </span>
+        </div>
+      </div>
+
+      <nav aria-label="View Switcher" class="flex items-center bg-evergreen-900/90 p-1 rounded-xl border border-gold-500/30 text-xs sm:text-sm">
+        <button id="tabBtn-invitation" onclick="switchMainTab('invitation')" class="px-3 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1.5 bg-gradient-to-r from-gold-400 to-gold-500 text-evergreen-950 font-semibold shadow-sm">
+          <i class="fa-solid fa-envelope-open-text"></i>
+          <span>Invitation &amp; RSVP</span>
+        </button>
+        <button id="tabBtn-guestlist" onclick="switchMainTab('guestlist')" class="px-3 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1.5 text-parchment-100 hover:text-gold-300">
+          <i class="fa-solid fa-users"></i>
+          <span>Who's Coming</span>
+          <span id="navBadgeYes" class="ml-1 px-1.5 py-0.5 text-[11px] rounded-full bg-evergreen-700 text-gold-200 border border-gold-400/30">0</span>
+        </button>
+        <button id="tabBtn-host" onclick="switchMainTab('host')" class="px-3 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1.5 text-parchment-100 hover:text-gold-300">
+          <i class="fa-solid fa-comment-sms"></i>
+          <span>Host &amp; Text Invites</span>
+        </button>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button onclick="replayEnvelopeReveal()" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-gold-200 hover:text-white bg-evergreen-800/80 hover:bg-evergreen-700 border border-gold-500/30 transition flex items-center gap-1.5" title="Replay Envelope">
+          <i class="fa-solid fa-rotate-left text-gold-300"></i>
+          <span class="hidden sm:inline">Replay</span>
+        </button>
+        <button onclick="toggleSnowfall()" class="px-2.5 py-1.5 rounded-lg text-xs font-medium text-gold-200 hover:text-white bg-evergreen-800/80 hover:bg-evergreen-700 border border-gold-500/30 transition flex items-center gap-1.5">
+          <i id="snowToggleIcon" class="fa-regular fa-snowflake text-gold-300"></i>
+          <span id="snowToggleLabel">Snow: On</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Guest Preview Banner -->
+    <div id="personalizedGuestBanner" class="hidden bg-gradient-to-r from-cranberry-800 via-cranberry-700 to-cranberry-800 text-parchment-50 border-t border-gold-400/30 px-4 py-1.5 text-xs sm:text-sm">
+      <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-star text-gold-300"></i>
+          <span>Invitation for <strong id="bannerGuestName" class="text-gold-200 underline decoration-gold-400/60">Guest</strong> &mdash; <span id="bannerGuestLimit" class="font-semibold">2 Spots Reserved</span></span>
+        </div>
+        <button onclick="clearPersonalizedGuest()" class="text-xs bg-black/25 hover:bg-black/40 px-2.5 py-0.5 rounded-md text-gold-200 transition">
+          Switch Invitee
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- VIEW 1: INVITATION & RSVP -->
+  <main id="view-invitation" class="relative z-10 py-6 sm:py-10 px-3 sm:px-6 max-w-5xl mx-auto">
+
+    <!-- 3D CHRISTMAS ENVELOPE STAGE -->
+    <section id="envelopeStageSection" class="min-h-[82vh] flex flex-col items-center justify-center py-8">
+      <div class="w-full max-w-xl mx-auto envelope-stage">
+        <div id="christmasEnvelope" class="xmas-envelope-scene select-none cursor-pointer" onclick="openEnvelopeExperience()">
+          <div class="xmas-envelope-back"></div>
+
+          <!-- Sliding Inner Card -->
+          <div id="slidingCardPreview" class="xmas-inner-card">
+            <div class="text-[10px] sm:text-xs uppercase tracking-[0.25em] text-evergreen-800 font-semibold mb-1">
+              With Joy &amp; Thanksgiving
+            </div>
+            <div class="font-serif text-xl sm:text-3xl font-bold text-evergreen-950 leading-tight">
+              Lester Simeon's <span class="gold-foil-text">50th Birthday</span> Celebration
+            </div>
+            <div class="h-[1px] w-24 bg-gradient-to-r from-transparent via-gold-500 to-transparent my-2"></div>
+            <div class="font-display italic text-base sm:text-xl text-cranberry-700 font-semibold">
+              Hymn Sing &bull; Filipino Feast &bull; Christmas Carol Sing
+            </div>
+            <div class="text-[11px] sm:text-xs text-stone-600 mt-1.5">
+              Thursday, December 17, 2026 &bull; The Lodge at Little Seneca Creek
+            </div>
+          </div>
+
+          <!-- Front Pocket -->
+          <div class="xmas-envelope-front-pocket">
+            <div class="xmas-pocket-sides"></div>
+            <div class="xmas-pocket-bottom"></div>
+            <svg class="w-full h-full" viewBox="0 0 600 390" preserveAspectRatio="none">
+              <line x1="0" y1="0" x2="300" y2="205" stroke="rgba(226, 190, 95, 0.45)" stroke-width="2" />
+              <line x1="600" y1="0" x2="300" y2="205" stroke="rgba(226, 190, 95, 0.45)" stroke-width="2" />
+              <line x1="0" y1="390" x2="300" y2="175" stroke="rgba(226, 190, 95, 0.6)" stroke-width="2.5" />
+              <line x1="600" y1="390" x2="300" y2="175" stroke="rgba(226, 190, 95, 0.6)" stroke-width="2.5" />
+            </svg>
+            <div class="absolute bottom-3.5 left-1/2 -translate-x-1/2 flex items-center gap-2 text-gold-300/80 text-xs">
+              <span class="h-[1px] w-8 bg-gold-400/50"></span>
+              <i class="fa-solid fa-holly-berry text-gold-300"></i>
+              <span class="h-[1px] w-8 bg-gold-400/50"></span>
+            </div>
+          </div>
+
+          <!-- Top Flap -->
+          <div id="envelopeTopFlap" class="xmas-envelope-flap">
+            <div class="xmas-flap-outer flex flex-col items-center pt-6 sm:pt-8 px-4 text-center">
+              <div class="flex items-center gap-2 text-gold-300/80 text-xs mb-2">
+                <span class="h-[1px] w-6 bg-gold-400/60"></span>
+                <i class="fa-solid fa-holly-berry text-cranberry-600"></i>
+                <span class="h-[1px] w-6 bg-gold-400/60"></span>
+              </div>
+              <h2 class="font-serif text-xl sm:text-3xl font-bold tracking-wide gold-foil-text drop-shadow-sm max-w-md leading-snug">
+                Lester's 50th Birthday Celebration
+              </h2>
+            </div>
+          </div>
+
+          <!-- Wax Seal -->
+          <button id="envelopeWaxSeal" type="button" aria-label="Open Christmas Card Envelope" class="wax-seal-btn absolute top-[56%] left-1/2 z-40 w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-cranberry-600 via-cranberry-700 to-cranberry-900 border-4 border-gold-300 flex flex-col items-center justify-center text-gold-200 shadow-2xl group">
+            <div class="w-[86%] h-[86%] rounded-full border border-gold-300/60 flex flex-col items-center justify-center">
+              <span class="font-serif font-bold text-lg sm:text-xl leading-none tracking-tight text-gold-200 group-hover:scale-105 transition">
+                LS &bull; 50
+              </span>
+              <span class="text-[9px] uppercase tracking-widest text-gold-100/90 mt-1">
+                Tap to Open
+              </span>
+            </div>
+          </button>
+        </div>
+
+        <p id="envelopePromptCaption" class="text-center text-gold-200/85 text-xs sm:text-sm font-medium mt-6 tracking-wide transition-opacity">
+          Tap the wax seal to open the invitation
+        </p>
+      </div>
+    </section>
+
+    <!-- FULL INVITATION CARD -->
+    <section id="invitationCardSection" class="hidden transition-all duration-700">
+      <div class="parchment-card rounded-3xl p-5 sm:p-10 md:p-14 relative overflow-hidden max-w-4xl mx-auto">
+
+        <!-- Header Crest -->
+        <div class="text-center relative z-10 max-w-2xl mx-auto">
+          <div class="inline-flex items-center justify-center gap-3 px-4 py-1.5 rounded-full bg-evergreen-900 text-gold-200 text-xs uppercase tracking-[0.22em] font-semibold mb-4 shadow-md border border-gold-400/50">
+            <i class="fa-solid fa-music text-gold-400"></i>
+            <span>50 Years of Grace &amp; Faithfulness</span>
+            <i class="fa-solid fa-holly-berry text-cranberry-600"></i>
+          </div>
+
+          <p class="font-display italic text-xl sm:text-2xl text-evergreen-800 mb-1">
+            With joyful hearts and thanksgiving, you are warmly invited to
+          </p>
+
+          <h1 class="font-serif text-3xl sm:text-5xl md:text-6xl font-bold text-evergreen-950 tracking-tight leading-tight mb-2">
+            Lester Simeon's <span class="gold-foil-text block sm:inline">50th Birthday</span> Celebration
+          </h1>
+
+          <div class="flex items-center justify-center gap-3 my-3">
+            <span class="h-[1px] w-10 sm:w-20 bg-gradient-to-r from-transparent to-gold-500"></span>
+            <span class="font-display text-2xl sm:text-3xl font-bold text-cranberry-700 italic flex items-center gap-2">
+              <i class="fa-solid fa-book-open text-gold-600 text-lg"></i>
+              Hymn Sing &bull; Filipino Feast &bull; Carol Sing
+              <i class="fa-solid fa-music text-gold-600 text-lg"></i>
+            </span>
+            <span class="h-[1px] w-10 sm:w-20 bg-gradient-to-l from-transparent to-gold-500"></span>
+          </div>
+
+          <p class="text-stone-700 text-sm sm:text-base max-w-xl mx-auto leading-relaxed mb-6">
+            Join us by the cozy woodland fireplace at The Lodge to celebrate Lester's Golden 50th Jubilee with an evening of sacred music, bountiful Filipino dining, Christmas carols, warm spiced drinks, and treasured fellowship.
+          </p>
+
+          <!-- Attire & Hospitality Badges -->
+          <div class="flex flex-wrap items-center justify-center gap-2 mb-8 text-xs font-semibold">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-evergreen-900/10 text-evergreen-900 border border-evergreen-800/20">
+              <i class="fa-solid fa-sparkles text-gold-600"></i>
+              Attire: Holiday Festive / Cozy Casual
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cranberry-900/10 text-cranberry-800 border border-cranberry-800/20">
+              <i class="fa-solid fa-gift text-cranberry-700"></i>
+              Your presence &amp; voices are the greatest gifts!
+            </span>
+          </div>
+
+          <!-- Date, Time & Venue Highlight Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left bg-parchment-100/90 border border-gold-400/60 rounded-2xl p-5 sm:p-6 shadow-inner mb-8">
+            <div class="flex items-start gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-evergreen-900 text-gold-300 flex items-center justify-center shrink-0 shadow">
+                <i class="fa-regular fa-calendar-check text-lg"></i>
+              </div>
+              <div>
+                <div class="text-[11px] uppercase tracking-wider font-bold text-gold-700">Date</div>
+                <div class="font-serif font-bold text-lg text-evergreen-950 leading-snug">Thursday, Dec 17, 2026</div>
+                <div class="text-xs text-stone-600 mt-0.5">Lester's 50th Birthday</div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3.5 border-t md:border-t-0 md:border-l border-gold-300/60 pt-3 md:pt-0 md:pl-4">
+              <div class="w-11 h-11 rounded-xl bg-cranberry-700 text-gold-200 flex items-center justify-center shrink-0 shadow">
+                <i class="fa-regular fa-clock text-lg"></i>
+              </div>
+              <div>
+                <div class="text-[11px] uppercase tracking-wider font-bold text-cranberry-700">Time</div>
+                <div class="font-serif font-bold text-lg text-evergreen-950 leading-snug">6:30 PM – 10:00 PM</div>
+                <div class="text-xs text-stone-600 mt-0.5">Warm drinks at 6:30 &bull; Hymns at 7:00 PM</div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3.5 border-t md:border-t-0 md:border-l border-gold-300/60 pt-3 md:pt-0 md:pl-4">
+              <div class="w-11 h-11 rounded-xl bg-evergreen-800 text-gold-300 flex items-center justify-center shrink-0 shadow">
+                <i class="fa-solid fa-tree text-lg"></i>
+              </div>
+              <div>
+                <div class="text-[11px] uppercase tracking-wider font-bold text-evergreen-700">Woodland Venue</div>
+                <div class="font-serif font-bold text-base text-evergreen-950 leading-snug">The Lodge at Little Seneca Creek</div>
+                <div class="text-xs text-stone-600 mt-0.5">14500 Clopper Rd, Boyds, MD 20841</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex flex-wrap items-center justify-center gap-3 mb-10">
+            <a href="#rsvpFormAnchor" class="px-6 py-3 rounded-xl bg-gradient-to-r from-evergreen-800 via-evergreen-700 to-evergreen-900 hover:from-evergreen-700 hover:to-evergreen-800 text-gold-200 font-semibold text-sm sm:text-base shadow-lg border border-gold-400/50 transition flex items-center gap-2">
+              <i class="fa-solid fa-feather-pointed text-gold-400"></i>
+              <span>RSVP Now</span>
+            </a>
+
+            <a href="https://www.google.com/maps/search/?api=1&query=The+Lodge+at+Little+Seneca+Creek+14500+Clopper+Rd+Boyds+MD+20841" target="_blank" rel="noopener noreferrer" class="px-4 py-3 rounded-xl bg-white hover:bg-parchment-200 text-evergreen-900 font-semibold text-xs sm:text-sm border border-gold-400/60 shadow-sm transition flex items-center gap-2">
+              <i class="fa-solid fa-location-dot text-cranberry-700"></i>
+              <span>Directions &amp; Map</span>
+            </a>
+
+            <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Lester+Simeon%27s+50th+Birthday+Celebration%3A+Hymn+Sing%2C+Filipino+Feast+%26+Carol+Sing&dates=20261217T233000Z/20261218T030000Z&details=Celebrate+Lester+Simeon%27s+50th+Birthday+at+The+Lodge+at+Little+Seneca+Creek.+6%3A30+Warm+Drinks+%7C+7%3A00+Hymn+Sing+%7C+7%3A30+Filipino+Feast+%7C+9%3A00+Carol+Sing.&location=The+Lodge+at+Little+Seneca+Creek%2C+14500+Clopper+Rd%2C+Boyds%2C+MD+20841" target="_blank" rel="noopener noreferrer" class="px-4 py-3 rounded-xl bg-white hover:bg-parchment-200 text-evergreen-900 font-semibold text-xs sm:text-sm border border-gold-400/60 shadow-sm transition flex items-center gap-2">
+              <i class="fa-brands fa-google text-evergreen-700"></i>
+              <span>Google Calendar</span>
+            </a>
+
+            <button type="button" onclick="downloadICSFile()" class="px-4 py-3 rounded-xl bg-white hover:bg-parchment-200 text-evergreen-900 font-semibold text-xs sm:text-sm border border-gold-400/60 shadow-sm transition flex items-center gap-2">
+              <i class="fa-regular fa-calendar-plus text-cranberry-700"></i>
+              <span>Apple / Outlook (.ics)</span>
+            </button>
+          </div>
+
+          <!-- Schedule -->
+          <div class="border-t border-b border-gold-400/50 py-7 my-6">
+            <h2 class="font-serif text-xl sm:text-2xl font-bold text-evergreen-950 mb-2 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-clock text-gold-600 text-base"></i>
+              <span>Evening Program &amp; Schedule</span>
+            </h2>
+            <p class="text-xs text-stone-600 mb-5">
+              An evening of sacred songs, hearty dining, and Christmas cheer
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
+              <div class="bg-white/90 p-4 rounded-xl border border-gold-300 shadow-sm">
+                <div class="flex items-center gap-2 text-cranberry-700 font-bold text-xs uppercase tracking-wider mb-1">
+                  <i class="fa-solid fa-mug-hot text-sm"></i>
+                  <span>6:30 PM</span>
+                </div>
+                <h3 class="font-serif font-bold text-evergreen-950 text-base mb-1">Warm Drinks &amp; Arrival</h3>
+                <p class="text-xs text-stone-600 leading-relaxed">
+                  Mulled spiced apple cider, hot cocoa bar with festive toppings, and fresh coffee by the fireside.
+                </p>
+              </div>
+
+              <div class="bg-white/90 p-4 rounded-xl border border-gold-300 shadow-sm">
+                <div class="flex items-center gap-2 text-evergreen-700 font-bold text-xs uppercase tracking-wider mb-1">
+                  <i class="fa-solid fa-book-open text-sm"></i>
+                  <span>7:00 PM</span>
+                </div>
+                <h3 class="font-serif font-bold text-evergreen-950 text-base mb-1">Favorite Hymn Sing</h3>
+                <p class="text-xs text-stone-600 leading-relaxed">
+                  Lifting our voices in beloved hymns of praise, God's faithfulness, and thanksgiving.
+                </p>
+              </div>
+
+              <div class="bg-gradient-to-b from-amber-50 to-white p-4 rounded-xl border-2 border-gold-400 shadow-md">
+                <div class="flex items-center gap-2 text-gold-700 font-bold text-xs uppercase tracking-wider mb-1">
+                  <i class="fa-solid fa-utensils text-sm"></i>
+                  <span>7:30 PM</span>
+                </div>
+                <h3 class="font-serif font-bold text-evergreen-950 text-base mb-1">Filipino Feast</h3>
+                <p class="text-xs text-stone-700 leading-relaxed">
+                  A bountiful traditional Filipino dinner buffet, birthday cake, and holiday treats.
+                </p>
+              </div>
+
+              <div class="bg-white/90 p-4 rounded-xl border border-gold-300 shadow-sm">
+                <div class="flex items-center gap-2 text-cranberry-700 font-bold text-xs uppercase tracking-wider mb-1">
+                  <i class="fa-solid fa-music text-sm"></i>
+                  <span>9:00 PM – 10:00 PM</span>
+                </div>
+                <h3 class="font-serif font-bold text-evergreen-950 text-base mb-1">Christmas Carol Sing</h3>
+                <p class="text-xs text-stone-600 leading-relaxed">
+                  Singing cherished Advent and Christmas carols together before our closing blessing at 10:00 PM.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filipino Feast Menu Showcase -->
+          <div class="my-8 text-left bg-gradient-to-br from-amber-50/70 via-parchment-100 to-white border border-gold-400/80 rounded-2xl p-5 sm:p-7 shadow-sm">
+            <div class="flex items-center gap-2 text-gold-700 uppercase tracking-widest text-xs font-bold mb-1">
+              <i class="fa-solid fa-star"></i>
+              <span>Dinner Spread &bull; Handcrafted Menu</span>
+            </div>
+            <h3 class="font-serif text-xl sm:text-2xl font-bold text-evergreen-950 mb-3">
+              The Traditional Filipino Feast
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 text-xs text-stone-700">
+              <div class="bg-white p-3 rounded-xl border border-gold-200">
+                <div class="font-bold text-evergreen-950 mb-0.5"><i class="fa-solid fa-drumstick-bite text-cranberry-700 mr-1.5"></i> Savory Entrées</div>
+                <p class="text-stone-600">Crispy Pork Lechon Belly, Filipino Chicken Inasal, and savory Beef Caldereta.</p>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-gold-200">
+                <div class="font-bold text-evergreen-950 mb-0.5"><i class="fa-solid fa-bowl-rice text-gold-600 mr-1.5"></i> Noodles &amp; Sides</div>
+                <p class="text-stone-600">Pancit Palabok &amp; Pancit Bihon, Crispy Lumpiang Shanghai, and Steamed Jasmine Rice.</p>
+              </div>
+              <div class="bg-white p-3 rounded-xl border border-gold-200 sm:col-span-2 md:col-span-1">
+                <div class="font-bold text-evergreen-950 mb-0.5"><i class="fa-solid fa-cake-candles text-gold-700 mr-1.5"></i> Cakes &amp; Warm Station</div>
+                <p class="text-stone-600">Lester's 50th Ube Birthday Cake, Bibingka, Cassava Cake, Spiced Cider, Coffee &amp; Cocoa Bar.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE RSVP FORM -->
+        <div id="rsvpFormAnchor" class="mt-8 bg-gradient-to-b from-evergreen-950 to-evergreen-900 text-parchment-50 rounded-2xl p-6 sm:p-9 border-2 border-gold-500/60 shadow-2xl relative">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gold-500/30 pb-5 mb-6">
+            <div>
+              <span class="text-xs uppercase tracking-[0.2em] text-gold-300 font-semibold block">Kindly Reply by December 5, 2026</span>
+              <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white mt-0.5">RSVP &amp; Song Requests</h2>
+            </div>
+            <div id="rsvpAllowanceBadge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gold-500/20 border border-gold-400/50 text-gold-200 text-xs sm:text-sm font-semibold">
+              <i class="fa-solid fa-user-check text-gold-400"></i>
+              <span id="rsvpAllowanceText">Select your invitation below</span>
+            </div>
+          </div>
+
+          <form id="guestRsvpForm" onsubmit="handleGuestRsvpSubmit(event)" class="space-y-6">
+            <!-- Step 1: Invitee Selection -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="rsvpSelectInvitee" class="block text-xs uppercase tracking-wider text-gold-200 font-semibold mb-2">
+                  1. Find Your Name / Family <span class="text-cranberry-600">*</span>
+                </label>
+                <select id="rsvpSelectInvitee" onchange="onInviteeDropdownChange(this.value)" class="w-full rounded-xl bg-evergreen-950 border border-gold-500/50 text-parchment-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400">
+                </select>
+                <p class="text-[11px] text-evergreen-200 mt-1.5">
+                  Opened from your personal text or email? Your name is already selected!
+                </p>
+              </div>
+
+              <!-- Manual Name (if unlisted) -->
+              <div id="manualInviteeNameBox" class="hidden">
+                <label for="rsvpCustomName" class="block text-xs uppercase tracking-wider text-gold-200 font-semibold mb-2">
+                  Your Full Name or Family Name <span class="text-gold-400">*</span>
+                </label>
+                <input type="text" id="rsvpCustomName" placeholder="e.g., David &amp; Ruth Anderson" class="w-full rounded-xl bg-evergreen-950 border border-gold-500/50 text-parchment-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" />
+              </div>
+
+              <!-- Allowance Box -->
+              <div id="guestAllowanceExplainBox" class="rounded-xl bg-evergreen-800/70 border border-gold-400/30 p-3.5 flex items-center gap-3.5">
+                <div class="w-10 h-10 rounded-full bg-gold-500/20 border border-gold-400/50 flex items-center justify-center text-gold-300 font-serif font-bold text-lg shrink-0" id="allowanceCircleNum">
+                  2
+                </div>
+                <div class="text-xs leading-relaxed">
+                  <div class="font-semibold text-gold-200" id="allowanceTitleLine">Party Allowance: Up to 2 Guests Total</div>
+                  <div class="text-evergreen-100/90" id="allowanceSubLine">Includes yourself plus up to 1 additional family member or guest.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Attendance Choice -->
+            <div>
+              <label class="block text-xs uppercase tracking-wider text-gold-200 font-semibold mb-2.5">
+                2. Will You Join Us on December 17? <span class="text-gold-400">*</span>
+              </label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <label id="radioCardYes" onclick="setRsvpResponseChoice('yes')" class="cursor-pointer rounded-xl p-4 border-2 border-gold-400 bg-evergreen-800/90 flex items-center gap-3.5 transition">
+                  <input type="radio" name="rsvpStatusChoice" value="yes" checked class="sr-only" />
+                  <div class="w-9 h-9 rounded-full bg-gold-400 text-evergreen-950 flex items-center justify-center font-bold text-base shrink-0">
+                    <i class="fa-solid fa-check"></i>
+                  </div>
+                  <div>
+                    <div class="font-serif font-bold text-base sm:text-lg text-white">Yes, Joyfully Attending!</div>
+                    <div class="text-xs text-gold-200">Looking forward to singing &amp; celebrating</div>
+                  </div>
+                </label>
+
+                <label id="radioCardNo" onclick="setRsvpResponseChoice('no')" class="cursor-pointer rounded-xl p-4 border-2 border-evergreen-700 bg-evergreen-950/60 hover:border-gold-500/40 flex items-center gap-3.5 transition">
+                  <input type="radio" name="rsvpStatusChoice" value="no" class="sr-only" />
+                  <div class="w-9 h-9 rounded-full bg-cranberry-800 text-gold-200 flex items-center justify-center font-bold text-base shrink-0">
+                    <i class="fa-solid fa-heart"></i>
+                  </div>
+                  <div>
+                    <div class="font-serif font-bold text-base sm:text-lg text-white">Regretfully Cannot Attend</div>
+                    <div class="text-xs text-evergreen-200">Sending warm 50th birthday wishes from afar</div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Step 3: Headcount & Contact Info -->
+            <div id="attendingCountContainer" class="space-y-4 pt-1">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label for="rsvpAttendingCount" class="block text-xs uppercase tracking-wider text-gold-200 font-semibold mb-2">
+                    3. Total Guests Attending
+                  </label>
+                  <select id="rsvpAttendingCount" class="w-full rounded-xl bg-evergreen-950 border border-gold-500/50 text-parchment-50 px-4 py-3 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-gold-400">
+                  </select>
+                  <p id="rsvpCapHelperNote" class="text-[11px] text-gold-300 mt-1.5">
+                    <i class="fa-solid fa-circle-info mr-1"></i> Your invitation reserves up to 2 spots total.
+                  </p>
+                </div>
+
+                <div>
+                  <label for="rsvpGuestEmail" class="block text-xs uppercase tracking-wider text-gold-200 font-semibold mb-2">
+                    Email Address (For Confirmation &amp; Calendar)
+                  </label>
+                  <input type="email" id="rsvpGuestEmail" placeholder="you@example.com" class="w-full rounded-xl bg-evergreen-950 border border-gold-500/50 text-parchment-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" />
+                  <p class="text-[11px] text-evergreen-200 mt-1.5">
+                    Receive your confirmed ticket &amp; program schedule.
+                  </p>
+                </div>
+
+                <div>
+                  <label for="rsvpGuestPhone" class="block text-xs uppercase tracking-wider text-gold-200 font-semibold mb-2">
+                    Mobile Phone (For Text Confirmation)
+                  </label>
+                  <input type="tel" id="rsvpGuestPhone" placeholder="(301) 555-0199" class="w-full rounded-xl bg-evergreen-950 border border-gold-500/50 text-parchment-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4: Hymn & Carol Request Field -->
+            <div id="songRequestContainer">
+              <label for="rsvpSongRequest" class="block text-xs uppercase tracking-wider text-gold-200 font-semibold mb-2">
+                <i class="fa-solid fa-music text-gold-400 mr-1"></i> 4. Request a Favorite Hymn or Christmas Carol (Optional)
+              </label>
+              <input type="text" id="rsvpSongRequest" placeholder="e.g., Great Is Thy Faithfulness, O Holy Night, It Is Well..." class="w-full rounded-xl bg-evergreen-950 border border-gold-500/50 text-parchment-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" />
+              <p class="text-[11px] text-evergreen-200 mt-1">We will compile requested songs into our printed sing-along songbook!</p>
+            </div>
+
+            <!-- Step 5 & 6: Dietary Notes & Birthday Wishes -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="rsvpDietaryNote" class="block text-xs uppercase tracking-wider text-gold-200 font-semibold mb-2">
+                  <i class="fa-solid fa-leaf text-gold-400 mr-1"></i> 5. Dietary Restrictions / Allergies (Optional)
+                </label>
+                <input type="text" id="rsvpDietaryNote" placeholder="e.g., Gluten-free, shellfish allergy, vegetarian..." class="w-full rounded-xl bg-evergreen-950 border border-gold-500/50 text-parchment-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" />
+              </div>
+
+              <div>
+                <label for="rsvpGuestNote" class="block text-xs uppercase tracking-wider text-gold-200 font-semibold mb-2">
+                  <i class="fa-solid fa-comment-dots text-gold-400 mr-1"></i> 6. 50th Birthday Note for Lester (Optional)
+                </label>
+                <input type="text" id="rsvpGuestNote" placeholder="Share a blessing, note, or memory for Lester..." class="w-full rounded-xl bg-evergreen-950 border border-gold-500/50 text-parchment-50 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-gold-400" />
+              </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p class="text-xs text-evergreen-200">
+                <i class="fa-solid fa-utensils text-gold-400 mr-1"></i> Filipino feast, drinks, hot cocoa bar &amp; birthday dessert provided.
+              </p>
+              <button id="rsvpSubmitButton" type="submit" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-gold-300 via-gold-400 to-gold-500 hover:from-gold-200 hover:to-gold-400 text-evergreen-950 font-serif font-bold text-base sm:text-lg shadow-xl transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span id="rsvpSubmitBtnText">Submit My RSVP</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- SONG REQUESTS MARQUEE -->
+        <div class="mt-10 pt-8 border-t border-gold-400/50">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-serif text-xl font-bold text-evergreen-950 flex items-center gap-2">
+              <i class="fa-solid fa-record-vinyl text-gold-600"></i>
+              <span>Requested Songs &amp; Hymns for the Evening</span>
+            </h3>
+            <span class="text-xs text-stone-500 hidden sm:inline">Songs submitted by guests</span>
+          </div>
+          <div id="hymnSongRequestsPills" class="flex flex-wrap gap-2">
+          </div>
+        </div>
+
+        <!-- 50TH BIRTHDAY BLESSINGS WALL -->
+        <div class="mt-8 pt-8 border-t border-gold-400/50">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+            <div>
+              <h3 class="font-serif text-xl sm:text-2xl font-bold text-evergreen-950 flex items-center gap-2">
+                <i class="fa-solid fa-cake-candles text-cranberry-700"></i>
+                <span>50th Birthday Wishes for Lester</span>
+              </h3>
+              <p class="text-xs text-stone-600">Warm notes and blessings from family and friends</p>
+            </div>
+            <button onclick="switchMainTab('guestlist')" class="text-xs font-semibold text-evergreen-800 hover:text-cranberry-700 underline flex items-center gap-1">
+              <span>View Full Guest Attendance List</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+
+          <div id="birthdayWishesWallGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- VIEW 2: GUEST LIST & TRACKER -->
+  <section id="view-guestlist" class="hidden py-8 px-3 sm:px-6 max-w-6xl mx-auto">
+    <div class="bg-parchment-50 rounded-3xl p-5 sm:p-8 md:p-10 border-2 border-gold-400/60 shadow-2xl">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gold-300 pb-6 mb-6">
+        <div>
+          <span class="text-xs uppercase tracking-[0.2em] text-cranberry-700 font-bold">Attendance &amp; Headcount Tracker</span>
+          <h2 class="font-serif text-2xl sm:text-4xl font-bold text-evergreen-950 mt-1">
+            Guest List: Yes, No &amp; Awaiting Response
+          </h2>
+          <p class="text-xs sm:text-sm text-stone-600 mt-1">
+            The Lodge at Little Seneca Creek &bull; Confirmed headcount, requested hymns, and notes.
+          </p>
+        </div>
+        <div>
+          <button onclick="switchMainTab('host')" class="px-4 py-2.5 rounded-xl bg-evergreen-900 hover:bg-evergreen-800 text-gold-200 text-xs sm:text-sm font-semibold transition flex items-center gap-2 shadow">
+            <i class="fa-solid fa-user-plus text-gold-400"></i>
+            <span>Add Invitee / Text &amp; Email Invites</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 mb-7">
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-gold-300 shadow-sm">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">
+            <span>Total Invitees</span>
+            <i class="fa-solid fa-envelope text-gold-600"></i>
+          </div>
+          <div class="font-serif text-2xl sm:text-3xl font-bold text-evergreen-950" id="statTotalInvitees">0</div>
+          <div class="text-xs text-stone-600 mt-1" id="statTotalAllowedSpots">0 max spots allocated</div>
+        </div>
+
+        <div class="bg-evergreen-900 text-parchment-50 rounded-2xl p-4 sm:p-5 border border-gold-400 shadow-md">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gold-300 mb-1">
+            <span>Attending</span>
+            <i class="fa-solid fa-circle-check text-gold-400"></i>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <span class="font-serif text-2xl sm:text-3xl font-bold text-white" id="statYesHeadcount">0</span>
+            <span class="text-xs text-gold-200">total guests</span>
+          </div>
+          <div class="text-xs text-evergreen-200 mt-1" id="statYesPartiesCount">Across 0 responding parties</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 sm:p-5 border border-cranberry-600/30 shadow-sm">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-cranberry-700 mb-1">
+            <span>Declined</span>
+            <i class="fa-solid fa-circle-xmark text-cranberry-600"></i>
+          </div>
+          <div class="font-serif text-2xl sm:text-3xl font-bold text-cranberry-800" id="statNoParties">0</div>
+          <div class="text-xs text-stone-600 mt-1">Sent warm regrets</div>
+        </div>
+
+        <div class="bg-amber-50 rounded-2xl p-4 sm:p-5 border border-gold-400 shadow-sm">
+          <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-gold-700 mb-1">
+            <span>No Response Yet</span>
+            <i class="fa-regular fa-clock text-gold-600"></i>
+          </div>
+          <div class="font-serif text-2xl sm:text-3xl font-bold text-amber-900" id="statPendingParties">0</div>
+          <div class="text-xs text-amber-800 mt-1" id="statPendingPotentialSpots">0 potential spots pending</div>
+        </div>
+      </div>
+
+      <!-- Filters & Search -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+        <div class="flex flex-wrap items-center gap-1.5 bg-parchment-200/80 p-1.5 rounded-xl border border-gold-300">
+          <button onclick="setGuestListFilter('all')" id="filterBtn-all" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition bg-evergreen-900 text-gold-200 shadow">
+            All (<span id="filterCountAll">0</span>)
+          </button>
+          <button onclick="setGuestListFilter('yes')" id="filterBtn-yes" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition text-evergreen-900 hover:bg-white/70">
+            Yes (<span id="filterCountYes">0</span>)
+          </button>
+          <button onclick="setGuestListFilter('no')" id="filterBtn-no" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition text-evergreen-900 hover:bg-white/70">
+            No (<span id="filterCountNo">0</span>)
+          </button>
+          <button onclick="setGuestListFilter('pending')" id="filterBtn-pending" class="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition text-evergreen-900 hover:bg-white/70">
+            Pending (<span id="filterCountPending">0</span>)
+          </button>
+        </div>
+
+        <div class="relative w-full sm:w-64">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+          <input type="text" id="guestListSearchInput" oninput="renderGuestListView()" placeholder="Search guest or song..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-gold-300 text-sm focus:outline-none focus:ring-2 focus:ring-evergreen-700" />
+        </div>
+      </div>
+
+      <!-- Guest Cards -->
+      <div id="guestListCardsContainer" class="space-y-3"></div>
+    </div>
+  </section>
+
+  <!-- VIEW 3: HOST COMMAND CENTER -->
+  <section id="view-host" class="hidden py-8 px-3 sm:px-6 max-w-7xl mx-auto">
+    <div class="bg-parchment-50 rounded-3xl p-5 sm:p-8 md:p-10 border-2 border-gold-400/60 shadow-2xl">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-gold-300 pb-6 mb-7">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-evergreen-900 text-gold-300 text-xs font-semibold uppercase tracking-widest mb-2">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Host Control Center &amp; SMS / Email Dispatcher</span>
+          </div>
+          <h2 class="font-serif text-2xl sm:text-4xl font-bold text-evergreen-950">
+            Manage Invitees &amp; Send Personalized Invites
+          </h2>
+          <p class="text-xs sm:text-sm text-stone-600 mt-1">
+            Set guest allowances per party, send automatic email invitations, and launch SMS text invitations.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="openSettingsModal()" class="px-3.5 py-2 rounded-xl bg-evergreen-800 hover:bg-evergreen-700 text-gold-200 border border-gold-400/40 text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+            <i class="fa-solid fa-table-cells text-gold-400"></i>
+            <span>Google Sheets Webhook</span>
+          </button>
+          <button onclick="exportGuestListCSV()" class="px-3.5 py-2 rounded-xl bg-white hover:bg-parchment-200 text-evergreen-900 border border-gold-400 text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+            <i class="fa-solid fa-file-csv text-evergreen-700"></i>
+            <span>Export CSV</span>
+          </button>
+          <button onclick="exportGuestListJSON()" class="px-3.5 py-2 rounded-xl bg-white hover:bg-parchment-200 text-evergreen-900 border border-gold-400 text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+            <i class="fa-solid fa-download text-gold-600"></i>
+            <span>Backup JSON</span>
+          </button>
+          <label class="cursor-pointer px-3.5 py-2 rounded-xl bg-white hover:bg-parchment-200 text-evergreen-900 border border-gold-400 text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+            <i class="fa-solid fa-upload text-cranberry-700"></i>
+            <span>Import JSON</span>
+            <input type="file" accept=".json" onchange="importGuestListJSON(event)" class="hidden" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Add Form & SMS Template -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+        <div class="lg:col-span-7 bg-white rounded-2xl p-5 sm:p-6 border border-gold-300 shadow-sm">
+          <h3 class="font-serif text-xl font-bold text-evergreen-950 mb-1 flex items-center gap-2">
+            <i class="fa-solid fa-user-plus text-evergreen-700"></i>
+            <span>Add Invitee &amp; Set Party Allowance</span>
+          </h3>
+          <p class="text-xs text-stone-500 mb-4">If you enter an email and leave status as "Pending", their formal invitation email is sent automatically!</p>
+
+          <form id="hostAddInviteeForm" onsubmit="handleHostAddInvitee(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  Invitee / Family Name <span class="text-cranberry-600">*</span>
+                </label>
+                <input type="text" id="newInviteeName" required placeholder="e.g., Uncle Art &amp; Family" class="w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-evergreen-700" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  Mobile Phone Number
+                </label>
+                <input type="tel" id="newInviteePhone" placeholder="e.g., 301-555-0148" class="w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-evergreen-700" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  Email Address (Auto-sends Invite if Pending)
+                </label>
+                <input type="email" id="newInviteeEmail" placeholder="e.g., uncleart@example.com" class="w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-evergreen-700" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-evergreen-800 mb-1">
+                  Max Guests Allowed <span class="text-cranberry-600">*</span>
+                </label>
+                <select id="newInviteeMaxGuests" class="w-full rounded-xl border-2 border-gold-400 bg-gold-50/50 px-3.5 py-2.5 text-sm font-semibold text-evergreen-950">
+                  <option value="1">1 Spot (Single Guest)</option>
+                  <option value="2" selected>Up to 2 Guests (Couple / +1)</option>
+                  <option value="3">Up to 3 Guests</option>
+                  <option value="4">Up to 4 Guests (Family of 4)</option>
+                  <option value="5">Up to 5 Guests</option>
+                  <option value="6">Up to 6 Guests</option>
+                  <option value="8">Up to 8 Guests (Large Family)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  Initial Status
+                </label>
+                <select id="newInviteeStatus" class="w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm">
+                  <option value="pending" selected>Pending (Awaiting Reply)</option>
+                  <option value="yes">Yes (Attending)</option>
+                  <option value="no">No (Declined)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  Requested Song (Optional)
+                </label>
+                <input type="text" id="newInviteeSong" placeholder="e.g., Blessed Assurance" class="w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                Host Note / Group Tag
+              </label>
+              <input type="text" id="newInviteeNote" placeholder="e.g., High school friends" class="w-full rounded-xl border border-stone-300 px-3.5 py-2.5 text-sm" />
+            </div>
+
+            <div class="pt-1 flex justify-end">
+              <button type="submit" class="px-6 py-2.5 rounded-xl bg-evergreen-900 hover:bg-evergreen-800 text-gold-200 font-semibold text-sm shadow-md transition flex items-center gap-2">
+                <i class="fa-solid fa-plus text-gold-400"></i>
+                <span>Add to Invitee List</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- SMS Template Editor -->
+        <div class="lg:col-span-5 bg-evergreen-950 text-parchment-50 rounded-2xl p-5 sm:p-6 border border-gold-500/40 shadow-lg flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-serif text-lg font-bold text-gold-300 flex items-center gap-2">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <span>SMS Invitation Template</span>
+              </h3>
+              <button onclick="resetSmsTemplate()" class="text-[11px] text-gold-300 hover:underline">Reset</button>
+            </div>
+            <textarea id="smsTemplateInput" rows="7" class="w-full rounded-xl bg-evergreen-900/90 border border-gold-500/40 text-parchment-50 p-3 text-xs leading-relaxed focus:outline-none focus:ring-2 focus:ring-gold-400">Hi {name}! 🎄🎶 You are warmly invited to Lester Simeon's 50th Birthday Celebration & Hymn Sing!
+
+📅 Thu, Dec 17, 2026 (6:30–10:00 PM)
+📍 The Lodge at Little Seneca Creek (Boyds, MD)
+🍽️ Traditional Filipino Feast & Warm Cider/Cocoa
+🎟️ Reserved for your party: {allowanceText}
+
+Open your envelope & request your favorite hymns here:
+{link}</textarea>
+          </div>
+          <div class="mt-3 pt-3 border-t border-gold-500/20 text-[11px] text-gold-200/90">
+            Tags: <code>{name}</code>, <code>{maxGuests}</code>, <code>{allowanceText}</code>, <code>{link}</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invitee Management Table -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-serif text-xl font-bold text-evergreen-950">
+            Invitees &amp; RSVP Directory
+          </h3>
+          <select id="hostFilterStatus" onchange="renderHostManagerTable()" class="rounded-lg border border-gold-400 bg-white px-3 py-1.5 text-xs font-semibold text-evergreen-950">
+            <option value="all">All Invitees</option>
+            <option value="pending">Pending Only</option>
+            <option value="yes">Attending Only</option>
+            <option value="no">Declined Only</option>
+          </select>
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border border-gold-300 bg-white shadow-sm">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-evergreen-900 text-gold-200 text-[11px] uppercase tracking-wider">
+                <th class="py-3.5 px-4">Invitee &amp; Contact</th>
+                <th class="py-3.5 px-3">RSVP Status</th>
+                <th class="py-3.5 px-3">Max Allowed</th>
+                <th class="py-3.5 px-3">Headcount</th>
+                <th class="py-3.5 px-3">Hymn / Carol Request</th>
+                <th class="py-3.5 px-3">Dietary / Notes</th>
+                <th class="py-3.5 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="hostInviteesTableBody" class="divide-y divide-stone-200 text-xs sm:text-sm"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL: INSTANT RSVP CONFIRMATION (SHOWN ON GUEST SUBMISSION) -->
+  <div id="rsvpConfirmationModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-parchment-50 rounded-3xl max-w-lg w-full p-6 sm:p-8 border-2 border-gold-400 shadow-2xl relative text-center">
+      <div class="w-16 h-16 rounded-full bg-evergreen-900 text-gold-300 border-2 border-gold-400 flex items-center justify-center mx-auto mb-4 text-2xl shadow-md">
+        <i class="fa-solid fa-check"></i>
+      </div>
+
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-evergreen-900 text-gold-200 text-xs uppercase tracking-widest font-semibold mb-2">
+        <span>RSVP Confirmed</span>
+      </div>
+
+      <h3 id="modalConfirmHeading" class="font-serif text-2xl sm:text-3xl font-bold text-evergreen-950 mb-2">
+        We Can't Wait to Celebrate!
+      </h3>
+      <p id="modalConfirmSubtext" class="text-xs sm:text-sm text-stone-600 mb-5 leading-relaxed">
+        Your spot is reserved for Lester Simeon's 50th Birthday Celebration.
+      </p>
+
+      <!-- Event Details Card -->
+      <div class="bg-white rounded-2xl border border-gold-300 p-4 text-left text-xs space-y-2 mb-5 shadow-inner">
+        <div class="flex items-center gap-2 text-stone-800">
+          <i class="fa-regular fa-calendar-check text-gold-600 text-sm"></i>
+          <span><strong>Thursday, December 17, 2026</strong> &bull; 6:30 PM – 10:00 PM</span>
+        </div>
+        <div class="flex items-center gap-2 text-stone-800">
+          <i class="fa-solid fa-location-dot text-cranberry-700 text-sm"></i>
+          <span>The Lodge at Little Seneca Creek, Boyds, MD</span>
+        </div>
+        <div id="modalConfirmPartyDetail" class="flex items-center gap-2 text-evergreen-800 font-semibold pt-1 border-t border-stone-200">
+          <i class="fa-solid fa-users text-evergreen-700"></i>
+          <span id="modalConfirmHeadcountText">Attending: 2 Guests</span>
+        </div>
+        <div id="modalConfirmEmailNotice" class="text-[11px] text-stone-500 italic hidden">
+          <i class="fa-solid fa-envelope text-gold-600 mr-1"></i> A confirmation email has been sent to your inbox.
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <a id="modalConfirmGoogleCal" href="#" target="_blank" rel="noopener noreferrer" class="px-4 py-3 rounded-xl bg-evergreen-900 hover:bg-evergreen-800 text-gold-200 font-semibold text-xs transition flex items-center justify-center gap-2 shadow">
+          <i class="fa-brands fa-google text-gold-400"></i>
+          <span>Add to Google Calendar</span>
+        </a>
+        <a id="modalConfirmTextSelf" href="#" class="px-4 py-3 rounded-xl bg-gold-400 hover:bg-gold-300 text-evergreen-950 font-bold text-xs transition flex items-center justify-center gap-2 shadow">
+          <i class="fa-solid fa-mobile-screen text-evergreen-900"></i>
+          <span>Text Confirmation to Self</span>
+        </a>
+      </div>
+
+      <button onclick="closeConfirmationModal()" class="mt-4 text-xs font-semibold text-stone-500 hover:text-stone-800 underline">
+        Close Window
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: SETTINGS & GOOGLE SHEETS WEBHOOK -->
+  <div id="settingsModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-parchment-50 rounded-2xl max-w-lg w-full p-6 border-2 border-gold-400 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-gold-300 pb-3 mb-4">
+        <h3 class="font-serif text-xl font-bold text-evergreen-950 flex items-center gap-2">
+          <i class="fa-solid fa-table-cells text-evergreen-700"></i>
+          <span>Live Google Sheets Sync Settings</span>
+        </h3>
+        <button onclick="closeSettingsModal()" class="text-stone-500 hover:text-stone-800 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm text-stone-700">
+        <div>
+          <label class="block font-bold text-evergreen-950 mb-1">Google Apps Script Web App URL</label>
+          <input type="url" id="sheetsWebhookUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full rounded-xl border border-stone-300 px-3.5 py-2 text-xs font-mono bg-white focus:outline-none focus:ring-2 focus:ring-evergreen-700" />
+          <p class="text-[11px] text-stone-500 mt-1">
+            Every guest submission automatically writes to your Google Sheet and sends confirmation emails.
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-bold text-evergreen-950 mb-1">Base Website URL (For SMS &amp; Email Links)</label>
+          <input type="url" id="customBaseUrlInput" class="w-full rounded-xl border border-stone-300 px-3.5 py-2 text-xs font-mono bg-white focus:outline-none focus:ring-2 focus:ring-evergreen-700" />
+        </div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-gold-300">
+          <button onclick="resetDemoInviteesData()" class="text-xs text-cranberry-700 hover:underline font-semibold">
+            Reset Sample Data
+          </button>
+          <div class="flex gap-2">
+            <button onclick="closeSettingsModal()" class="px-4 py-2 rounded-xl bg-stone-200 hover:bg-stone-300 text-stone-800 font-semibold text-xs">
+              Cancel
+            </button>
+            <button onclick="saveSettings()" class="px-4 py-2 rounded-xl bg-evergreen-900 hover:bg-evergreen-800 text-gold-200 font-semibold text-xs">
+              Save Settings
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SMS MODAL -->
+  <div id="smsPreviewModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-parchment-50 rounded-2xl max-w-lg w-full p-6 border-2 border-gold-400 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-gold-300 pb-3 mb-4">
+        <div>
+          <span class="text-[11px] uppercase tracking-wider text-evergreen-700 font-bold">Personalized SMS</span>
+          <h3 id="smsModalRecipientTitle" class="font-serif text-xl font-bold text-evergreen-950">Text Invite</h3>
+        </div>
+        <button onclick="closeSmsPreviewModal()" class="text-stone-500 hover:text-stone-800 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div class="flex items-center justify-between text-xs bg-evergreen-900 text-gold-200 px-3.5 py-2 rounded-xl">
+          <span><i class="fa-solid fa-phone mr-1.5 text-gold-400"></i> To: <strong id="smsModalPhoneDisplay"></strong></span>
+          <span id="smsModalMaxGuestsBadge" class="bg-gold-500/20 border border-gold-400/40 px-2.5 py-0.5 rounded-full text-gold-300 font-semibold"></span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">
+            Message Preview (Editable):
+          </label>
+          <textarea id="smsModalMessageText" rows="7" class="w-full rounded-xl border border-gold-400 bg-white p-3 text-xs sm:text-sm text-stone-800 leading-relaxed focus:outline-none focus:ring-2 focus:ring-evergreen-700"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+          <a id="smsModalLaunchLink" href="#" class="px-4 py-3 rounded-xl bg-evergreen-900 hover:bg-evergreen-800 text-gold-200 font-semibold text-xs sm:text-sm text-center shadow transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-comment-sms text-gold-400 text-base"></i>
+            <span>Open SMS App</span>
+          </a>
+          <button type="button" onclick="copyModalSmsText()" class="px-4 py-3 rounded-xl bg-gold-400 hover:bg-gold-300 text-evergreen-950 font-bold text-xs sm:text-sm shadow transition flex items-center justify-center gap-2">
+            <i class="fa-regular fa-copy"></i>
+            <span>Copy Text &amp; Link</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastBanner" class="fixed bottom-5 right-5 z-50 hidden max-w-sm bg-evergreen-950 text-parchment-50 border-2 border-gold-400 rounded-2xl px-5 py-3.5 shadow-2xl flex items-center gap-3">
+    <i class="fa-solid fa-circle-check text-gold-400 text-xl"></i>
+    <div id="toastMessageText" class="text-xs sm:text-sm font-medium">Updated!</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer id="mainSiteFooter" class="hidden relative z-10 py-8 px-4 text-center text-evergreen-200/70 text-xs border-t border-gold-500/20 mt-12">
+    <div class="max-w-4xl mx-auto space-y-2">
+      <div class="flex items-center justify-center gap-3 text-gold-400/80 text-sm">
+        <i class="fa-solid fa-tree"></i>
+        <i class="fa-solid fa-music"></i>
+        <i class="fa-solid fa-mug-hot"></i>
+        <i class="fa-solid fa-utensils"></i>
+        <i class="fa-solid fa-cake-candles"></i>
+        <i class="fa-solid fa-book-open"></i>
+      </div>
+      <p class="font-serif text-parchment-100 text-sm">
+        Lester Simeon's Golden 50th Birthday Celebration &bull; Hymn Sing, Filipino Feast &amp; Christmas Carol Sing
+      </p>
+      <p>
+        Thursday, December 17, 2026 &bull; 6:30 PM – 10:00 PM &bull; The Lodge at Little Seneca Creek (14500 Clopper Rd, Boyds, MD)
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    let GOOGLE_SHEETS_SCRIPT_URL = ''; 
+
+    const STORAGE_KEY_INVITEES = 'lester_50th_rsvp_invitees_v6';
+    const STORAGE_KEY_ENVELOPE_OPENED = 'lester50_envelope_opened';
+    const STORAGE_KEY_SHEETS_URL = 'lester50_sheets_url';
+    const STORAGE_KEY_BASE_URL = 'lester50_base_url';
+
+    const DEFAULT_INVITEES = [
+      {
+        id: 'inv-1',
+        name: 'Pastor Mark & Sarah Davis',
+        phone: '301-555-0142',
+        email: 'pastormark@example.com',
+        maxGuests: 4,
+        status: 'yes',
+        attendingCount: 4,
+        songRequest: 'Great Is Thy Faithfulness',
+        dietary: '',
+        note: 'Happy 50th, Lester! Wouldn\'t miss this hymn sing for the world!',
+        updatedAt: '2026-10-20'
+      },
+      {
+        id: 'inv-2',
+        name: 'The Santos Family (Tito Jun & Tita Maria)',
+        phone: '240-555-0188',
+        email: 'santosfamily@example.com',
+        maxGuests: 5,
+        status: 'yes',
+        attendingCount: 5,
+        songRequest: 'O Holy Night & It Is Well',
+        dietary: 'No pork for Tito Jun',
+        note: 'Maligayang ika-50 kaarawan,
